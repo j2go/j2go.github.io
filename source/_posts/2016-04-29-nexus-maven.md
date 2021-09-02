@@ -2,8 +2,8 @@
 layout: post
 title: "Centos6.5 搭建 nexus + maven"
 date: 2016-04-29
-tags: Maven
-categories: Java
+tags: nexus
+categories: Linux
 ---
 
 # 安装MAVEN

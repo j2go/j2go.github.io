@@ -2,7 +2,7 @@
 layout: post
 title: "Android 之 Intent 学习"
 date: 2015-03-02
-tags: Intent
+tags: Android
 categories: Android
 ---
 

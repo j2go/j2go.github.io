@@ -2,7 +2,7 @@
 layout: post
 title: "Android 之 AsyncTask 学习"
 date: 2015-03-04
-tags: AsyncTask
+tags: Android
 categories: Android
 ---
 

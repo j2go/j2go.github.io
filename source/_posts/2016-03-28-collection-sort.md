@@ -2,7 +2,7 @@
 layout: post
 title: "Collections.sort 原理探究"
 date: 2016-03-28
-tags: Collection
+tags: Java
 categories: Java
 ---
 

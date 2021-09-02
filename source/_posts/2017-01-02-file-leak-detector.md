@@ -2,7 +2,7 @@
 layout: post
 title: "file-leak-detector 检查Java文件句柄泄露"
 date: 2017-01-02
-tags: file leak
+tags: IO
 categories: Java
 ---
 

@@ -2,8 +2,8 @@
 layout: post
 title: "Docker Swarm 试用"
 date: 2016-10-15
-tags: Swarm
-categories: Docker
+tags: DockerSwarm
+categories: Linux
 ---
 ## 环境
 > 系统 Ubuntu 14.04, Docker version: 1.12

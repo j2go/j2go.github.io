@@ -2,7 +2,7 @@
 layout: post
 title: "Spring Cloud Config"
 date: 2016-12-01
-tags: Cloud Config
+tags: SpringCloud
 categories: Java
 ---
 

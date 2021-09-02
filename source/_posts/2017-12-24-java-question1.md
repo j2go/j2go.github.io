@@ -2,8 +2,8 @@
 layout: post
 title: "记一道 Java 笔试题"
 date: 2017-12-24
-tags: csv
-categories: Java
+tags: 文件
+categories: 算法
 ---
 
 # 题目

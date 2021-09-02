@@ -2,8 +2,8 @@
 layout: post
 title: "记一次代码重构"
 date: 2017-02-07
-tags: file download
-categories: Java
+tags: 重构
+categories: 重构
 ---
 
 ## 问题
