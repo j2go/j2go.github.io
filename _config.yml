@@ -80,4 +80,4 @@ theme: indigo-card
 deploy:
   type: git
   repo:
-    coding: git@git.coding.net:tiangao/tiangao.git,coding-pages
+    coding: git@github.com:j2go/j2go.github.io.git,gh-pages
