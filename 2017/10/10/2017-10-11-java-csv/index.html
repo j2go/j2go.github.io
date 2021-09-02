@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Java CSV 文件操作 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="csv">
+    <meta name="description" content="以前一直以为 csv 就是逗号分隔的表格文件，读取的时候直接每行按逗号 split 之后进行操作，后来发现结果有点不对，列数据里也是会有逗号的！！！甚至还有回车换行符！  CSV 文件定义逗号分隔值（Comma-Separated Values，CSV，有时也称为字符分隔值，因为分隔字符也可以不是逗号），其文件以纯文本形式存储表格数据（数字和文本）。纯文本意味着该文件是一个字符序列，不含必须象二">
+<meta name="keywords" content="csv">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java CSV 文件操作">
+<meta property="og:url" content="http://j2go.cn/2017/10/10/2017-10-11-java-csv/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="以前一直以为 csv 就是逗号分隔的表格文件，读取的时候直接每行按逗号 split 之后进行操作，后来发现结果有点不对，列数据里也是会有逗号的！！！甚至还有回车换行符！  CSV 文件定义逗号分隔值（Comma-Separated Values，CSV，有时也称为字符分隔值，因为分隔字符也可以不是逗号），其文件以纯文本形式存储表格数据（数字和文本）。纯文本意味着该文件是一个字符序列，不含必须象二">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Java CSV 文件操作">
+<meta name="twitter:description" content="以前一直以为 csv 就是逗号分隔的表格文件，读取的时候直接每行按逗号 split 之后进行操作，后来发现结果有点不对，列数据里也是会有逗号的！！！甚至还有回车换行符！  CSV 文件定义逗号分隔值（Comma-Separated Values，CSV，有时也称为字符分隔值，因为分隔字符也可以不是逗号），其文件以纯文本形式存储表格数据（数字和文本）。纯文本意味着该文件是一个字符序列，不含必须象二">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Java CSV 文件操作</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Java CSV 文件操作</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-10-10T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2017-10-11
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#CSV-文件定义"><span class="post-toc-number">1.</span> <span class="post-toc-text">CSV 文件定义</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Java-操作库"><span class="post-toc-number">2.</span> <span class="post-toc-text">Java 操作库</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#测试文件"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">测试文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#按列读取"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">按列读取</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#通过-header-读取"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">通过 header 读取</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#写-CSV-文件"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">写 CSV 文件</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#疑问"><span class="post-toc-number">3.</span> <span class="post-toc-text">疑问</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#CSVFormat-RFC4180-和-CSVFormat-DEFAULT-什么区别？"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">CSVFormat.RFC4180 和 CSVFormat.DEFAULT 什么区别？</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2017-10-11-java-csv"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Java CSV 文件操作</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-10-11 00:00:00" datetime="2017-10-10T16:00:00.000Z"  itemprop="datePublished">2017-10-11</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>以前一直以为 csv 就是逗号分隔的表格文件，读取的时候直接每行按逗号 split 之后进行操作，后来发现结果有点不对，列数据里也是会有逗号的！！！甚至还有回车换行符！</p>
+</blockquote>
+<h2 id="CSV-文件定义"><a href="#CSV-文件定义" class="headerlink" title="CSV 文件定义"></a>CSV 文件定义</h2><p>逗号分隔值（Comma-Separated Values，CSV，有时也称为字符分隔值，因为分隔字符也可以不是逗号），其文件以纯文本形式存储表格数据（数字和文本）。纯文本意味着该文件是一个字符序列，不含必须象二进制数字那样被解读的数据。CSV文件由任意数目的记录组成，记录间以某种换行符分隔；每条记录由字段组成，字段间的分隔符是其它字符或字符串，最常见的是逗号或制表符。通常，所有记录都有完全相同的字段序列。</p>
+<p>CSV是一种通用的、相对简单的文件格式，被用户、商业和科学广泛应用。最广泛的应用是在程序之间转移表格数据，而这些程序本身是在不兼容的格式上进行操作的（往往是私有的和/或无规范的格式）。因为大量程序都支持某种CSV变体，至少是作为一种可选择的输入/输出格式。</p>
+<p><a href="https://zh.wikipedia.org/wiki/%E9%80%97%E5%8F%B7%E5%88%86%E9%9A%94%E5%80%BC" target="_blank" rel="noopener">维基百科：CSV</a></p>
+<h2 id="Java-操作库"><a href="#Java-操作库" class="headerlink" title="Java 操作库"></a>Java 操作库</h2><p><a href="https://commons.apache.org/proper/commons-csv/user-guide.html" target="_blank" rel="noopener">Apache Commons CSV</a></p>
+<h3 id="测试文件"><a href="#测试文件" class="headerlink" title="测试文件"></a>测试文件</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id,name,age</span><br><span class="line">01,tom,12</span><br><span class="line">02,&quot;t,j&quot;,23</span><br></pre></td></tr></table></figure>
+<h3 id="按列读取"><a href="#按列读取" class="headerlink" title="按列读取"></a>按列读取</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readCSV</span><span class="params">(String file)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> (Reader reader = <span class="keyword">new</span> FileReader(file)) &#123;</span><br><span class="line">        Iterable&lt;CSVRecord&gt; records = CSVFormat.DEFAULT.parse(reader);</span><br><span class="line">        <span class="keyword">for</span> (CSVRecord record : records) &#123;</span><br><span class="line">            String column1 = record.get(<span class="number">0</span>);</span><br><span class="line">            String column2 = record.get(<span class="number">1</span>);</span><br><span class="line">            String column3 = record.get(<span class="number">2</span>);</span><br><span class="line">            System.out.println(column1 + <span class="string">" | "</span> + column2 + <span class="string">" | "</span> + column3);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id | name | age</span><br><span class="line">01 | tom | 12</span><br><span class="line">02 | t,j | 23</span><br></pre></td></tr></table></figure></p>
+<h3 id="通过-header-读取"><a href="#通过-header-读取" class="headerlink" title="通过 header 读取"></a>通过 header 读取</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">readCSVWithHeader</span><span class="params">(String file)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> String[] header = <span class="keyword">new</span> String[]&#123;<span class="string">"id"</span>, <span class="string">"name"</span>, <span class="string">"age"</span>&#125;;</span><br><span class="line">    <span class="keyword">try</span> (Reader reader = <span class="keyword">new</span> FileReader(file)) &#123;</span><br><span class="line">        Iterable&lt;CSVRecord&gt; records = CSVFormat.RFC4180.withHeader(header).parse(reader);</span><br><span class="line">        <span class="keyword">for</span> (CSVRecord record : records) &#123;</span><br><span class="line">            String id = record.get(<span class="string">"id"</span>);</span><br><span class="line">            String name = record.get(<span class="string">"name"</span>);</span><br><span class="line">            String age = record.get(<span class="string">"age"</span>);</span><br><span class="line">            System.out.println(id + <span class="string">" | "</span> + name + <span class="string">" | "</span> + age);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>测试结果<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id | name | age</span><br><span class="line">01 | tom | 12</span><br><span class="line">02 | t,j | 23</span><br></pre></td></tr></table></figure></p>
+<h3 id="写-CSV-文件"><a href="#写-CSV-文件" class="headerlink" title="写 CSV 文件"></a>写 CSV 文件</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">writeCSV</span><span class="params">(String file)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">final</span> String[] header = <span class="keyword">new</span> String[]&#123;<span class="string">"id"</span>, <span class="string">"name"</span>, <span class="string">"age"</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">try</span> (Writer writer = <span class="keyword">new</span> FileWriter(file)) &#123;</span><br><span class="line">        CSVPrinter csvPrinter = CSVFormat.RFC4180.withHeader(header).print(writer);</span><br><span class="line">        csvPrinter.printRecord(<span class="number">1</span>, <span class="string">"gg"</span>, <span class="number">14</span>);</span><br><span class="line">        csvPrinter.printRecord(<span class="number">1</span>, <span class="string">"p,ff"</span>, <span class="number">14</span>);</span><br><span class="line">    &#125; <span class="keyword">catch</span> (FileNotFoundException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">        e.printStackTrace();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>输出文件内容<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">id,name,age</span><br><span class="line">1,gg,14</span><br><span class="line">1,&quot;p,ff&quot;,14</span><br></pre></td></tr></table></figure></p>
+<h2 id="疑问"><a href="#疑问" class="headerlink" title="疑问"></a>疑问</h2><h3 id="CSVFormat-RFC4180-和-CSVFormat-DEFAULT-什么区别？"><a href="#CSVFormat-RFC4180-和-CSVFormat-DEFAULT-什么区别？" class="headerlink" title="CSVFormat.RFC4180 和 CSVFormat.DEFAULT 什么区别？"></a>CSVFormat.RFC4180 和 CSVFormat.DEFAULT 什么区别？</h3><p>看源代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">    DEFAULT = <span class="keyword">new</span> CSVFormat(<span class="string">','</span>, Constants.DOUBLE_QUOTE_CHAR, (QuoteMode)<span class="keyword">null</span>, (Character)<span class="keyword">null</span>, (Character)<span class="keyword">null</span>, <span class="keyword">false</span>, <span class="keyword">true</span>, <span class="string">"\r\n"</span>, (String)<span class="keyword">null</span>, (Object[])<span class="keyword">null</span>, (String[])<span class="keyword">null</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>, <span class="keyword">false</span>);</span><br><span class="line">    EXCEL = DEFAULT.withIgnoreEmptyLines(<span class="keyword">false</span>).withAllowMissingColumnNames();</span><br><span class="line">    INFORMIX_UNLOAD = DEFAULT.withDelimiter(<span class="string">'|'</span>).withEscape(<span class="string">'\\'</span>).withQuote(Constants.DOUBLE_QUOTE_CHAR).withRecordSeparator(<span class="string">'\n'</span>);</span><br><span class="line">    INFORMIX_UNLOAD_CSV = DEFAULT.withDelimiter(<span class="string">','</span>).withQuote(Constants.DOUBLE_QUOTE_CHAR).withRecordSeparator(<span class="string">'\n'</span>);</span><br><span class="line">    MYSQL = DEFAULT.withDelimiter(<span class="string">'\t'</span>).withEscape(<span class="string">'\\'</span>).withIgnoreEmptyLines(<span class="keyword">false</span>).withQuote((Character)<span class="keyword">null</span>).withRecordSeparator(<span class="string">'\n'</span>).withNullString(<span class="string">"\\N"</span>).withQuoteMode(QuoteMode.ALL_NON_NULL);</span><br><span class="line">    POSTGRESQL_CSV = DEFAULT.withDelimiter(<span class="string">','</span>).withEscape(Constants.DOUBLE_QUOTE_CHAR).withIgnoreEmptyLines(<span class="keyword">false</span>).withQuote(Constants.DOUBLE_QUOTE_CHAR).withRecordSeparator(<span class="string">'\n'</span>).withNullString(<span class="string">""</span>).withQuoteMode(QuoteMode.ALL_NON_NULL);</span><br><span class="line">    POSTGRESQL_TEXT = DEFAULT.withDelimiter(<span class="string">'\t'</span>).withEscape(Constants.DOUBLE_QUOTE_CHAR).withIgnoreEmptyLines(<span class="keyword">false</span>).withQuote(Constants.DOUBLE_QUOTE_CHAR).withRecordSeparator(<span class="string">'\n'</span>).withNullString(<span class="string">"\\N"</span>).withQuoteMode(QuoteMode.ALL_NON_NULL);</span><br><span class="line">    RFC4180 = DEFAULT.withIgnoreEmptyLines(<span class="keyword">false</span>);</span><br><span class="line">    TDF = DEFAULT.withDelimiter(<span class="string">'\t'</span>).withIgnoreSurroundingSpaces();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>不同的 Format 参数不一样而已，RFC4180 不会跳过空行，遇到空行会抛出异常</strong></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2017/10/10/2017-10-11-java-csv/" target="_blank" rel="external">http://j2go.cn/2017/10/10/2017-10-11-java-csv/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/csv/">csv</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/10/10/2017-10-11-java-csv/&title=《Java CSV 文件操作》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/10/10/2017-10-11-java-csv/&title=《Java CSV 文件操作》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/10/10/2017-10-11-java-csv/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java CSV 文件操作》 — tiangao&url=http://j2go.cn/2017/10/10/2017-10-11-java-csv/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/10/10/2017-10-11-java-csv/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/10/25/2017-10-26-iphone-battery/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">查看 IPhone 电池信息</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/09/15/2017-09-14-spring-beans/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">深入 Spring Bean 生命周期</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/10/10/2017-10-11-java-csv/&title=《Java CSV 文件操作》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/10/10/2017-10-11-java-csv/&title=《Java CSV 文件操作》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/10/10/2017-10-11-java-csv/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Java CSV 文件操作》 — tiangao&url=http://j2go.cn/2017/10/10/2017-10-11-java-csv/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/10/10/2017-10-11-java-csv/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3aS27DMAxFUe9/0y6QWYDYvY8Umpq6GgWJf8cDhqR4HHidr0U+p7/ef7N4yZAh47GM83Z1jiEv4v5ccl8ZMmTswyBBlmPIa+KM+2eTIUOGDJLk3QN42K0dI0OGDBlpsUrSRBLWZciQIaNWxHZ6XCQQ/1EtLkOGjAcy1m4MrP38tf0NGTJk/BvGGS5yHX6vzpO8XUeGDBmjGbWmfBqI08KVR1f0nmTIkDGOsYqXNuZqL+Uy4MqQIWMQg59WG7wgpAXDZzJkyNiAkQ5y8WGLTqpXrMVlyJAxlNEpJtPmGg+4fPtThgwZsxl89CFtpXWKVY7/UIvLkCFjHIO37/k2JC+JeYr5C0+GDBmjGfzkVVQ+08WbfTJkyJjN4GlfeoMamx//4X9DhgwZQxnpwBZP+DrtPB6CZciQsQODDDrU2v28uCUhPp4ZkSFDxlBGbQis87i1rYKgayhDhoxBjFVjFp2hCl6mXnYKZciQMZRRC3C8fOXJXz9ky5AhYyojvX0/+Us3IdAVZMiQsQ2DD2mRhn7/mCCtlCFDxmgGL1bTR0wf9MArLrxlyJDxcMYZrlrqlm588uNlyJCxAyMNc/w2tdGKdPhMhgwZ+zDSIEuK0toWQqflJ0OGjB0YtSBYw/dHPS4DrgwZMrZn1Npt/aENNCImQ4YMGbj5Fad0pTGyZQFXhgwZj2KkmwFp474ztIFKXBkyZIxm1DYGOslc7QotgAwZMp7K+AGP1DMIodeEnAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

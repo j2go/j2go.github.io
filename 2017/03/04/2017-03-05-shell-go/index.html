@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>直接上手写 Shell | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="shell">
+    <meta name="description" content="作为一个 Java 程序员，Go 爱好者，自然免不了天天和 Linux 打交道，也曾经写过一点点 shell 脚本，但是对那个反人类的语法深感厌恶，空格不对都不行。无奈项目需要一定要用 shell 来实现一个工具，学习的过程总是不那么顺风的，不过搞完之后也觉得没那么讨厌了。整理一下几天所得，希望能让一个从没写过 shell 但是还挺熟悉 Linux 的可以立马完成一个可用的脚本。  开始执行顺序">
+<meta name="keywords" content="shell">
+<meta property="og:type" content="article">
+<meta property="og:title" content="直接上手写 Shell">
+<meta property="og:url" content="http://j2go.cn/2017/03/04/2017-03-05-shell-go/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="作为一个 Java 程序员，Go 爱好者，自然免不了天天和 Linux 打交道，也曾经写过一点点 shell 脚本，但是对那个反人类的语法深感厌恶，空格不对都不行。无奈项目需要一定要用 shell 来实现一个工具，学习的过程总是不那么顺风的，不过搞完之后也觉得没那么讨厌了。整理一下几天所得，希望能让一个从没写过 shell 但是还挺熟悉 Linux 的可以立马完成一个可用的脚本。  开始执行顺序">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="直接上手写 Shell">
+<meta name="twitter:description" content="作为一个 Java 程序员，Go 爱好者，自然免不了天天和 Linux 打交道，也曾经写过一点点 shell 脚本，但是对那个反人类的语法深感厌恶，空格不对都不行。无奈项目需要一定要用 shell 来实现一个工具，学习的过程总是不那么顺风的，不过搞完之后也觉得没那么讨厌了。整理一下几天所得，希望能让一个从没写过 shell 但是还挺熟悉 Linux 的可以立马完成一个可用的脚本。  开始执行顺序">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">直接上手写 Shell</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">直接上手写 Shell</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-03-04T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2017-03-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#开始"><span class="post-toc-number">1.</span> <span class="post-toc-text">开始</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#执行顺序"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">执行顺序</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#变量赋值"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">变量赋值</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#数组及其遍历"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">数组及其遍历</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#条件判断"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">条件判断</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#定义函数"><span class="post-toc-number">1.5.</span> <span class="post-toc-text">定义函数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#说明"><span class="post-toc-number">1.6.</span> <span class="post-toc-text">$? 说明</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#字符串操作"><span class="post-toc-number">1.7.</span> <span class="post-toc-text">字符串操作</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#文件和目录判断"><span class="post-toc-number">1.8.</span> <span class="post-toc-text">文件和目录判断</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#内容既输出到控制台也输出到文件里"><span class="post-toc-number">1.9.</span> <span class="post-toc-text">内容既输出到控制台也输出到文件里</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#处理退出信号"><span class="post-toc-number">1.10.</span> <span class="post-toc-text">处理退出信号</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#处理参数"><span class="post-toc-number">1.11.</span> <span class="post-toc-text">处理参数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MySQL-查询"><span class="post-toc-number">1.12.</span> <span class="post-toc-text">MySQL 查询</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#标准输入输出重定向"><span class="post-toc-number">1.13.</span> <span class="post-toc-text">标准输入输出重定向</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#注意"><span class="post-toc-number">2.</span> <span class="post-toc-text">注意</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2017-03-05-shell-go"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">直接上手写 Shell</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-03-05 00:00:00" datetime="2017-03-04T16:00:00.000Z"  itemprop="datePublished">2017-03-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>作为一个 Java 程序员，Go 爱好者，自然免不了天天和 Linux 打交道，也曾经写过一点点 shell 脚本，但是对那个反人类的语法深感厌恶，空格不对都不行。无奈项目需要一定要用 shell 来实现一个工具，学习的过程总是不那么顺风的，不过搞完之后也觉得没那么讨厌了。整理一下几天所得，希望能让一个从没写过 shell 但是还挺熟悉 Linux 的可以立马完成一个可用的脚本。</p>
+</blockquote>
+<h1 id="开始"><a href="#开始" class="headerlink" title="开始"></a>开始</h1><h2 id="执行顺序"><a href="#执行顺序" class="headerlink" title="执行顺序"></a>执行顺序</h2><blockquote>
+<p>脚本顺序执行，原来怎么敲命令的就怎么写</p>
+</blockquote>
+<h2 id="变量赋值"><a href="#变量赋值" class="headerlink" title="变量赋值"></a>变量赋值</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> 变量赋值时等号两边不能有空格</span><br><span class="line"><span class="meta">#</span> 单引号是固定字符串</span><br><span class="line">pa='string'</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 双引号可包含变量</span><br><span class="line">pb="ps is $&#123;pa&#125;"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 接受命令返回</span><br><span class="line">pc=`ls -alh`</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="数组及其遍历"><a href="#数组及其遍历" class="headerlink" title="数组及其遍历"></a>数组及其遍历</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">    arr=(aa bb cc dd ff)</span><br><span class="line">    # 通过下标访问</span><br><span class="line">    for ((i=0; i&lt;5; i++))</span><br><span class="line">    do</span><br><span class="line">        echo "$i: $&#123;arr[$i]&#125;"</span><br><span class="line">    done</span><br><span class="line">    </span><br><span class="line">    # 遍历访问</span><br><span class="line">    for s in $&#123;arr[@]&#125;</span><br><span class="line">do</span><br><span class="line">    echo "  $s"</span><br><span class="line">    done</span><br><span class="line">    </span><br><span class="line">    # 空格分隔的字符串也能遍历，但是不能像上面的方式一样用下标访问元素</span><br><span class="line">    arr2='a1 a2 a3 a4 a5'</span><br><span class="line">    for s in $&#123;arr2&#125;</span><br><span class="line">do</span><br><span class="line">    echo $&#123;s&#125;</span><br><span class="line">    done</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> shell 脚本都是指令，if 的语句一定要注意空格</span><br><span class="line"><span class="meta">#</span> 第一种写法,下面输出 ok</span><br><span class="line">if [[ 10 -gt 3 ]]; then echo ok; else echo no; fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 第二种, ** 注意()： 下面输出 ok</span><br><span class="line">if [ 2 &gt; 3 ]; then </span><br><span class="line">    echo ok</span><br><span class="line">fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 第三种, 下面输出 no</span><br><span class="line">if [[ 2 &gt; 3 ]]</span><br><span class="line">then </span><br><span class="line">    echo ok</span><br><span class="line">else </span><br><span class="line">    echo no</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="定义函数"><a href="#定义函数" class="headerlink" title="定义函数"></a>定义函数</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">res=0</span><br><span class="line">echo $res</span><br><span class="line"></span><br><span class="line">add() &#123;</span><br><span class="line">    ((res = $1 + $2))</span><br><span class="line">&#125;</span><br><span class="line">add 12 13</span><br><span class="line">echo $res</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="说明"><a href="#说明" class="headerlink" title="$? 说明"></a><code>$?</code> 说明</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> $?接受的是上一条命令执行后的返回值</span><br><span class="line">ls /home</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 下面的输出是 0</span><br><span class="line">echo $?</span><br><span class="line"></span><br><span class="line">testReurn() &#123;</span><br><span class="line">    return 8</span><br><span class="line">&#125;</span><br><span class="line">testReurn</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 下面的输出是 8 </span><br><span class="line">echo $?</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="字符串操作"><a href="#字符串操作" class="headerlink" title="字符串操作"></a>字符串操作</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">a='stringA'</span><br><span class="line">b='stringB'</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 判断是否相等，下面输出 no</span><br><span class="line">if [[ $a == $b ]]; then echo yes; else echo no; fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 字符串拼接， 下面输出 yes</span><br><span class="line">if [[ 'stringAstringB' == "$&#123;a&#125;$&#123;b&#125;" ]]; then echo yes; fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 取字符串长度, 下面输出 7</span><br><span class="line">echo $&#123;#a&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 截取字符串, 下面输出  string, ing</span><br><span class="line">echo "$&#123;a:0:6&#125;, $&#123;a:3:3&#125;"</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 判断两个字符串是否有相同前缀, 下面输出 yes</span><br><span class="line">if [[ $&#123;a:0:5&#125; == $&#123;b:0:5&#125; ]]; then echo yes; else echo no; fi</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 字符串切分为数组, IFS 变量指定分隔符, 分隔符前后空格会被略去</span><br><span class="line">IFS=, read -r -a arr &lt;&lt;&lt; 'a,b  ,c, d,g e,   ss'</span><br><span class="line">for str in $&#123;arr[@]&#125;; do echo "'$&#123;str&#125;'"; done</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="文件和目录判断"><a href="#文件和目录判断" class="headerlink" title="文件和目录判断"></a>文件和目录判断</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">if [[ -f $filename ]]; then</span><br><span class="line">  echo "$filename 是一个文件"</span><br><span class="line">elif [[ -d $filename ]]; then</span><br><span class="line">  echo "$filename 是一个目录"</span><br><span class="line">elif [[ -p $filename ]]; then</span><br><span class="line">  echo "$filename 是一个管道文件"</span><br><span class="line">elif [[ -S $filename ]]; then</span><br><span class="line">  echo "$filename 是一个 sokcet 文件"</span><br><span class="line">elif [[ -b $filename ]]; then</span><br><span class="line">  echo "$filename 是 block device"</span><br><span class="line">elif [[ -c $filename ]]; then</span><br><span class="line">  echo "$filename 是 character device"</span><br><span class="line">fi</span><br><span class="line">if [[ -L $filename ]]; then</span><br><span class="line">  echo "$filename 是一个软链接"</span><br><span class="line">fi</span><br><span class="line"><span class="meta">#</span> 对于软链接，使用-L测试时，当链接指向的目标文件不存在时会返回false</span><br><span class="line">if [[ -L $filename || -e $filename ]]; then</span><br><span class="line">  echo "$filename 存在 (可能是失效的链接)"</span><br><span class="line">fi</span><br><span class="line"> </span><br><span class="line">if [[ -L $filename &amp;&amp; ! -e $filename ]]; then</span><br><span class="line">  echo "$filename 是失效的软链接"</span><br><span class="line">fi</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="内容既输出到控制台也输出到文件里"><a href="#内容既输出到控制台也输出到文件里" class="headerlink" title="内容既输出到控制台也输出到文件里"></a>内容既输出到控制台也输出到文件里</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">echo 'ok'| tee -a bb.log</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="处理退出信号"><a href="#处理退出信号" class="headerlink" title="处理退出信号"></a>处理退出信号</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">trap "rm -f $&#123;lock_file&#125;; echo 'exited ok.'" SIGINT SIGQUIT</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> SIGHUP：从终端终止或退出正在前台运行的进程</span><br><span class="line"><span class="meta">#</span> SIGINT：从键盘按下 Ctrl-C</span><br><span class="line"><span class="meta">#</span> SIGQUIT：从键盘按下 Ctrl-\</span><br><span class="line"><span class="meta">#</span> SIGTERM ：软件终止信号</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="处理参数"><a href="#处理参数" class="headerlink" title="处理参数"></a>处理参数</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">    if [[ "$OSTYPE" == "darwin"* ]]; then</span><br><span class="line">        # Mac OSX ( brew install gnu-getopt )</span><br><span class="line">        getopt_cmd="$(brew --prefix gnu-getopt)/bin/getopt"</span><br><span class="line">    else</span><br><span class="line">        # linux-gnu</span><br><span class="line">        getopt_cmd="getopt"</span><br><span class="line">    fi</span><br><span class="line">    long_opts="once,name:,note:"</span><br><span class="line">    </span><br><span class="line">    opts=$($getopt_cmd -n $0 -o - --long $long_opts -- "$@")</span><br><span class="line">    </span><br><span class="line">    eval set -- "$opts"</span><br><span class="line">    </span><br><span class="line">    while : </span><br><span class="line">    do</span><br><span class="line">        case "$1" in</span><br><span class="line">        --once)</span><br><span class="line">            once="true" ; shift 1 ;;</span><br><span class="line">        --name)</span><br><span class="line">            name=$2  ; shift 2 ;;</span><br><span class="line">            --note)</span><br><span class="line">                note=$2  ; shift 2 ;;</span><br><span class="line">        --)</span><br><span class="line">            shift ; break ;;</span><br><span class="line">        *)</span><br><span class="line">        echo "参数错误" ; exit 1 ;;</span><br><span class="line">    esac</span><br><span class="line">done</span><br><span class="line">echo "once: $&#123;once:-no&#125;, name: $&#123;name&#125;, note: $&#123;note&#125;"</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="MySQL-查询"><a href="#MySQL-查询" class="headerlink" title="MySQL 查询"></a>MySQL 查询</h2><pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">std_log='/var/log/test.log'</span><br><span class="line">err_log='/var/log/test.err.log'</span><br><span class="line"></span><br><span class="line">user='root'</span><br><span class="line">pwd=''</span><br><span class="line">host='127.0.0.1'</span><br><span class="line">db='mysql'</span><br><span class="line"></span><br><span class="line">exec_sql() &#123;</span><br><span class="line">    echo "exec_sql: $1" | tee -a $&#123;std_log&#125;</span><br><span class="line">    mysql -u$&#123;user&#125; -p$&#123;pwd&#125; -h$&#123;host&#125; -D$&#123;db&#125; -s -N -e "$1" | tee -a $&#123;std_log&#125;</span><br><span class="line">&#125;</span><br><span class="line">exec_sql "show databases"</span><br></pre></td></tr></table></figure>
+</code></pre><h2 id="标准输入输出重定向"><a href="#标准输入输出重定向" class="headerlink" title="标准输入输出重定向"></a>标准输入输出重定向</h2><blockquote>
+<p>shell中，每个进程都和三个系统文<br>件相关联：标准输入stdin，标准输出stdout和标准错误stderr，三个系统文件的文件描述符分别为0, 1, 2<br>在使用 mysql 命令获取结果时会有一些警告信息<br><code>mysql: [Warning] Using a password on the command line interface can be insecure.</code><br>但是我要得到命令的结果不需要这些警告, 这个时候就需要重定向错误输出到其他地方<br><code>num=`mysql -u${user} -p${pwd} -h${host} -D${db} -s -N -e &quot;${count_sql}&quot; 2&gt;${err_log}</code></p>
+</blockquote>
+<h1 id="注意"><a href="#注意" class="headerlink" title="注意"></a>注意</h1><p>此为个人这一周以来的小总结，并非专业的 shell 教程，旨在能帮助懂编程的人不会 shell 的能快速上手，少走一些我趟过的坑，减少一些搜索。<br>有些原理我也不是太清楚，以后需要的时候才会去系统学习吧，现在这些已经能完成任务了。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2017/03/04/2017-03-05-shell-go/" target="_blank" rel="external">http://j2go.cn/2017/03/04/2017-03-05-shell-go/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/03/04/2017-03-05-shell-go/&title=《直接上手写 Shell》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/03/04/2017-03-05-shell-go/&title=《直接上手写 Shell》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/03/04/2017-03-05-shell-go/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《直接上手写 Shell》 — tiangao&url=http://j2go.cn/2017/03/04/2017-03-05-shell-go/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/03/04/2017-03-05-shell-go/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/09/15/2017-09-14-spring-beans/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">深入 Spring Bean 生命周期</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/02/06/2017-02-07-download-refactoring/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">记一次代码重构</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/03/04/2017-03-05-shell-go/&title=《直接上手写 Shell》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/03/04/2017-03-05-shell-go/&title=《直接上手写 Shell》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/03/04/2017-03-05-shell-go/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《直接上手写 Shell》 — tiangao&url=http://j2go.cn/2017/03/04/2017-03-05-shell-go/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/03/04/2017-03-05-shell-go/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACN0lEQVR42u3aS27DMAxF0ex/0+60QCrnPtIpIOpqZDhO5ZMBK35eL7yuX+v9Pnn+/Xr1zOpvPrBkyJCxLeO6XeS1Ortw2OoZGTJknMNYbUyuyZM8pJIfS4YMGTI4g7xcLcjKkCFDRodx/wy/0zmAypAh40wG2YCX4dJj37/m4jJkyNiQ0d/+e9df6W/IkCFjK8YVLp6g1kL5VVoyZMiYzeAB7qnWZlpuC4Y/ZMiQMZTBg2laPksDMd/xD6oMGTKOYcRfbofj/vXyhCtDhoxBDNIavL9TC6xp3axVHZQhQ8bmjPvUkRfuO4E7GKdY7SVDhozRjHQ4rHZwrKXEtXKeDBkypjLSoa60DUlS0FqTIO5vyJAhY0MGCaad8QtUGguT4WXVUIYMGUMZtfNVWsTvvzT/VIYMGbMZaRHtqeNjrV0RdzZkyJCxLaNVnwNNx3Twovi8DBkyRjP4CEXa7EwT1zQoy5Ah4xwGL9DzkYt4PAIjP8yMyJAhYyiDh9faIbL23WJrU4YMGQcweHkr/bQ2lkGaph9mRmTIkDGOcR80eSOzFnB5wQ7935AhQ8ZQBkkdyYGSh+M0rf0Q7mXIkDGUcYWrlnZ+MXGVIUPGAYw0zNU2S9sJ/GgYw2TIkLEtoxYia1umQxjBTyBDhowDGOkrkg1qDdEHcnEZMmQcz0i36RTj4qKbDBkyZOBEt9aYTO+0joYyZMjYkMHHWDsJLU9Z4/anDBkyRjPSA186eMqbDel9GTJkHMD4AeIOapgfOzzgAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

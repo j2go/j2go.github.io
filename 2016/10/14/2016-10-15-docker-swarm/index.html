@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Docker Swarm 试用 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Swarm">
+    <meta name="description" content="环境 系统 Ubuntu 14.04, Docker version: 1.12  创建 swarm节点操作机器 a12345678910111213141516root@ide-a:~# docker swarm initError response from daemon: could not choose an IP address to advertise since this syste">
+<meta name="keywords" content="Swarm">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Docker Swarm 试用">
+<meta property="og:url" content="http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="环境 系统 Ubuntu 14.04, Docker version: 1.12  创建 swarm节点操作机器 a12345678910111213141516root@ide-a:~# docker swarm initError response from daemon: could not choose an IP address to advertise since this syste">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Docker Swarm 试用">
+<meta name="twitter:description" content="环境 系统 Ubuntu 14.04, Docker version: 1.12  创建 swarm节点操作机器 a12345678910111213141516root@ide-a:~# docker swarm initError response from daemon: could not choose an IP address to advertise since this syste">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Docker Swarm 试用</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Docker Swarm 试用</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-10-14T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2016-10-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Docker/">Docker</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#环境"><span class="post-toc-number">1.</span> <span class="post-toc-text">环境</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#创建-swarm"><span class="post-toc-number">2.</span> <span class="post-toc-text">创建 swarm</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#检验-swarm-是否保证实例个数"><span class="post-toc-number">3.</span> <span class="post-toc-text">检验 swarm 是否保证实例个数</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#关闭一个节点"><span class="post-toc-number">4.</span> <span class="post-toc-text">关闭一个节点</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#测试滚动更新"><span class="post-toc-number">5.</span> <span class="post-toc-text">测试滚动更新</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#能否在指定节点上创建-container？"><span class="post-toc-number">6.</span> <span class="post-toc-text">能否在指定节点上创建 container？</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2016-10-15-docker-swarm"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Docker Swarm 试用</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-10-15 00:00:00" datetime="2016-10-14T16:00:00.000Z"  itemprop="datePublished">2016-10-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Docker/">Docker</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h2><blockquote>
+<p>系统 Ubuntu 14.04, Docker version: 1.12</p>
+</blockquote>
+<h2 id="创建-swarm"><a href="#创建-swarm" class="headerlink" title="创建 swarm"></a>创建 swarm</h2><p>节点操作<br>机器 a<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">root@ide-a:~# docker swarm init</span><br><span class="line">Error response from daemon: could not choose an IP address to advertise since this system has multiple addresses on different interfaces (10.211.55.16 on eth0 and 192.168.3.10 on eth1) - specify one with --advertise-addr</span><br><span class="line"></span><br><span class="line">root@ide-a:~# docker swarm init --advertise-addr 192.168.3.10</span><br><span class="line">Swarm initialized: current node (e6q1r4qw1jatxvqk056fu6502) is now a manager.</span><br><span class="line"></span><br><span class="line">To add a worker to this swarm, run the following command:</span><br><span class="line"></span><br><span class="line">    docker swarm join \</span><br><span class="line">    --token SWMTKN-1-6cvv0fm296x7c686a8ojxie33ob502hjdxickcj7ycitwqd2ej-bch1g33glv0ktox9qg0q7qshj \</span><br><span class="line">    192.168.3.10:2377</span><br><span class="line"></span><br><span class="line">To add a manager to this swarm, run &apos;docker swarm join-token manager&apos; and follow the instructions.</span><br><span class="line">root@ide-a:~# docker node ls</span><br><span class="line">ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS</span><br><span class="line">e6q1r4qw1jatxvqk056fu6502 *  ide-a     Ready   Active        Leader</span><br></pre></td></tr></table></figure></p>
+<p>机器 b<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-b:~$ docker swarm join \</span><br><span class="line">&gt;     --token SWMTKN-1-6cvv0fm296x7c686a8ojxie33ob502hjdxickcj7ycitwqd2ej-bch1g33glv0ktox9qg0q7qshj \</span><br><span class="line">&gt;     192.168.3.10:2377</span><br><span class="line">This node joined a swarm as a worker.</span><br></pre></td></tr></table></figure></p>
+<p>同样添加一个机器 c</p>
+<p>然后在机器 a 上看<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker node ls</span><br><span class="line">ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS</span><br><span class="line">2mcmsgvu4nvgymaqaexnevxn3    ide-b     Ready   Active</span><br><span class="line">6arg09xduwb65r6zaof61tjzk    ide-c     Ready   Active</span><br><span class="line">e6q1r4qw1jatxvqk056fu6502 *  ide-a     Ready   Active        Leader</span><br></pre></td></tr></table></figure></p>
+<p>如果关闭一个机器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker node ls</span><br><span class="line">ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS</span><br><span class="line">2mcmsgvu4nvgymaqaexnevxn3    ide-b     Down    Active</span><br><span class="line">6arg09xduwb65r6zaof61tjzk    ide-c     Ready   Active</span><br><span class="line">e6q1r4qw1jatxvqk056fu6502 *  ide-a     Ready   Active        Leader</span><br></pre></td></tr></table></figure></p>
+<p>把一个结点变成 manager<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker node promote 2mcmsgvu4nvgymaqaexnevxn3</span><br><span class="line">Node 2mcmsgvu4nvgymaqaexnevxn3 promoted to a manager in the swarm.</span><br><span class="line"></span><br><span class="line">ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS</span><br><span class="line">2mcmsgvu4nvgymaqaexnevxn3    ide-b     Ready   Active        Reachable</span><br><span class="line">6arg09xduwb65r6zaof61tjzk    ide-c     Ready   Active</span><br><span class="line">e6q1r4qw1jatxvqk056fu6502 *  ide-a     Ready   Active        Leader</span><br></pre></td></tr></table></figure></p>
+<p>模拟 a 机器宕机</p>
+<p>但是 b 机器始终没有变成 manager<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-b:~$ docker node ls</span><br><span class="line">Error response from daemon: rpc error: code = 2 desc = raft: no elected cluster leader</span><br></pre></td></tr></table></figure></p>
+<p>当重启 a 机器节点时 b 就成 Leader  了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS</span><br><span class="line">2mcmsgvu4nvgymaqaexnevxn3 *  ide-b     Ready   Active        Leader</span><br><span class="line">6arg09xduwb65r6zaof61tjzk    ide-c     Ready   Active</span><br><span class="line">e6q1r4qw1jatxvqk056fu6502    ide-a     Ready   Active        Reachable</span><br></pre></td></tr></table></figure></p>
+<p>由此怀疑内部的 raft 算法是一定要收到回复才能确定自己是 Leader<br> 把 c 也设一下 manager 然后关闭 b 看看<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker node promote ide-c</span><br><span class="line">Node ide-c promoted to a manager in the swarm.</span><br><span class="line">vagrant@ide-a:~$ docker node ls</span><br><span class="line">ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS</span><br><span class="line">2mcmsgvu4nvgymaqaexnevxn3    ide-b     Ready   Active        Leader</span><br><span class="line">6arg09xduwb65r6zaof61tjzk    ide-c     Ready   Active        Reachable</span><br><span class="line">e6q1r4qw1jatxvqk056fu6502 *  ide-a     Ready   Active        Reachable</span><br><span class="line"></span><br><span class="line">vagrant@ide-a:~$ docker node ls</span><br><span class="line">ID                           HOSTNAME  STATUS   AVAILABILITY  MANAGER STATUS</span><br><span class="line">2mcmsgvu4nvgymaqaexnevxn3    ide-b     Unknown  Active        Unreachable</span><br><span class="line">6arg09xduwb65r6zaof61tjzk    ide-c     Ready    Active        Reachable</span><br><span class="line">e6q1r4qw1jatxvqk056fu6502 *  ide-a     Ready    Active        Leader</span><br></pre></td></tr></table></figure></p>
+<p>ok，这下就是无缝切换了。</p>
+<p>在swarm 上运行一个应用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker service create --replicas 1 --name helloworld alpine ping docker.com</span><br><span class="line">exzsbuclde7fmxr74days2v7h</span><br><span class="line">vagrant@ide-a:~$ docker node ps ide-a</span><br><span class="line">ID  NAME  IMAGE  NODE  DESIRED STATE  CURRENT STATE  ERROR</span><br><span class="line">vagrant@ide-a:~$ docker node ps ide-b</span><br><span class="line">ID                         NAME          IMAGE   NODE   DESIRED STATE  CURRENT STATE             ERROR</span><br><span class="line">cvsbavho7pqvabhe1pk4r5zik  helloworld.1  alpine  ide-b  Running        Preparing 13 seconds ago</span><br><span class="line">vagrant@ide-a:~$ docker node ps ide-c</span><br><span class="line">ID  NAME  IMAGE  NODE  DESIRED STATE  CURRENT STATE  ERROR</span><br><span class="line"></span><br><span class="line">vagrant@ide-a:~$ docker service ls</span><br><span class="line">ID            NAME        REPLICAS  IMAGE   COMMAND</span><br><span class="line">exzsbuclde7f  helloworld  1/1       alpine  ping docker.com</span><br><span class="line">vagrant@ide-a:~$ docker service inspect --pretty exzsbuclde7f</span><br><span class="line">ID:		exzsbuclde7fmxr74days2v7h</span><br><span class="line">Name:		helloworld</span><br><span class="line">Mode:		Replicated</span><br><span class="line">Replicas:	1</span><br><span class="line">Placement:</span><br><span class="line">UpdateConfig:</span><br><span class="line">Parallelism:	1</span><br><span class="line">On failure:	pause</span><br><span class="line">ContainerSpec:</span><br><span class="line">Image:		alpine</span><br><span class="line">Args:		ping docker.com</span><br><span class="line">Resources:</span><br></pre></td></tr></table></figure></p>
+<p>查看在哪台机器上<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker service ps helloworld</span><br><span class="line">ID                         NAME          IMAGE   NODE   DESIRED STATE  CURRENT STATE          ERROR</span><br><span class="line">cvsbavho7pqvabhe1pk4r5zik  helloworld.1  alpine  ide-b  Running        Running 5 minutes ago</span><br></pre></td></tr></table></figure></p>
+<p>扩展5个实例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-b:~$ docker service scale helloworld=5</span><br><span class="line">helloworld scaled to 5</span><br><span class="line">vagrant@ide-b:~$ docker service ps helloworld</span><br><span class="line">ID                         NAME          IMAGE   NODE   DESIRED STATE  CURRENT STATE             ERROR</span><br><span class="line">cvsbavho7pqvabhe1pk4r5zik  helloworld.1  alpine  ide-b  Running        Running 15 minutes ago</span><br><span class="line">3z6yoie0qs5o388win82g9s3i  helloworld.2  alpine  ide-c  Running        Preparing 16 seconds ago</span><br><span class="line">dbltvky8b1omkhfsgetudfzix  helloworld.3  alpine  ide-b  Running        Preparing 15 seconds ago</span><br><span class="line">0zz270134yk761b61btj2u7vd  helloworld.4  alpine  ide-a  Running        Preparing 16 seconds ago</span><br><span class="line">7cqitdly74zcrf6vy4pzhbw2u  helloworld.5  alpine  ide-c  Running        Preparing 16 seconds ago</span><br></pre></td></tr></table></figure></p>
+<p>删除 service<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-b:~$ docker service rm helloworld</span><br><span class="line">helloworld</span><br><span class="line">vagrant@ide-b:~$ docker service ps helloworld</span><br><span class="line">Error: No such service: helloworld</span><br></pre></td></tr></table></figure></p>
+<h2 id="检验-swarm-是否保证实例个数"><a href="#检验-swarm-是否保证实例个数" class="headerlink" title="检验 swarm 是否保证实例个数"></a>检验 swarm 是否保证实例个数</h2><p>开启3个实例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-b:~$ docker service create --replicas 3 --name helloworld alpine ping docker.com</span><br><span class="line">Dt81b618tz8yu8g5opw5990di</span><br><span class="line"></span><br><span class="line">vagrant@ide-b:~$ docker service ps helloworld</span><br><span class="line">ID                         NAME          IMAGE   NODE   DESIRED STATE  CURRENT STATE             ERROR</span><br><span class="line">6drq6vomc15ils31ymr6lhgqk  helloworld.1  alpine  ide-a  Running        Preparing 30 seconds ago</span><br><span class="line">0j3m7oqf2cxxv1dof7q2fbhzw  helloworld.2  alpine  ide-c  Running        Running 23 seconds ago</span><br><span class="line">7khhv039gw3a9h4p3qaorbkg3  helloworld.3  alpine  ide-b  Running        Running 21 seconds ago</span><br></pre></td></tr></table></figure></p>
+<p>关闭 c 机器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-b:~$ docker service ps helloworld</span><br><span class="line">ID                         NAME              IMAGE   NODE   DESIRED STATE  CURRENT STATE               ERROR</span><br><span class="line">6drq6vomc15ils31ymr6lhgqk  helloworld.1      alpine  ide-a  Running        Running 53 seconds ago</span><br><span class="line">85d8d1tuus0qmikwtv0qi6ulo  helloworld.2      alpine  ide-b  Running        Preparing 7 seconds ago</span><br><span class="line">0j3m7oqf2cxxv1dof7q2fbhzw   \_ helloworld.2  alpine  ide-c  Shutdown       Running about a minute ago</span><br><span class="line">7khhv039gw3a9h4p3qaorbkg3  helloworld.3      alpine  ide-b  Running        Running about a minute ago</span><br></pre></td></tr></table></figure></p>
+<p>OK，确实有3个实例在，那么再开启 c 机器<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-b:~$ docker node ls</span><br><span class="line">ID                           HOSTNAME  STATUS  AVAILABILITY  MANAGER STATUS</span><br><span class="line">2mcmsgvu4nvgymaqaexnevxn3 *  ide-b     Ready   Active        Reachable</span><br><span class="line">6arg09xduwb65r6zaof61tjzk    ide-c     Ready   Active</span><br><span class="line">e6q1r4qw1jatxvqk056fu6502    ide-a     Ready   Active        Leader</span><br><span class="line">vagrant@ide-b:~$ docker service ps helloworld</span><br><span class="line">ID                         NAME              IMAGE   NODE   DESIRED STATE  CURRENT STATE               ERROR</span><br><span class="line">6drq6vomc15ils31ymr6lhgqk  helloworld.1      alpine  ide-a  Running        Running 2 minutes ago</span><br><span class="line">85d8d1tuus0qmikwtv0qi6ulo  helloworld.2      alpine  ide-b  Running        Running about a minute ago</span><br><span class="line">0j3m7oqf2cxxv1dof7q2fbhzw   \_ helloworld.2  alpine  ide-c  Shutdown       Complete 19 seconds ago</span><br><span class="line">7khhv039gw3a9h4p3qaorbkg3  helloworld.3      alpine  ide-b  Running        Running 3 minutes ago</span><br></pre></td></tr></table></figure></p>
+<p>没有变化，在 c 上强行开起来 ps 结果也没发生变化<br>删除服务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-b:~$  docker service rm helloworld</span><br><span class="line">helloworld</span><br><span class="line">vagrant@ide-b:~$ docker service ps helloworld</span><br><span class="line">Error: No such service: helloworld</span><br></pre></td></tr></table></figure></p>
+<p> c 机器上依然有这个 不按规则 的 container存在<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-c:/data/coding-ide-home$ docker ps</span><br><span class="line">CONTAINER ID        IMAGE                                                     COMMAND                  CREATED             STATUS              PORTS                                                                NAMES</span><br><span class="line">ffe29f05f2e7        alpine:latest                                             &quot;ping docker.com&quot;        9 minutes ago       Up About a minute                                                                        helloworld.2.0j3m7oqf2cxxv1dof7q2fbhzw</span><br></pre></td></tr></table></figure></p>
+<p>测试过如果没有人为启动起来在用 service rm  指令删除后该异常 container 也退出了</p>
+<h2 id="关闭一个节点"><a href="#关闭一个节点" class="headerlink" title="关闭一个节点"></a>关闭一个节点</h2><p>但是该节点的 docker  deman没有停掉<br>准确的说是停用一个节点，设置了一个状态<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker node update --availability drain ide-c</span><br></pre></td></tr></table></figure></p>
+<p>复活<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ docker node update --availability active ide-c</span><br></pre></td></tr></table></figure></p>
+<h2 id="测试滚动更新"><a href="#测试滚动更新" class="headerlink" title="测试滚动更新"></a>测试滚动更新</h2><p>创建一个滚动更新的服务<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker service create --replicas 3 --name redis --update-delay 10s redis:3.0.6</span><br><span class="line">c1cieiareqz8l43ckr8ekstc9</span><br><span class="line">vagrant@ide-a:~$ docker service ps redis</span><br><span class="line">ID                         NAME     IMAGE        NODE   DESIRED STATE  CURRENT STATE             ERROR</span><br><span class="line">dv0bqyp5j8rt2qhdb67vk1ux6  redis.1  redis:3.0.6  ide-a  Running        Preparing 11 seconds ago</span><br><span class="line">ednp70fzj2nocae2gismqgx3c  redis.2  redis:3.0.6  ide-c  Running        Preparing 11 seconds ago</span><br><span class="line">1m0fnh3qhkj1rfpufdkmn3cqd  redis.3  redis:3.0.6  ide-b  Running        Preparing 13 seconds ago</span><br></pre></td></tr></table></figure></p>
+<p>作用是神马？<br>为了多实例的平滑升级<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker service ps redis</span><br><span class="line">ID                         NAME         IMAGE        NODE   DESIRED STATE  CURRENT STATE                 ERROR</span><br><span class="line">dv0bqyp5j8rt2qhdb67vk1ux6  redis.1      redis:3.0.6  ide-a  Running        Preparing 4 minutes ago</span><br><span class="line">ednp70fzj2nocae2gismqgx3c  redis.2      redis:3.0.6  ide-c  Running        Running 3 minutes ago</span><br><span class="line">0rgbjgr5cf8gz7cyt0hhhgin4  redis.3      redis:3.0.7  ide-a  Running        Preparing about a minute ago</span><br><span class="line">1m0fnh3qhkj1rfpufdkmn3cqd   \_ redis.3  redis:3.0.6  ide-b  Shutdown       Shutdown about a minute ago</span><br></pre></td></tr></table></figure></p>
+<p>不过好像测试过程中有点问题，只升级了一个节点就停止了</p>
+<p><a href="https://docs.docker.com/engine/swarm/admin_guide/" target="_blank" rel="noopener">Swarm 集群管理</a></p>
+<p>创建对外服务的实例<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ docker service create --name my_web --replicas 3 --publish 2345:80 nginx</span><br><span class="line">6wud0bt1qbs6upptvddxvkc4k</span><br><span class="line">vagrant@ide-a:~$ docker service ps my_web</span><br><span class="line">ID                         NAME      IMAGE  NODE   DESIRED STATE  CURRENT STATE            ERROR</span><br><span class="line">cf5co7yx4x79cn2ruirothgi1  my_web.1  nginx  ide-a  Running        Preparing 4 seconds ago</span><br><span class="line">3ibjg29g7nq6j1a2533neerb5  my_web.2  nginx  ide-c  Running        Preparing 4 seconds ago</span><br><span class="line">096muixt5lmd5c0oedrwkzg9y  my_web.3  nginx  ide-b  Running        Preparing 5 seconds ago</span><br></pre></td></tr></table></figure></p>
+<p>能访问的地址是最开始设置的 –advertise-addr 的地址<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ curl http://192.168.3.10:2345</span><br></pre></td></tr></table></figure></p>
+<p><strong>一个问题</strong>: 对外有一个 端口 提供服务，如果这个主 IP 的节点挂掉了呢？</p>
+<p>测试显示绑定一个端口对外服务，访问集群中所有 ip +该端口 均能得到结果</p>
+<h2 id="能否在指定节点上创建-container？"><a href="#能否在指定节点上创建-container？" class="headerlink" title="能否在指定节点上创建 container？"></a>能否在指定节点上创建 container？</h2><p>有一种方式在每个可用节点上运行一个 service<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker service create --name myservice --mode global alpine top</span><br></pre></td></tr></table></figure></p>
+<p>实验结果表明 swarm 都是负载均衡的，即使使用 global 模式，访问其中一个指定 ip 的请求也会均衡转发到各个节点中去</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2016/10/14/2016-10-15-docker-swarm/" target="_blank" rel="external">http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Swarm/">Swarm</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/&title=《Docker Swarm 试用》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/&title=《Docker Swarm 试用》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Docker Swarm 试用》 — tiangao&url=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2016/11/04/2016-11-05-go-sparse/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Golang 稀疏文件处理</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2016/04/28/2016-04-29-nexus-maven/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Centos6.5 搭建 nexus + maven</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/&title=《Docker Swarm 试用》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/&title=《Docker Swarm 试用》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Docker Swarm 试用》 — tiangao&url=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/10/14/2016-10-15-docker-swarm/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACLElEQVR42u3aS27DMAxF0ex/0+40g7q+j5SBSrwaBY7j6HhA8KPPB6/ra91dIfeTz3fPXLBkyJCxLeP6c6Xbqr0I8r9398iQIWMO4+6P7+5JgykPqeQFyZAhQ0ZtQyRNJEmhDBkyZPQZJIFL76y9GhkyZExjkGKy1hRLG22v1+IyZMjYkLF2K2s/vzLfkCFDxlaMK1z8V3zwebWXDBkyzmasHUCSp5EUs7YfGTJknM1Im268ECUbTQP0A1WGDBnHMXiDnl+vHSZrDSdkyJBxNIOEXf5jziOJIz/AIUOGjAmMWuOeH5XggTsFyJAhYw6jdgyi3yDjJW4w4JQhQ8ZxjHQYyUcC/W+DVqAMGTIGMEjs6pSsvIhNX5kMGTLmMHhTrHYUjD+HN/VuR5gyZMgYw+DHJjqJ4wcvVH/LkCFjACMdOqbbJeG1VkjLkCHjbAZvdZFwmSaancMWv3wrQ4aMoxm8cV8rPnmiWXtZMmTImMBIA26ncZa20kiaKEOGjJkMHgp5iCRlbafNJ0OGjAkMfngCjRXxE9IW20PAlSFDxtGMWtDsjCdrjbliEStDhoxtGZ3krDaS5C+CDyRkyJBxNiMdLtaGlMGBibBgjmEyZMjYltEJkXwr/Sc/HMWQIUPGAEZauKYp5qq07yHPlSFDhoxSMVlr9xezVxkyZMgIi0/etqtdaaWGMmTI2JCRpnSrwmjtEJgMGTKmMVblXekRis4xixfTRxkyZPwvxg94v/AuePz5VgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

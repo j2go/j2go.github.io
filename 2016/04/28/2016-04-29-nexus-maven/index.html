@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Centos6.5 搭建 nexus + maven | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Maven">
+    <meta name="description" content="安装MAVEN #wget http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz#tar -zxvf apache-maven-3.3.9-bin.tar.gz#mkdir /usr/local/maven#mv -rf apache-">
+<meta name="keywords" content="Maven">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Centos6.5 搭建 nexus + maven">
+<meta property="og:url" content="http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="安装MAVEN #wget http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz#tar -zxvf apache-maven-3.3.9-bin.tar.gz#mkdir /usr/local/maven#mv -rf apache-">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Centos6.5 搭建 nexus + maven">
+<meta name="twitter:description" content="安装MAVEN #wget http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz#tar -zxvf apache-maven-3.3.9-bin.tar.gz#mkdir /usr/local/maven#mv -rf apache-">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Centos6.5 搭建 nexus + maven</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Centos6.5 搭建 nexus + maven</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-04-28T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2016-04-29
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#安装MAVEN"><span class="post-toc-number">1.</span> <span class="post-toc-text">安装MAVEN</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#修改环境配置"><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">修改环境配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#检查结果"><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">检查结果</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#安装nexus"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装nexus</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#接下来就可以运行了"><span class="post-toc-number">2.0.1.</span> <span class="post-toc-text">接下来就可以运行了</span></a></li></ol></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2016-04-29-nexus-maven"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Centos6.5 搭建 nexus + maven</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-04-29 00:00:00" datetime="2016-04-28T16:00:00.000Z"  itemprop="datePublished">2016-04-29</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="安装MAVEN"><a href="#安装MAVEN" class="headerlink" title="安装MAVEN"></a>安装MAVEN</h1><blockquote>
+<p>#wget <a href="http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz" target="_blank" rel="noopener">http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz</a><br>#tar -zxvf apache-maven-3.3.9-bin.tar.gz<br>#mkdir /usr/local/maven<br>#mv -rf apache-maven-3.3.9/* /usr/local/maven/</p>
+</blockquote>
+<h3 id="修改环境配置"><a href="#修改环境配置" class="headerlink" title="修改环境配置"></a>修改环境配置</h3><blockquote>
+<p># vi /etc/profile</p>
+</blockquote>
+<p><em>加入</em></p>
+<blockquote>
+<p>export M2_HOME=/usr/local/maven<br>export PATH=${M2_HOME}/bin:${PATH}<br># source /etc/profile</p>
+</blockquote>
+<h3 id="检查结果"><a href="#检查结果" class="headerlink" title="检查结果"></a>检查结果</h3><blockquote>
+<p># mvn -v<br>Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-11T00:41:47+08:00)<br>Maven home: /usr/local/maven<br>Java version: 1.7.0_79, vendor: Oracle Corporation<br>Java home: /usr/java/jdk1.7.0_79/jre<br>Default locale: zh_CN, platform encoding: UTF-8<br>OS name: “linux”, version: “2.6.32-431.el6.x86_64”, arch: “amd64”, family: “unix”</p>
+</blockquote>
+<h1 id="安装nexus"><a href="#安装nexus" class="headerlink" title="安装nexus"></a>安装nexus</h1><p><em>需要翻墙才能下</em><br><a href="https://sonatype-download.global.ssl.fastly.net/nexus/oss/nexus-2.13.0-01-bundle.tar.gz" target="_blank" rel="noopener">nexus-2.13.0-01-bundle.tar.gz</a></p>
+<p><em>然后解压</em></p>
+<blockquote>
+<p>#tar -zxvf nexus-2.13.0-01-bundle.tar.gz</p>
+</blockquote>
+<p>产生如下两个目录</p>
+<blockquote>
+<p>drwxr-xr-x 8 1001 1001       4096 4月  28 16:06 nexus-2.13.0-01<br>drwxr-xr-x 3 1001 1001       4096 4月  12 22:21 sonatype-work</p>
+</blockquote>
+<p><em>直接去运行会报错</em></p>
+<blockquote>
+<p># nexus-2.13.0-01/bin/nexus start<br>Starting Nexus OSS…<br>Failed to start Nexus OSS.</p>
+</blockquote>
+<p>stackoverflow上找到了答案，不能用root用户运行，新建并切换用户之…</p>
+<p><em>还要切换目录owner</em></p>
+<blockquote>
+<p>#chown -R rd:rd nexus-2.13.0-01<br>#chown -R sonatype-work</p>
+</blockquote>
+<h3 id="接下来就可以运行了"><a href="#接下来就可以运行了" class="headerlink" title="接下来就可以运行了"></a>接下来就可以运行了</h3><blockquote>
+<p>#nexus start</p>
+</blockquote>
+<p>打开 <a href="http://localhost:8081/nexus" target="_blank" rel="noopener">http://localhost:8081/nexus</a> 即可看到nexus的管理页面</p>
+<p>_默认账户密码_admin admin123</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2016/04/28/2016-04-29-nexus-maven/" target="_blank" rel="external">http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Maven/">Maven</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/&title=《Centos6.5 搭建 nexus + maven》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/&title=《Centos6.5 搭建 nexus + maven》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Centos6.5 搭建 nexus + maven》 — tiangao&url=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2016/10/14/2016-10-15-docker-swarm/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Docker Swarm 试用</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2016/04/27/2016-04-28-nginx-cache/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">nginx配置缓存</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/&title=《Centos6.5 搭建 nexus + maven》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/&title=《Centos6.5 搭建 nexus + maven》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Centos6.5 搭建 nexus + maven》 — tiangao&url=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/04/28/2016-04-29-nexus-maven/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJElEQVR42u3aQW7DMAwEwPz/0y7QU4Ei7i6VFIg0OgWI7XB8YEiJj0e8ru91/+3Pa64n6/fTnt31eMfCwMD4WMZ1u/Ife3Z9Qr1/zn1sGBgY5zDuk2weREtKfiX6A8DAwMCIk2COz4tFDAwMjFnCrUu3UVmJgYGB0Tax+YbaSon59l4cAwPjAxntwcB/fn7j+QYGBsaHMK5yrSTBpJUdRoWBgbE1437j/n1F3mxo4490jIGBsSljZdAhbztnRw759hwGBsbejJWNs7ajbEc08qSMgYGxN2Ol1Gsb2rxWrUcxMDAwDmCstJqzsJL0WpSVGBgYWzPalnK9QEwS8TASDAyMTRntoFV7hLDUWwcFKwYGxgmMdhhi1qa2aTdvXzEwME5gJDfkY16zFNkejmJgYJzJWBl3yLfbZgecUdOLgYFxDGM9oLYFfXFpiIGBsSkj38pPYHmJmYebUDEwME5gtMluhmnTaP0SMTAwtmYkAdWNZZwokxeUF68YGBj7MXJrEkQ9GBEPcETvHgMDY2vGLEXO2s7kZbUNNgYGxt6MNpnOSsk23Q/vwsDA2JRxlWulNnvEK296MTAwTmC0j27b4DztJoHWe4cYGBgbMZIkmzefs0GxlU1ADAyMcxj3qXB2MDA7Bhjei4GBgVGWa69KysXMCAYGBsaLxkxnoxXR8QMGBsYBjCTB5S1ue80LjkgxMDC2ZqwcDORh5S1u+1oxMDC2ZnwB+RnwLk9Trg0AAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

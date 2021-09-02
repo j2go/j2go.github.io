@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>记一次代码重构 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="file download">
+    <meta name="description" content="问题有这么一个下载 zip 文件的功能函数     函数的目的是要下载一个文件到指定目录，第一要检查大小，第二要检查是不是 zip 文件，然后下载到指定目录。现在的问题是这个没有超时控制，网络慢或者出问题的时候就死死的卡在那儿了  原代码1234567891011121314151617181920212223242526272829303132333435private File downloa">
+<meta name="keywords" content="file download">
+<meta property="og:type" content="article">
+<meta property="og:title" content="记一次代码重构">
+<meta property="og:url" content="http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="问题有这么一个下载 zip 文件的功能函数     函数的目的是要下载一个文件到指定目录，第一要检查大小，第二要检查是不是 zip 文件，然后下载到指定目录。现在的问题是这个没有超时控制，网络慢或者出问题的时候就死死的卡在那儿了  原代码1234567891011121314151617181920212223242526272829303132333435private File downloa">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="记一次代码重构">
+<meta name="twitter:description" content="问题有这么一个下载 zip 文件的功能函数     函数的目的是要下载一个文件到指定目录，第一要检查大小，第二要检查是不是 zip 文件，然后下载到指定目录。现在的问题是这个没有超时控制，网络慢或者出问题的时候就死死的卡在那儿了  原代码1234567891011121314151617181920212223242526272829303132333435private File downloa">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">记一次代码重构</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">记一次代码重构</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-02-06T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2017-02-07
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题"><span class="post-toc-number">1.</span> <span class="post-toc-text">问题</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#原代码"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">原代码</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#解决方案一"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">解决方案一</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#解决方案二"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">解决方案二</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#最终结果"><span class="post-toc-number">1.4.</span> <span class="post-toc-text">最终结果</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#重构小结"><span class="post-toc-number">2.</span> <span class="post-toc-text">重构小结</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2017-02-07-download-refactoring"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">记一次代码重构</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-02-07 00:00:00" datetime="2017-02-06T16:00:00.000Z"  itemprop="datePublished">2017-02-07</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="问题"><a href="#问题" class="headerlink" title="问题"></a>问题</h2><p>有这么一个下载 zip 文件的功能函数   </p>
+<blockquote>
+<p>函数的目的是要下载一个文件到指定目录，第一要检查大小，第二要检查是不是 zip 文件，然后下载到指定目录。<br>现在的问题是这个没有超时控制，网络慢或者出问题的时候就死死的卡在那儿了</p>
+</blockquote>
+<h3 id="原代码"><a href="#原代码" class="headerlink" title="原代码"></a>原代码</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> File <span class="title">downloadZipFile</span><span class="params">(Task task)</span> <span class="keyword">throws</span> DeployScheduleException, IOException </span>&#123;</span><br><span class="line">    LOGGER.debug(<span class="string">"#Scheduler#&#123;&#125;#download start"</span>, task.getId());</span><br><span class="line">    HttpClient client = HttpClientBuilder.create().build();</span><br><span class="line">    HttpGet httpGet = <span class="keyword">new</span> HttpGet(task.getArchive_url());</span><br><span class="line"></span><br><span class="line">    dbHelper.updateTaskStatusAndReason(task.getId(), <span class="string">"FETCHING"</span>, <span class="string">""</span>);</span><br><span class="line">    HttpResponse response = client.execute(httpGet);</span><br><span class="line">    <span class="keyword">long</span> contentLength = response.getEntity().getContentLength();</span><br><span class="line">    <span class="keyword">long</span> limit = sizeLimit &lt;&lt; <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">if</span> (contentLength &gt; limit) &#123;</span><br><span class="line">        dbHelper.updateTaskLog(task.getId(), <span class="string">"Site archive size is more than "</span> + sizeLimit + <span class="string">"M."</span>);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> DeployScheduleException(<span class="string">"#Scheduler#"</span> + task.getId() + <span class="string">"#Archive too big#size: &#123;&#125;"</span> + contentLength);</span><br><span class="line">    &#125;</span><br><span class="line">    String contentType = response.getEntity().getContentType().getValue();</span><br><span class="line">    <span class="keyword">if</span> (!contentType.contains(<span class="string">"octet-stream"</span>) &amp;&amp;</span><br><span class="line">            !contentType.contains(<span class="string">"zip"</span>) &amp;&amp;</span><br><span class="line">            !task.getArchive_url().endsWith(<span class="string">".zip"</span>)) &#123;</span><br><span class="line">        dbHelper.updateTaskLog(task.getId(), <span class="string">"Project or branch not found."</span>);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> DeployScheduleException(<span class="string">"#Scheduler#"</span> + task.getId() + <span class="string">"#invalid content type: "</span> + contentType);</span><br><span class="line">    &#125;</span><br><span class="line">    InputStream inputStream = response.getEntity().getContent();</span><br><span class="line"></span><br><span class="line">    LOGGER.debug(<span class="string">"tempPath"</span> + getTempOutFile(task));</span><br><span class="line">    FileOutputStream outFile = <span class="keyword">new</span> FileOutputStream(getTempOutFile(task));</span><br><span class="line">    LOGGER.info(<span class="string">"#Scheduler#&#123;&#125;#download file at &#123;&#125;"</span>, task.getId(), getTempOutFile(task));</span><br><span class="line">    <span class="keyword">byte</span>[] buffer=<span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">    <span class="keyword">int</span> ch;</span><br><span class="line">    <span class="keyword">while</span> ((ch = inputStream.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">        outFile.write(buffer,<span class="number">0</span>,ch);</span><br><span class="line">    &#125;</span><br><span class="line">    inputStream.close();</span><br><span class="line">    outFile.flush();</span><br><span class="line">    outFile.close();</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> File(getTempOutFile(task));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>第一个想法就是： 没超时控制，加上呗。</p>
+<h3 id="解决方案一"><a href="#解决方案一" class="headerlink" title="解决方案一"></a>解决方案一</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//downloadTimeout= 1200s</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> File <span class="title">downloadZipFile</span><span class="params">(Task task)</span> <span class="keyword">throws</span> DeployScheduleException, IOException </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line">    String outFilePath = getTempOutFile(task);</span><br><span class="line">    <span class="keyword">boolean</span> successful = <span class="keyword">false</span>;</span><br><span class="line">    <span class="keyword">try</span> (InputStream inputStream = response.getEntity().getContent();</span><br><span class="line">         FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(outFilePath)) &#123;</span><br><span class="line"></span><br><span class="line">        LOGGER.info(<span class="string">"#Scheduler#&#123;&#125;#download file at &#123;&#125;"</span>, task.getId(), getTempOutFile(task));</span><br><span class="line">        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">        <span class="keyword">int</span> ch;</span><br><span class="line">        <span class="keyword">while</span> ((ch = inputStream.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">            fos.write(buffer, <span class="number">0</span>, ch);</span><br><span class="line">            <span class="keyword">if</span> (System.currentTimeMillis() - start &gt; downloadTimeout * <span class="number">1000</span>) &#123;</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IOException(format(<span class="string">"#Scheduler#%d#fetching timeout: %ds"</span>, task.getId(), downloadTimeoutSeconds));</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        successful = <span class="keyword">true</span>;</span><br><span class="line">        fos.flush();</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!successful) &#123;</span><br><span class="line">            FileUtils.deleteQuietly(<span class="keyword">new</span> File(outFilePath));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> File(getTempOutFile(task));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Review 时 大神们的意见就来了:</p>
+<ul>
+<li>timeout 加上单位吧</li>
+<li>httpClient 自己有超时控制，自己造轮子有风险</li>
+<li>判断条件长了语义化一下比较好</li>
+</ul>
+<p>嗯嗯嗯，有道理，改改改。。。</p>
+<h3 id="解决方案二"><a href="#解决方案二" class="headerlink" title="解决方案二"></a>解决方案二</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//downloadTimeoutSeconds= 1200s</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> File <span class="title">downloadZipFile</span><span class="params">(Task task)</span> <span class="keyword">throws</span> DeployScheduleException, IOException </span>&#123;</span><br><span class="line">        LOGGER.debug(<span class="string">"#Scheduler#&#123;&#125;#download start"</span>, task.getId());</span><br><span class="line">        SocketConfig socketConfig = SocketConfig.custom()</span><br><span class="line">                .setSoTimeout(downloadTimeoutSeconds * <span class="number">1000</span>)</span><br><span class="line">                .build();</span><br><span class="line">        HttpGet httpGet = <span class="keyword">new</span> HttpGet(task.getArchive_url());</span><br><span class="line">        <span class="keyword">final</span> String tempOutFile = getTempOutFile(task);</span><br><span class="line">        <span class="keyword">try</span>(CloseableHttpClient client = HttpClientBuilder.create().setDefaultSocketConfig(socketConfig).build()) &#123;</span><br><span class="line">            dbHelper.updateTaskStatusAndReason(task.getId(), <span class="string">"FETCHING"</span>, <span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">            HttpEntity resEntity = client.execute(httpGet).getEntity();</span><br><span class="line">            <span class="keyword">long</span> contentLength = resEntity.getContentLength();</span><br><span class="line">            <span class="keyword">long</span> limit = sizeLimit &lt;&lt; <span class="number">20</span>;</span><br><span class="line">            <span class="keyword">if</span> (contentLength &gt; limit) &#123;</span><br><span class="line">                dbHelper.updateTaskLog(task.getId(), <span class="string">"Site archive size is more than "</span> + sizeLimit + <span class="string">"M."</span>);</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> DeployScheduleException(<span class="string">"#Scheduler#"</span> + task.getId() + <span class="string">"#Archive too big#size: &#123;&#125;"</span> + contentLength);</span><br><span class="line">            &#125;</span><br><span class="line">            String contentType = resEntity.getContentType().getValue();</span><br><span class="line">            <span class="keyword">if</span> (isZipFile(task, contentType)) &#123;</span><br><span class="line">                dbHelper.updateTaskLog(task.getId(), <span class="string">"Project or branch not found."</span>);</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> DeployScheduleException(<span class="string">"#Scheduler#"</span> + task.getId() + <span class="string">"#invalid content type: "</span> + contentType);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">try</span> (InputStream inputStream = response.getEntity().getContent();</span><br><span class="line">		         FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(outFilePath)) &#123;</span><br><span class="line"></span><br><span class="line">		        LOGGER.info(<span class="string">"#Scheduler#&#123;&#125;#download file at &#123;&#125;"</span>, task.getId(), getTempOutFile(task));</span><br><span class="line">		        <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1024</span>];</span><br><span class="line">		        <span class="keyword">int</span> ch;</span><br><span class="line">		        <span class="keyword">while</span> ((ch = inputStream.read(buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line">		            fos.write(buffer, <span class="number">0</span>, ch);</span><br><span class="line">		            <span class="keyword">if</span> (System.currentTimeMillis() - start &gt; downloadTimeout * <span class="number">1000</span>) &#123;</span><br><span class="line">		                <span class="keyword">throw</span> <span class="keyword">new</span> IOException(format(<span class="string">"#Scheduler#%d#fetching timeout: %ds"</span>, task.getId(), downloadTimeoutSeconds));</span><br><span class="line">		            &#125;</span><br><span class="line">		        &#125;</span><br><span class="line">		        fos.flush();</span><br><span class="line">		    &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (SocketTimeoutException e) &#123;</span><br><span class="line">            FileUtils.deleteQuietly(<span class="keyword">new</span> File(tempOutFile));</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> IOException(String.format(<span class="string">"#Scheduler#%d#fetching timeout: %ds"</span>, task.getId(), downloadTimeoutSeconds));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">new</span> File(tempOutFile);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isZipFile</span><span class="params">(Task task, String contentType)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> !contentType.contains(<span class="string">"octet-stream"</span>) &amp;&amp;</span><br><span class="line">                !contentType.contains(<span class="string">"zip"</span>) &amp;&amp;</span><br><span class="line">                !task.getArchive_url().endsWith(<span class="string">".zip"</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这下应该没问题了吧，继续提交<br>又有人质疑了这段<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">try (InputStream inputStream = response.getEntity().getContent();</span><br><span class="line">     FileOutputStream fos = new FileOutputStream(outFilePath)) &#123;</span><br><span class="line"></span><br><span class="line">    LOGGER.info(&quot;#Scheduler#&#123;&#125;#download file at &#123;&#125;&quot;, task.getId(), getTempOutFile(task));</span><br><span class="line">    byte[] buffer = new byte[1024];</span><br><span class="line">    int ch;</span><br><span class="line">    while ((ch = inputStream.read(buffer)) != -1) &#123;</span><br><span class="line">        fos.write(buffer, 0, ch);</span><br><span class="line">        if (System.currentTimeMillis() - start &gt; downloadTimeout * 1000) &#123;</span><br><span class="line">            throw new IOException(format(&quot;#Scheduler#%d#fetching timeout: %ds&quot;, task.getId(), downloadTimeoutSeconds));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    fos.flush();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>都什么时候还用这么原始的方式， JDK nio 啊，Files.copy() 一下搞定，还不比你写的优秀啊</strong></p>
+<p>去翻翻源码还真有这么个<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Copies all bytes from an input stream to a file. On return, the input</span><br><span class="line"> * stream will be at end of stream.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt; By default, the copy fails if the target file already exists or is a</span><br><span class="line"> * symbolic link. If the &#123;@link StandardCopyOption#REPLACE_EXISTING</span><br><span class="line"> * REPLACE_EXISTING&#125; option is specified, and the target file already exists,</span><br><span class="line"> * then it is replaced if it is not a non-empty directory. If the target</span><br><span class="line"> * file exists and is a symbolic link, then the symbolic link is replaced.</span><br><span class="line"> * In this release, the &#123;@code REPLACE_EXISTING&#125; option is the only option</span><br><span class="line"> * required to be supported by this method. Additional options may be</span><br><span class="line"> * supported in future releases.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt;  If an I/O error occurs reading from the input stream or writing to</span><br><span class="line"> * the file, then it may do so after the target file has been created and</span><br><span class="line"> * after some bytes have been read or written. Consequently the input</span><br><span class="line"> * stream may not be at end of stream and may be in an inconsistent state.</span><br><span class="line"> * It is strongly recommended that the input stream be promptly closed if an</span><br><span class="line"> * I/O error occurs.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt; This method may block indefinitely reading from the input stream (or</span><br><span class="line"> * writing to the file). The behavior for the case that the input stream is</span><br><span class="line"> * &lt;i&gt;asynchronously closed&lt;/i&gt; or the thread interrupted during the copy is</span><br><span class="line"> * highly input stream and file system provider specific and therefore not</span><br><span class="line"> * specified.</span><br><span class="line"> *</span><br><span class="line"> * &lt;p&gt; &lt;b&gt;Usage example&lt;/b&gt;: Suppose we want to capture a web page and save</span><br><span class="line"> * it to a file:</span><br><span class="line"> * &lt;pre&gt;</span><br><span class="line"> *     Path path = ...</span><br><span class="line"> *     URI u = URI.create(&quot;http://java.sun.com/&quot;);</span><br><span class="line"> *     try (InputStream in = u.toURL().openStream()) &#123;</span><br><span class="line"> *         Files.copy(in, path);</span><br><span class="line"> *     &#125;</span><br><span class="line"> * &lt;/pre&gt;</span><br><span class="line"> *</span><br><span class="line"> * @param   in</span><br><span class="line"> *          the input stream to read from</span><br><span class="line"> * @param   target</span><br><span class="line"> *          the path to the file</span><br><span class="line"> * @param   options</span><br><span class="line"> *          options specifying how the copy should be done</span><br><span class="line"> *</span><br><span class="line"> * @return  the number of bytes read or written</span><br><span class="line"> *</span><br><span class="line"> * @throws  IOException</span><br><span class="line"> *          if an I/O error occurs when reading or writing</span><br><span class="line"> * @throws  FileAlreadyExistsException</span><br><span class="line"> *          if the target file exists but cannot be replaced because the</span><br><span class="line"> *          &#123;@code REPLACE_EXISTING&#125; option is not specified &lt;i&gt;(optional</span><br><span class="line"> *          specific exception)&lt;/i&gt;</span><br><span class="line"> * @throws  DirectoryNotEmptyException</span><br><span class="line"> *          the &#123;@code REPLACE_EXISTING&#125; option is specified but the file</span><br><span class="line"> *          cannot be replaced because it is a non-empty directory</span><br><span class="line"> *          &lt;i&gt;(optional specific exception)&lt;/i&gt;     *</span><br><span class="line"> * @throws  UnsupportedOperationException</span><br><span class="line"> *          if &#123;@code options&#125; contains a copy option that is not supported</span><br><span class="line"> * @throws  SecurityException</span><br><span class="line"> *          In the case of the default provider, and a security manager is</span><br><span class="line"> *          installed, the &#123;@link SecurityManager#checkWrite(String) checkWrite&#125;</span><br><span class="line"> *          method is invoked to check write access to the file. Where the</span><br><span class="line"> *          &#123;@code REPLACE_EXISTING&#125; option is specified, the security</span><br><span class="line"> *          manager&apos;s &#123;@link SecurityManager#checkDelete(String) checkDelete&#125;</span><br><span class="line"> *          method is invoked to check that an existing file can be deleted.</span><br><span class="line"> */</span><br><span class="line">public static long copy(InputStream in, Path target, CopyOption... options)</span><br><span class="line">    throws IOException</span><br><span class="line">&#123;...&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后忽然觉得用 throw 来终止过程好像还可以精简。<br>哟西，最终结果出炉。</p>
+<h3 id="最终结果"><a href="#最终结果" class="headerlink" title="最终结果"></a>最终结果</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> File <span class="title">downloadZipFile</span><span class="params">(Task task)</span> <span class="keyword">throws</span> DeployScheduleException, IOException </span>&#123;</span><br><span class="line">    LOGGER.debug(<span class="string">"#Scheduler#&#123;&#125;#download start"</span>, task.getId());</span><br><span class="line">    SocketConfig socketConfig = SocketConfig.custom()</span><br><span class="line">            .setSoTimeout(downloadTimeoutSeconds * <span class="number">1000</span>)</span><br><span class="line">            .build();</span><br><span class="line">    HttpGet httpGet = <span class="keyword">new</span> HttpGet(task.getArchive_url());</span><br><span class="line">    <span class="keyword">final</span> String tempOutFile = getTempOutFile(task);</span><br><span class="line">    <span class="keyword">try</span>(CloseableHttpClient client = HttpClientBuilder.create().setDefaultSocketConfig(socketConfig).build()) &#123;</span><br><span class="line">        dbHelper.updateTaskStatusAndReason(task.getId(), <span class="string">"FETCHING"</span>, <span class="string">""</span>);</span><br><span class="line"></span><br><span class="line">        HttpEntity responseEntity = client.execute(httpGet).getEntity();</span><br><span class="line">        checkContentLength(task, responseEntity);</span><br><span class="line">        checkContentType(task, responseEntity);</span><br><span class="line">        <span class="keyword">try</span> (InputStream inputStream = responseEntity.getContent()) &#123;</span><br><span class="line">            Files.copy(inputStream, Paths.get(tempOutFile), StandardCopyOption.REPLACE_EXISTING);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (SocketTimeoutException e) &#123;</span><br><span class="line">        FileUtils.deleteQuietly(<span class="keyword">new</span> File(tempOutFile));</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IOException(String.format(<span class="string">"#Scheduler#%d#fetching timeout: %ds"</span>, task.getId(), downloadTimeoutSeconds));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> <span class="keyword">new</span> File(tempOutFile);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkContentType</span><span class="params">(Task task, HttpEntity resEntity)</span> <span class="keyword">throws</span> DeployScheduleException </span>&#123;</span><br><span class="line">    String contentType = resEntity.getContentType().getValue();</span><br><span class="line">    <span class="keyword">if</span> (isZipFile(task, contentType)) &#123;</span><br><span class="line">        dbHelper.updateTaskLog(task.getId(), <span class="string">"Project or branch not found."</span>);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> DeployScheduleException(<span class="string">"#Scheduler#"</span> + task.getId() + <span class="string">"#invalid content type: "</span> + contentType);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">checkContentLength</span><span class="params">(Task task, HttpEntity resEntity)</span> <span class="keyword">throws</span> DeployScheduleException </span>&#123;</span><br><span class="line">    <span class="keyword">long</span> contentLength = resEntity.getContentLength();</span><br><span class="line">    <span class="comment">// 1 &lt;&lt; 20 = 1M</span></span><br><span class="line">    <span class="keyword">long</span> limit = sizeLimit &lt;&lt; <span class="number">20</span>;</span><br><span class="line">    <span class="keyword">if</span> (contentLength &gt; limit) &#123;</span><br><span class="line">        dbHelper.updateTaskLog(task.getId(), <span class="string">"Site archive size is more than "</span> + sizeLimit + <span class="string">"M."</span>);</span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> DeployScheduleException(<span class="string">"#Scheduler#"</span> + task.getId() + <span class="string">"#Archive too big#size: &#123;&#125;"</span> + contentLength);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">boolean</span> <span class="title">isZipFile</span><span class="params">(Task task, String contentType)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> !contentType.contains(<span class="string">"octet-stream"</span>) &amp;&amp;</span><br><span class="line">            !contentType.contains(<span class="string">"zip"</span>) &amp;&amp;</span><br><span class="line">            !task.getArchive_url().endsWith(<span class="string">".zip"</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="重构小结"><a href="#重构小结" class="headerlink" title="重构小结"></a>重构小结</h2><ul>
+<li>对类库的使用要熟悉，多测试，少写很多代码而且语义清晰</li>
+<li>长判断条件提炼方法，语义化更方便看</li>
+<li>要多看看 JDK 的东西，很多基础的操作里面都有</li>
+<li>配置参数如果有单位最好加上单位，减少使用风险</li>
+</ul>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2017/02/06/2017-02-07-download-refactoring/" target="_blank" rel="external">http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/file-download/">file download</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记一次代码重构》 — tiangao&url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/03/04/2017-03-05-shell-go/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">直接上手写 Shell</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/01/01/2017-01-02-file-leak-detector/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">file-leak-detector 检查Java文件句柄泄露</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记一次代码重构》 — tiangao&url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aS07EQAwFwLn/pYPECgRp/OyASKd6NQr5VRbGbfv1Kq/jfX38fXbk6/HKVWdHLl4YGBi3ZRzLVXnA+tqvpDVyffz0TTAwMB7A+I0guwavP0T93TAwMDAm59Tx6/MxMDAw0lf8IUUrpHTpRhcDAwMjfVglvKYlsz/di2NgYNyQ0WsM/M3vX+9vYGBg/HvGEa60iDY5J3grDAyMrRmTEv8kaE4GLIIMFwMDYztGpZSfblbTzXD6Ub4JuBgYGA9gTAr06SDFxU1QDAyMrRm9cFlpFdQbpb1WaFyMw8DAuC2jPgaRJnyThDL+WBgYGJsy6gW1C8phrfC6/oif+hsYGBibMiZZZBqg001vXLzDwMDYmhEU38MQ2SvS1ZNODAwMjB7pFa70ns2Ai4GBcVtGfbtY/+ukSLdOVU/TRAwMjEcyJoMRvU1vL+nEwMB4AqPebuwFynmCeBQWBgbG3oxS4lVuHvQSwcuGLTAwMDZlNIvvYerWC+VxsxMDA2NTRr312BsgS0NwvdCGgYHxTMYkZtebBPWBs/qdMTAw9mbUN5BpkjfZpl5wLQYGxkaMI1z1pLA3utH8N4CBgbE14+JoPd641hsDGBgYT2PU25PrJkFvnCvd7p4iMTAwHsCYDz0EjyyPhQXDZxgYGBitAv1kFKPybhgYGBi9JmWd0RtEw8DAeDLjqk1sGjp7xT4MDIynMSY36j2ml/yNABgYGHdlvAHgJ0a8VRDbcAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

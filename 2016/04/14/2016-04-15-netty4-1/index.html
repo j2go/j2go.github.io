@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>初试 Netty4.1 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Netty">
+    <meta name="description" content="之前通过以前公司的框架和github上的一个开源框架封装过一个东东，还根据自己的思考完善了下通讯协议，看这里。 不过呢之前哪个是 netty3.x的，而且还是 jboss的包，现在都是 io.netty了，以前一直是一知半解的状态，没有深入研究过，所以现在就循序渐进好好搞一搞。 直接上最新的 netty4.1CR7 jdk812345&amp;lt;dependency&amp;gt;    &amp;lt;groupI">
+<meta name="keywords" content="Netty">
+<meta property="og:type" content="article">
+<meta property="og:title" content="初试 Netty4.1">
+<meta property="og:url" content="http://j2go.cn/2016/04/14/2016-04-15-netty4-1/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="之前通过以前公司的框架和github上的一个开源框架封装过一个东东，还根据自己的思考完善了下通讯协议，看这里。 不过呢之前哪个是 netty3.x的，而且还是 jboss的包，现在都是 io.netty了，以前一直是一知半解的状态，没有深入研究过，所以现在就循序渐进好好搞一搞。 直接上最新的 netty4.1CR7 jdk812345&amp;lt;dependency&amp;gt;    &amp;lt;groupI">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="初试 Netty4.1">
+<meta name="twitter:description" content="之前通过以前公司的框架和github上的一个开源框架封装过一个东东，还根据自己的思考完善了下通讯协议，看这里。 不过呢之前哪个是 netty3.x的，而且还是 jboss的包，现在都是 io.netty了，以前一直是一知半解的状态，没有深入研究过，所以现在就循序渐进好好搞一搞。 直接上最新的 netty4.1CR7 jdk812345&amp;lt;dependency&amp;gt;    &amp;lt;groupI">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">初试 Netty4.1</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">初试 Netty4.1</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-04-14T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2016-04-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+<article id="post-2016-04-15-netty4-1"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">初试 Netty4.1</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-04-15 00:00:00" datetime="2016-04-14T16:00:00.000Z"  itemprop="datePublished">2016-04-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>之前通过以前公司的框架和github上的一个开源框架封装过一个东东，还根据自己的思考完善了下通讯协议，<a href="http://git.oschina.net/tiangao/tg-tcp-framework" target="_blank" rel="noopener">看这里</a>。</p>
+<p>不过呢之前哪个是 netty3.x的，而且还是 jboss的包，现在都是 io.netty了，以前一直是一知半解的状态，没有深入研究过，所以现在就循序渐进好好搞一搞。</p>
+<p>直接上最新的 netty4.1CR7 jdk8<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;io.netty&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;netty-all&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;4.1.0.CR7&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<p>首先看一下如何跑起来。按照官方 Guide 这么写了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line">public class TGServer &#123;</span><br><span class="line"></span><br><span class="line">    private static final Logger log = LoggerFactory.getLogger(TGServer.class);</span><br><span class="line"></span><br><span class="line">    final int port;</span><br><span class="line"></span><br><span class="line">    public  TGServer(int port) &#123;</span><br><span class="line">        this.port = port;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void start() &#123;</span><br><span class="line">        EventLoopGroup bossGroup = new NioEventLoopGroup(); // (1)</span><br><span class="line">        EventLoopGroup workerGroup = new NioEventLoopGroup();</span><br><span class="line">        try &#123;</span><br><span class="line">            ServerBootstrap b = new ServerBootstrap(); // (2)</span><br><span class="line">            b.group(bossGroup, workerGroup)</span><br><span class="line">                    .channel(NioServerSocketChannel.class) // (3)</span><br><span class="line">                    .childHandler(new GameChannelInitializer())</span><br><span class="line">                    .option(ChannelOption.SO_BACKLOG, 128)          // (5)</span><br><span class="line">                    .childOption(ChannelOption.SO_KEEPALIVE, true); // (6)</span><br><span class="line"></span><br><span class="line">            // Bind and start to accept incoming connections.</span><br><span class="line">            ChannelFuture f = b.bind(port).sync(); // (7)</span><br><span class="line"></span><br><span class="line">            // Wait until the server socket is closed.</span><br><span class="line">            // In this example, this does not happen, but you can do that to gracefully</span><br><span class="line">            // shut down your server.</span><br><span class="line">            log.info(&quot;listen on &quot; + port + &quot;success&quot;);</span><br><span class="line">            f.channel().closeFuture().sync();</span><br><span class="line"></span><br><span class="line">        &#125; catch (InterruptedException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125; finally &#123;</span><br><span class="line">            workerGroup.shutdownGracefully();</span><br><span class="line">            bossGroup.shutdownGracefully();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        new TGServer(8901).start();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>关键地方在18行</strong> .childHandler(new GameChannelInitializer())<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public class GameChannelInitializer extends ChannelInitializer&lt;SocketChannel&gt;&#123;</span><br><span class="line">    protected void initChannel(SocketChannel sc) throws Exception &#123;</span><br><span class="line">        sc.pipeline().addLast(new StringDecoder()).addLast(new StringEncoder()).addLast(new GameServerHandler());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>这里我试过把几个的顺序换一下，结果就不行了，把new GameServerHandler()换到中间会出现客户端无法收到服务器发送消息的情况</strong><br>然后是试试 GameServerHandler()<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">public class GameServerHandler extends ChannelInboundHandlerAdapter&#123;</span><br><span class="line">    private static final Logger log = LoggerFactory.getLogger(GameServerHandler.class);</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void channelRegistered(ChannelHandlerContext ctx) throws Exception &#123;</span><br><span class="line">        log.debug(&quot;=============== channelRegistered ==============&quot;);</span><br><span class="line">        log.debug(&quot;---&quot; + ctx.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void channelUnregistered(ChannelHandlerContext ctx) throws Exception &#123;</span><br><span class="line">        log.debug(&quot;=============== channelUnregistered ==============&quot;);</span><br><span class="line">        log.debug(&quot;---&quot; + ctx.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception &#123;</span><br><span class="line">        log.debug(&quot;=============== channelRead ==============&quot;);</span><br><span class="line">        log.debug(&quot;---&quot; + ctx.toString());</span><br><span class="line">        log.debug(&quot;---&quot; + msg.toString());</span><br><span class="line">//        if (msg instanceof String) &#123;</span><br><span class="line">//            log.debug(&quot;String:&quot; + msg);</span><br><span class="line">//        &#125;</span><br><span class="line">        ctx.writeAndFlush(&quot;server recv: &quot; + msg);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void channelReadComplete(ChannelHandlerContext ctx) throws Exception &#123;</span><br><span class="line">        log.debug(&quot;=============== channelReadComplete ==============&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) throws Exception &#123;</span><br><span class="line">        log.debug(&quot;=============== exceptionCaught ==============&quot;);</span><br><span class="line">//        log.debug(&quot;excption&quot;, cause);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void channelActive(ChannelHandlerContext ctx) throws Exception &#123;</span><br><span class="line">        log.debug(&quot;=============== channelActive ==============&quot;);</span><br><span class="line">        log.debug(&quot;---&quot; + ctx.toString());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void channelInactive(ChannelHandlerContext ctx) throws Exception &#123;</span><br><span class="line">        log.debug(&quot;=============== channelActive ==============&quot;);</span><br><span class="line">        log.debug(&quot;---&quot; + ctx.toString());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>然后看输出就知道数据处理的流程的，这里我没用 Netty 的客户端，我用 golang 来tcp连接测试<br><strong><em>执行日志如下</em></strong>一目了然<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">11:33:41.717 - === channelRegistered ===</span><br><span class="line">11:33:41.724 - ---ChannelHandlerContext(GameServerHandler#0, [id: 0xbda05939, L:/0:0:0:0:0:0:0:1:8901 - R:/0:0:0:0:0:0:0:1:51145])</span><br><span class="line">11:33:41.724 - === channelActive ===</span><br><span class="line">11:33:41.724 - ---ChannelHandlerContext(GameServerHandler#0, [id: 0xbda05939, L:/0:0:0:0:0:0:0:1:8901 - R:/0:0:0:0:0:0:0:1:51145])</span><br><span class="line">11:33:46.312 - -Dio.netty.recycler.maxCapacity: 262144</span><br><span class="line">11:33:46.319 - -Dio.netty.buffer.bytebuf.checkAccessible: true</span><br><span class="line">11:33:46.329 - === channelRead ===</span><br><span class="line">11:33:46.329 - ---ChannelHandlerContext(GameServerHandler#0, [id: 0xbda05939, L:/0:0:0:0:0:0:0:1:8901 - R:/0:0:0:0:0:0:0:1:51145])</span><br><span class="line">11:33:46.329 - ---AA</span><br><span class="line"> 接入</span><br><span class="line">11:33:46.330 - === channelReadComplete ===</span><br><span class="line">11:33:51.162 - === channelRead ===</span><br><span class="line">11:33:51.162 - ---ChannelHandlerContext(GameServerHandler#0, [id: 0xbda05939, L:/0:0:0:0:0:0:0:1:8901 - R:/0:0:0:0:0:0:0:1:51145])</span><br><span class="line">11:33:51.162 - ---AA</span><br><span class="line"> : 你好</span><br><span class="line">11:33:51.162 - === channelReadComplete ===</span><br><span class="line">11:33:54.850 - === channelRead ===</span><br><span class="line">11:33:54.850 - ---ChannelHandlerContext(GameServerHandler#0, [id: 0xbda05939, L:/0:0:0:0:0:0:0:1:8901 - R:/0:0:0:0:0:0:0:1:51145])</span><br><span class="line">11:33:54.850 - ---AA</span><br><span class="line"> : good</span><br><span class="line">11:33:54.850 - === channelReadComplete ===</span><br><span class="line">11:34:00.016 - === channelRead ===</span><br><span class="line">11:34:00.016 - ---ChannelHandlerContext(GameServerHandler#0, [id: 0xbda05939, L:/0:0:0:0:0:0:0:1:8901 - R:/0:0:0:0:0:0:0:1:51145])</span><br><span class="line">11:34:00.016 - ---AA</span><br><span class="line"> 退出了 </span><br><span class="line">11:34:00.016 - === channelReadComplete ===</span><br><span class="line">11:34:00.018 - === channelReadComplete ===</span><br><span class="line">11:34:00.018 - === exceptionCaught ===</span><br><span class="line">11:34:00.019 - === channelActive ===</span><br><span class="line">11:34:00.019 - ---ChannelHandlerContext(GameServerHandler#0, [id: 0xbda05939, L:/0:0:0:0:0:0:0:1:8901 ! R:/0:0:0:0:0:0:0:1:51145])</span><br><span class="line">11:34:00.019 - === channelUnregistered ===</span><br><span class="line">11:34:00.019 - ---ChannelHandlerContext(GameServerHandler#0, [id: 0xbda05939, L:/0:0:0:0:0:0:0:1:8901 ! R:/0:0:0:0:0:0:0:1:51145])</span><br></pre></td></tr></table></figure></p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2016/04/14/2016-04-15-netty4-1/" target="_blank" rel="external">http://j2go.cn/2016/04/14/2016-04-15-netty4-1/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Netty/">Netty</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/&title=《初试 Netty4.1》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/&title=《初试 Netty4.1》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《初试 Netty4.1》 — tiangao&url=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2016/04/27/2016-04-28-nginx-cache/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">nginx配置缓存</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2016/04/14/2016-05-15-ranklist/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">数据排序——排行榜</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/&title=《初试 Netty4.1》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/&title=《初试 Netty4.1》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《初试 Netty4.1》 — tiangao&url=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/04/14/2016-04-15-netty4-1/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIUlEQVR42u3a3U7DMAwG0L3/Sw+JKyS07rOdIZqcXE0dbXJAMv7p4xGv5/f6+fl6Xd+VX1m8MDAwbsvID3S9wat7f5N6+14/HwMD4wRGHmTz0Hx9lPzbZBcMDAyM3s9cX1m1LwYGBkZSxFbTxLVUDAyMcxi9xln1ep4+frAWx8DAuCGjNxj4m88fn29gYGD8e8azuPKUcZ4sFk6FgYGxNSNJy9YWn/PwWshwMTAwtmNcF5x52L3eMseXm24YGBgHMJIN8uQvJ61q6mFgYJzAyAFVXi/VaxaxGBgY2zGqiVoOqI5Cq6+alf8OGBgYN2fkydkkfcwL1HLKiIGBcQCj1z5bddA8BL/kYWBgbM2YP7SQwA1GoeWuIQYGxnaM/Ob5axNVcPmVDgwMjO0YkxcmJiPJfFQQBX0MDIytGUlQq4bFyUC0WuhiYGCcw8iDXTW89kaVz+LCwMDYm5EH1qRZX00ZJ428ZmWMgYFxQ8aqI1ZL0B7mDQkDA2NTRpQttl5snQ8bCu08DAyMIxm9crTa9K8OId6MBDAwMDZlVNO1R7Am4bv6/KhriIGBcXPGZJJQHR70wnoU+jEwMLZmVMNcvk1144RX+L+BgYGxHWMyhlw1pEx+TW+QGBgYBzBWDQN6zbVekYyBgYGx6ujzcJwkrBgYGBi9Zly0fRx83+yLgYFxAGNSxOZhtwrLm30YGBh7M6qDgbzpvzb5GwEwMDDuyvgCIK0zCF7y0AoAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

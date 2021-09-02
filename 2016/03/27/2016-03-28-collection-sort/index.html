@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Collections.sort 原理探究 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Collection">
+    <meta name="description" content="从代码的角度一步步深入，首先 12List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;String&amp;gt;();Collections.sort(list); 里面是这样1234@SuppressWarnings(&quot;unchecked&quot;)public static &amp;lt;T extends Comparable&amp;lt;? super T&amp;gt;&amp;gt; voi">
+<meta name="keywords" content="Collection">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Collections.sort 原理探究">
+<meta property="og:url" content="http://j2go.cn/2016/03/27/2016-03-28-collection-sort/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="从代码的角度一步步深入，首先 12List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;String&amp;gt;();Collections.sort(list); 里面是这样1234@SuppressWarnings(&quot;unchecked&quot;)public static &amp;lt;T extends Comparable&amp;lt;? super T&amp;gt;&amp;gt; voi">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Collections.sort 原理探究">
+<meta name="twitter:description" content="从代码的角度一步步深入，首先 12List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;String&amp;gt;();Collections.sort(list); 里面是这样1234@SuppressWarnings(&quot;unchecked&quot;)public static &amp;lt;T extends Comparable&amp;lt;? super T&amp;gt;&amp;gt; voi">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Collections.sort 原理探究</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Collections.sort 原理探究</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-03-27T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2016-03-28
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+<article id="post-2016-03-28-collection-sort"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Collections.sort 原理探究</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-03-28 00:00:00" datetime="2016-03-27T16:00:00.000Z"  itemprop="datePublished">2016-03-28</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p> 从代码的角度一步步深入，首先</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">Collections.sort(list);</span><br></pre></td></tr></table></figure>
+<p>里面是这样<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"unchecked"</span>)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T extends Comparable&lt;? <span class="keyword">super</span> T&gt;&gt; <span class="function"><span class="keyword">void</span> <span class="title">sort</span><span class="params">(List&lt;T&gt; list)</span> </span>&#123;</span><br><span class="line">    list.sort(<span class="keyword">null</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>list 的泛型需要继承 Comparable 接口，否则需要使用<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings</span>(&#123;<span class="string">"unchecked"</span>, <span class="string">"rawtypes"</span>&#125;)</span><br><span class="line"><span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">sort</span><span class="params">(List&lt;T&gt; list, Comparator&lt;? <span class="keyword">super</span> T&gt; c)</span> </span>&#123;</span><br><span class="line">    list.sort(c);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>list.sort 长这样<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">    <span class="meta">@SuppressWarnings</span>(&#123;<span class="string">"unchecked"</span>, <span class="string">"rawtypes"</span>&#125;)</span><br><span class="line">    <span class="function"><span class="keyword">default</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Comparator&lt;? <span class="keyword">super</span> E&gt; c)</span> </span>&#123;</span><br><span class="line">        Object[] a = <span class="keyword">this</span>.toArray();</span><br><span class="line">        Arrays.sort(a, (Comparator) c);</span><br><span class="line">        ListIterator&lt;E&gt; i = <span class="keyword">this</span>.listIterator();</span><br><span class="line">        <span class="keyword">for</span> (Object e : a) &#123;</span><br><span class="line">            i.next();</span><br><span class="line">            i.set((E) e);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<ol>
+<li>转成数组</li>
+<li>调用 Arrays.sort 排序</li>
+<li>通过迭代器赋值回原来集合</li>
+</ol>
+<p>然后关键来了，JDK 默认的的 sort 方法到底有多神奇呢？<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">sort</span><span class="params">(T[] a, Comparator&lt;? <span class="keyword">super</span> T&gt; c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (c == <span class="keyword">null</span>) &#123;</span><br><span class="line">            sort(a);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> (LegacyMergeSort.userRequested)</span><br><span class="line">                legacyMergeSort(a, c);</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                TimSort.sort(a, <span class="number">0</span>, a.length, c, <span class="keyword">null</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(Object[] a)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (LegacyMergeSort.userRequested)</span><br><span class="line">            legacyMergeSort(a);</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            ComparableTimSort.sort(a, <span class="number">0</span>, a.length, <span class="keyword">null</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>再继续扒皮…<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">legacyMergeSort</span><span class="params">(Object[] a)</span> </span>&#123;</span><br><span class="line">        Object[] aux = a.clone();</span><br><span class="line">        mergeSort(aux, a, <span class="number">0</span>, a.length, <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这里用了一个 clone() 方法，mergeSort 看来已经是归并排序了，是不是一会儿还得赋值回来？继续看…<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings</span>(&#123;<span class="string">"unchecked"</span>, <span class="string">"rawtypes"</span>&#125;)</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">mergeSort</span><span class="params">(Object[] src,</span></span></span><br><span class="line"><span class="function"><span class="params">                                  Object[] dest,</span></span></span><br><span class="line"><span class="function"><span class="params">                                  <span class="keyword">int</span> low,</span></span></span><br><span class="line"><span class="function"><span class="params">                                  <span class="keyword">int</span> high,</span></span></span><br><span class="line"><span class="function"><span class="params">                                  <span class="keyword">int</span> off)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> length = high - low;</span><br><span class="line"></span><br><span class="line">        <span class="comment">//这里这个常量是7，长度小于7直接冒泡解决，比较的是 dest 数组</span></span><br><span class="line">        <span class="keyword">if</span> (length &lt; INSERTIONSORT_THRESHOLD) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> i=low; i&lt;high; i++)</span><br><span class="line">                <span class="keyword">for</span> (<span class="keyword">int</span> j=i; j&gt;low &amp;&amp;</span><br><span class="line">                         ((Comparable) dest[j-<span class="number">1</span>]).compareTo(dest[j])&gt;<span class="number">0</span>; j--)</span><br><span class="line">                    swap(dest, j, j-<span class="number">1</span>);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Recursively sort halves of dest into src</span></span><br><span class="line">        <span class="keyword">int</span> destLow  = low;</span><br><span class="line">        <span class="keyword">int</span> destHigh = high;</span><br><span class="line">        <span class="comment">//从上面看下来off 是0，这里可以忽略</span></span><br><span class="line">        low  += off;</span><br><span class="line">        high += off;</span><br><span class="line">        <span class="comment">//新技能 Get</span></span><br><span class="line">        <span class="keyword">int</span> mid = (low + high) &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">        mergeSort(dest, src, low, mid, -off);</span><br><span class="line">        mergeSort(dest, src, mid, high, -off);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果列表已经有序, 只需要从 src 拷贝到 dest. 下面是优化过的拷贝算法</span></span><br><span class="line">        <span class="keyword">if</span> (((Comparable)src[mid-<span class="number">1</span>]).compareTo(src[mid]) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">            System.arraycopy(src, low, dest, destLow, length);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 归并算法的最后，拷贝到 dest</span></span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = destLow, p = low, q = mid; i &lt; destHigh; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (q &gt;= high || p &lt; mid &amp;&amp; ((Comparable)src[p]).compareTo(src[q])&lt;=<span class="number">0</span>)</span><br><span class="line">                dest[i] = src[p++];</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                dest[i] = src[q++];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>等等，好像什么地方漏了。。。。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">TimSort.sort(a, <span class="number">0</span>, a.length, c, <span class="keyword">null</span>, <span class="number">0</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure></p>
+<p>看方法上的注释说这是自1.8开始后才使用的，尽可能使用给定的数据空间，为了提升性能而设计<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">    <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">sort</span><span class="params">(T[] a, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, Comparator&lt;? <span class="keyword">super</span> T&gt; c,</span></span></span><br><span class="line"><span class="function"><span class="params">                         T[] work, <span class="keyword">int</span> workBase, <span class="keyword">int</span> workLen)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> c != <span class="keyword">null</span> &amp;&amp; a != <span class="keyword">null</span> &amp;&amp; lo &gt;= <span class="number">0</span> &amp;&amp; lo &lt;= hi &amp;&amp; hi &lt;= a.length;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">int</span> nRemaining  = hi - lo;</span><br><span class="line">        <span class="keyword">if</span> (nRemaining &lt; <span class="number">2</span>)</span><br><span class="line">            <span class="keyword">return</span>;  <span class="comment">// Arrays of size 0 and 1 are always sorted</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果数组长度小(这里是32), 使用0拷贝的"mini-TimSort"方式</span></span><br><span class="line">        <span class="keyword">if</span> (nRemaining &lt; MIN_MERGE) &#123;</span><br><span class="line">            <span class="keyword">int</span> initRunLen = countRunAndMakeAscending(a, lo, hi, c);</span><br><span class="line">            binarySort(a, lo, hi, lo + initRunLen, c);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment">         * March over the array once, left to right, finding natural runs,</span></span><br><span class="line"><span class="comment">         * extending short natural runs to minRun elements, and merging runs</span></span><br><span class="line"><span class="comment">         * to maintain stack invariant.</span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line">        TimSort&lt;T&gt; ts = <span class="keyword">new</span> TimSort&lt;&gt;(a, c, work, workBase, workLen);</span><br><span class="line">        <span class="keyword">int</span> minRun = minRunLength(nRemaining);</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            <span class="comment">// Identify next run</span></span><br><span class="line">            <span class="keyword">int</span> runLen = countRunAndMakeAscending(a, lo, hi, c);</span><br><span class="line"></span><br><span class="line">            <span class="comment">// If run is short, extend to min(minRun, nRemaining)</span></span><br><span class="line">            <span class="keyword">if</span> (runLen &lt; minRun) &#123;</span><br><span class="line">                <span class="keyword">int</span> force = nRemaining &lt;= minRun ? nRemaining : minRun;</span><br><span class="line">                binarySort(a, lo, lo + force, lo + runLen, c);</span><br><span class="line">                runLen = force;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Push run onto pending-run stack, and maybe merge</span></span><br><span class="line">            ts.pushRun(lo, runLen);</span><br><span class="line">            ts.mergeCollapse();</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Advance to find next run</span></span><br><span class="line">            lo += runLen;</span><br><span class="line">            nRemaining -= runLen;</span><br><span class="line">        &#125; <span class="keyword">while</span> (nRemaining != <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Merge all remaining runs to complete sort</span></span><br><span class="line">        <span class="keyword">assert</span> lo == hi;</span><br><span class="line">        ts.mergeForceCollapse();</span><br><span class="line">        <span class="keyword">assert</span> ts.stackSize == <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>擦，还得继续扒皮 binarySort<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@SuppressWarnings</span>(<span class="string">"fallthrough"</span>)</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">void</span> <span class="title">binarySort</span><span class="params">(T[] a, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi, <span class="keyword">int</span> start,</span></span></span><br><span class="line"><span class="function"><span class="params">                                       Comparator&lt;? <span class="keyword">super</span> T&gt; c)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">assert</span> lo &lt;= start &amp;&amp; start &lt;= hi;</span><br><span class="line">        <span class="keyword">if</span> (start == lo)</span><br><span class="line">            start++;</span><br><span class="line">        <span class="keyword">for</span> ( ; start &lt; hi; start++) &#123;</span><br><span class="line">            T pivot = a[start];</span><br><span class="line"></span><br><span class="line">            <span class="comment">// Set left (and right) to the index where a[start] (pivot) belongs</span></span><br><span class="line">            <span class="keyword">int</span> left = lo;</span><br><span class="line">            <span class="keyword">int</span> right = start;</span><br><span class="line">            <span class="keyword">assert</span> left &lt;= right;</span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">             * Invariants:</span></span><br><span class="line"><span class="comment">             *   pivot &gt;= all in [lo, left).</span></span><br><span class="line"><span class="comment">             *   pivot &lt;  all in [right, start).</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">while</span> (left &lt; right) &#123;</span><br><span class="line">                <span class="keyword">int</span> mid = (left + right) &gt;&gt;&gt; <span class="number">1</span>;</span><br><span class="line">                <span class="keyword">if</span> (c.compare(pivot, a[mid]) &lt; <span class="number">0</span>)</span><br><span class="line">                    right = mid;</span><br><span class="line">                <span class="keyword">else</span></span><br><span class="line">                    left = mid + <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">assert</span> left == right;</span><br><span class="line"></span><br><span class="line">            <span class="comment">/*</span></span><br><span class="line"><span class="comment">             * The invariants still hold: pivot &gt;= all in [lo, left) and</span></span><br><span class="line"><span class="comment">             * pivot &lt; all in [left, start), so pivot belongs at left.  Note</span></span><br><span class="line"><span class="comment">             * that if there are elements equal to pivot, left points to the</span></span><br><span class="line"><span class="comment">             * first slot after them -- that's why this sort is stable.</span></span><br><span class="line"><span class="comment">             * Slide elements over to make room for pivot.</span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line">            <span class="keyword">int</span> n = start - left;  <span class="comment">// The number of elements to move</span></span><br><span class="line">            <span class="comment">// Switch is just an optimization for arraycopy in default case</span></span><br><span class="line">            <span class="keyword">switch</span> (n) &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="number">2</span>:  a[left + <span class="number">2</span>] = a[left + <span class="number">1</span>];</span><br><span class="line">                <span class="keyword">case</span> <span class="number">1</span>:  a[left + <span class="number">1</span>] = a[left];</span><br><span class="line">                         <span class="keyword">break</span>;</span><br><span class="line">                <span class="keyword">default</span>: System.arraycopy(a, left, a, left + <span class="number">1</span>, n);</span><br><span class="line">            &#125;</span><br><span class="line">            a[left] = pivot;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这是一个二分的插入排序算法。然后研究了下下面这个函数，返回连续升序数据的数据量，如果前 n 个数据是连续降序排列的，翻转此序列，并返回 n 。为了防止最坏的情况<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> &lt;T&gt; <span class="function"><span class="keyword">int</span> <span class="title">countRunAndMakeAscending</span><span class="params">(T[] a, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi,</span></span></span><br><span class="line"><span class="function"><span class="params">                                                    Comparator&lt;? <span class="keyword">super</span> T&gt; c)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">assert</span> lo &lt; hi;</span><br><span class="line">	<span class="keyword">int</span> runHi = lo + <span class="number">1</span>;</span><br><span class="line">	<span class="keyword">if</span> (runHi == hi)</span><br><span class="line">		<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">	<span class="comment">// Find end of run, and reverse range if descending</span></span><br><span class="line">	<span class="keyword">if</span> (c.compare(a[runHi++], a[lo]) &lt; <span class="number">0</span>) &#123; <span class="comment">// Descending</span></span><br><span class="line">	<span class="keyword">while</span> (runHi &lt; hi &amp;&amp; c.compare(a[runHi], a[runHi - <span class="number">1</span>]) &lt; <span class="number">0</span>)</span><br><span class="line">		runHi++;</span><br><span class="line">		reverseRange(a, lo, runHi);</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;                              <span class="comment">// Ascending</span></span><br><span class="line">		<span class="keyword">while</span> (runHi &lt; hi &amp;&amp; c.compare(a[runHi], a[runHi - <span class="number">1</span>]) &gt;= <span class="number">0</span>) &#123;</span><br><span class="line">			runHi++;</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> runHi - lo;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>TimeSort的逻辑还是挺复杂，这里引用一个 demo 的解释</p>
+<p><a href="http://blog.sina.com.cn/s/blog_8e6f1b330101h7fa.html" target="_blank" rel="noopener">http://blog.sina.com.cn/s/blog_8e6f1b330101h7fa.html</a></p>
+<blockquote>
+<ol start="5">
+<li>Demo<br>这一节用一个具体的例子来演示整个算法的演进过程：<br><em>注意</em>：为了演示方便，我将TimSort中的minRun直接设置为2，否则我不能用很小的数组演示。。。同时把MIN_MERGE也改成2（默认为32），这样避免直接进入binary sort。</li>
+</ol>
+<p>初始数组为[7,5,1,2,6,8,10,12,4,3,9,11,13,15,16,14]</p>
+<p>=&gt; 寻找连续的降序或升序序列 (4.3.2)</p>
+<p>[1,5,7] [2,6,8,10,12,4,3,9,11,13,15,16,14]</p>
+<p>=&gt; 入栈 (4.3.4)<br>当前的栈区块为[3]<br>=&gt; 进入merge循环 (4.3.5)<br>do not merge因为栈大小仅为1<br>=&gt; 寻找连续的降序或升序序列 (4.3.2)<br>[1,5,7] [2,6,8,10,12] [4,3,9,11,13,15,16,14]<br>=&gt; 入栈 (4.3.4)<br>当前的栈区块为[3, 5]<br>=&gt; 进入merge循环 (4.3.5)<br>merge因为runLen[0]&lt;=runLen[1]<br>1) gallopRight：寻找run1的第一个元素应当插入run0中哪个位置（”2”应当插入”1”之后），然后就可以忽略之前run0的&gt;元素（都比run1的第一个元素小）<br>2) gallopLeft：寻找run0的最后一个元素应当插入run1中哪个位置（”7”应当插入”8”之前），然后就可以忽略之后 run1 的元素（都比run0的最后一个元素大）<br>这样需要排序的元素就仅剩下[5,7] [2,6]，然后进行mergeLow<br>完成之后的结果：<br>[1,2,5,6,7,8,10,12] [4,3,9,11,13,15,16,14]<br>=&gt; 入栈 (4.3.4)<br>当前的栈区块为[8]<br>退出当前merge循环因为栈中的区块仅为1<br>=&gt; 寻找连续的降序或升序序列 (4.3.2)<br>[1,2,5,6,7,8,10,12] [3,4] [9,11,13,15,16,14]<br>=&gt; 入栈 (4.3.4)<br>当前的栈区块大小为[8,2]<br>=&gt; 进入merge循环 (4.3.5)<br>do not merge因为runLen[0]&gt;runLen[1]<br>=&gt; 寻找连续的降序或升序序列 (4.3.2)<br>[1,2,5,6,7,8,10,12] [3,4] [9,11,13,15,16] [14]<br>=&gt; 入栈 (4.3.4)<br>当前的栈区块为[8,2,5]<br>=&gt;<br>do not merege run1与run2因为不满足runLen[0]&lt;=runLen[1]+runLen[2]<br>merge run2与run3因为runLen[1]&lt;=runLen[2]<br>1) gallopRight：发现run1和run2就已经排好序<br>完成之后的结果：<br>[1,2,5,6,7,8,10,12] [3,4,9,11,13,15,16] [14]<br>=&gt; 入栈 (4.3.4)<br>当前入栈的区块大小为[8,7]<br>退出merge循环因为runLen[0]&gt;runLen[1]<br>=&gt; 寻找连续的降序或升序序列 (4.3.2)<br>最后只剩下[14]这个元素：[1,2,5,6,7,8,10,12] [3,4,9,11,13,15,16] [14]<br>=&gt; 入栈 (4.3.4)<br>当前入栈的区块大小为[8,7,1]<br>=&gt; 进入merge循环 (4.3.5)<br>merge因为runLen[0]&lt;=runLen[1]+runLen[2]<br>因为runLen[0]&gt;runLen[2]，所以将run1和run2先合并。（否则将run0和run1先合并）<br>1) gallopRight &amp; 2) gallopLeft<br>这样需要排序的元素剩下[13,15] [14]，然后进行mergeHigh<br>完成之后的结果：<br>[1,2,5,6,7,8,10,12] [3,4,9,11,13,14,15,16] 当前入栈的区块为[8,8]<br>=&gt;<br>继续merge因为runLen[0]&lt;=runLen[1]<br>1) gallopRight &amp; 2) gallopLeft<br>需要排序的元素剩下[5,6,7,8,10,12] [3,4,9,11]，然后进行mergeHigh<br>完成之后的结果：<br>[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16] 当前入栈的区块大小为[16]<br>=&gt;<br>不需要final merge因为当前栈大小为1<br>=&gt;<br>结束   </p>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2016/03/27/2016-03-28-collection-sort/" target="_blank" rel="external">http://j2go.cn/2016/03/27/2016-03-28-collection-sort/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Collection/">Collection</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Collections.sort 原理探究》 — tiangao&url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2016/04/09/2016-04-10-linkedlist-sort/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">双向链表排序</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2015/03/03/2015-03-04-android-asynctask/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Android 之 AsyncTask 学习</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Collections.sort 原理探究》 — tiangao&url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIElEQVR42u3aQXKDMAwF0Nz/0u22G8iXRDJFPK8yBLAfC48s6fWKx8/pOLrz6Nm/18/vuXhgYGDclpEs8Xy5VV7+bP5+DAyMJzCOdrDz30ebbHkRwbxv1oyBgYExoFY/AQYGBsaEkVxJpkwCQQwMDIzeITafphdEJmm4C87iGBgYN2TkWffv//5IfQMDA+NWjEmyPgn18kBwMjAwMHYzeiXM8+As+TdvsMjfhoGBsZUxSeV/p/ksuRMDA+M5jEnZclJamJRIMTAwnsCoHjLzBVXbvy7YyjEwMJYy8qXnE/eKkb2EHQYGxjMZvUBw0hKRv/9wU8bAwFjNyMOyvIRZ7YhIwtDCmjEwMNYxqgfU6rab35+/500NFgMDYx2jutlV0/r5tntBMwcGBsYDGL2J8615zo5uxcDAWMpIDpmFNP2llUcMDAyMvCRZTfHnBdFJo0bU3YaBgbGCMQnaeltqfliNtnsMDIzVjEnBchLe9dq/8k+AgYGxj9FreqiGfclc+Tisx2JgYKxmJCHafOnVcmYhq4aBgbGakRcy88AxCQqrRYXoWQwMjHWMXkBWXfTkYBylAjEwMFYzJo0RvUJCtRTaKypgYGDsY1RT+fP2i155IKpmYGBgrGZUE215ebKc4u81eWBgYGC0igGTRH/eooGBgYFR3UZ7Qd7keIyBgfEcRu8QOwkE8w/x8XQbBgbGv2eMjo4fTredX8fAwHgA4xeLr2WritsrnAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

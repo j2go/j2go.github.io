@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content>
+    <meta property="og:type" content="website">
+<meta property="og:title" content="tiangao">
+<meta property="og:url" content="http://j2go.cn/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:locale" content="zh_CN">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tiangao">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu"  >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect active">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">tiangao</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header index-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">tiangao</h1>
+        <h5 class="subtitle">
+            
+                天高云淡
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+<div class="container body-wrap">
+
+    <ul class="post-list">
+    
+        <li class="post-list-item fade">
+            <article id="post-2017-12-24-java-question1"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-12-24 00:00:00" datetime="2017-12-23T16:00:00.000Z"  itemprop="datePublished">2017-12-24</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/12/23/2017-12-24-java-question1/">记一道 Java 笔试题</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        题目100+ 文件，1W+ 单词，设计用 5 个线程统计单词出现次数,输出次数最多的 100 个单词和次数
+当时做的很烂，写了快 200 行，一开始的想法是 5 个线程 5 个 map 分开统计，然后归并，最后遍历插入一个 100 大小的有序数组。
+后来想想，其实好像有个简单的解法，毕竟这个单词总数又不是很多， 30 行代码就搞定了123456789101112131415161718192...
+    
+
+        <a href="/2017/12/23/2017-12-24-java-question1/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/csv/">csv</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2017-10-26-iphone-battery"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-10-26 00:00:00" datetime="2017-10-25T16:00:00.000Z"  itemprop="datePublished">2017-10-26</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Other/">Other</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/10/25/2017-10-26-iphone-battery/">查看 IPhone 电池信息</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        
+不需要其他第三方软件
+
+打开设置
+                
+                    
+                    
+                
+                图片
+            
+
+                
+                    
+                    
+           ...
+    
+
+        <a href="/2017/10/25/2017-10-26-iphone-battery/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/iphone/">iphone</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2017-10-11-java-csv"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-10-11 00:00:00" datetime="2017-10-10T16:00:00.000Z"  itemprop="datePublished">2017-10-11</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/10/10/2017-10-11-java-csv/">Java CSV 文件操作</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        
+以前一直以为 csv 就是逗号分隔的表格文件，读取的时候直接每行按逗号 split 之后进行操作，后来发现结果有点不对，列数据里也是会有逗号的！！！甚至还有回车换行符！
+
+CSV 文件定义逗号分隔值（Comma-Separated Values，CSV，有时也称为字符分隔值，因为分隔字符也可以不是逗号），其文件以纯文本形式存储表格数据（数字和文本）。纯文本意味着该文件是一个字符序列，不含必...
+    
+
+        <a href="/2017/10/10/2017-10-11-java-csv/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/csv/">csv</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2017-09-14-spring-beans"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-09-16 00:00:00" datetime="2017-09-15T16:00:00.000Z"  itemprop="datePublished">2017-09-16</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/09/15/2017-09-14-spring-beans/">深入 Spring Bean 生命周期</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        实例化Spring 扫描包下所有类，对注解的 Bean 进行实例化
+依赖注入Spring 将值和 Bean 的引用注入进 Bean 对应的属性中
+setBeanName 回调如果 Bean 实现了 BeanNameAware 接口，Spring将Bean的ID传递给 setBeanName()方法（实现 BeanNameAware 主要是为了通过 Bean 的引用来获得 Bean 的 id，...
+    
+
+        <a href="/2017/09/15/2017-09-14-spring-beans/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2017-03-05-shell-go"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-03-05 00:00:00" datetime="2017-03-04T16:00:00.000Z"  itemprop="datePublished">2017-03-05</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/03/04/2017-03-05-shell-go/">直接上手写 Shell</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        
+作为一个 Java 程序员，Go 爱好者，自然免不了天天和 Linux 打交道，也曾经写过一点点 shell 脚本，但是对那个反人类的语法深感厌恶，空格不对都不行。无奈项目需要一定要用 shell 来实现一个工具，学习的过程总是不那么顺风的，不过搞完之后也觉得没那么讨厌了。整理一下几天所得，希望能让一个从没写过 shell 但是还挺熟悉 Linux 的可以立马完成一个可用的脚本。
+
+开始执...
+    
+
+        <a href="/2017/03/04/2017-03-05-shell-go/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/shell/">shell</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2017-02-07-download-refactoring"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-02-07 00:00:00" datetime="2017-02-06T16:00:00.000Z"  itemprop="datePublished">2017-02-07</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/02/06/2017-02-07-download-refactoring/">记一次代码重构</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        问题有这么一个下载 zip 文件的功能函数   
+
+函数的目的是要下载一个文件到指定目录，第一要检查大小，第二要检查是不是 zip 文件，然后下载到指定目录。现在的问题是这个没有超时控制，网络慢或者出问题的时候就死死的卡在那儿了
+
+原代码1234567891011121314151617181920212223242526272829303132333435private File down...
+    
+
+        <a href="/2017/02/06/2017-02-07-download-refactoring/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/file-download/">file download</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2017-01-02-file-leak-detector"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2017-01-02 00:00:00" datetime="2017-01-01T16:00:00.000Z"  itemprop="datePublished">2017-01-02</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2017/01/01/2017-01-02-file-leak-detector/">file-leak-detector 检查Java文件句柄泄露</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        
+维护 WEB-IDE 免不了要管理很多的文件， 自从我们 线上的系统增加了资源回收功能，便一直受一个问题困扰，后台线程解绑目录时偶尔报错，看症状因为是某些文件被占用了，目录不能解绑。但是由于系统中很多地方都有打开文件，各种包也存在复杂的的引用关系，在搜查几遍代码后并没有发现什么明显的异常。
+
+由于这个功能清理的是既没在线又没有在离线列表中的磁盘绑定目录，那么很可能是文件句柄泄露了，还有一种...
+    
+
+        <a href="/2017/01/01/2017-01-02-file-leak-detector/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/file-leak/">file leak</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2016-12-01-cloud-config"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-12-01 00:00:00" datetime="2016-11-30T16:00:00.000Z"  itemprop="datePublished">2016-12-01</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/11/30/2016-12-01-cloud-config/">Spring Cloud Config</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        背景现今这个时候，微服务大行其道，互联网应用遍地都是，随便开发个什么应用首要考虑的都是要可伸缩，扩展性要好。当我们的后台服务一点点增多，各个服务的配置也越来越多，随之而来的就是一个配置管理问题，各自管各自的开发时没什么问题，到了线上之后管理就会很头疼，到了要大规模更新的时候就更烦了。我们的后台服务就是如此，各种语言开发的都有，在慢慢的迭代过程的我们发现配置中心是一个比较好的解决方案，作为 S...
+    
+
+        <a href="/2016/11/30/2016-12-01-cloud-config/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Cloud-Config/">Cloud Config</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2016-11-30-Java7-file-op"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-11-30 00:00:00" datetime="2016-11-29T16:00:00.000Z"  itemprop="datePublished">2016-11-30</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/11/29/2016-11-30-Java7-file-op/">Java7 文件夹操作</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        复制文件夹 &amp;  删除文件夹12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686970717273public static void copy(String src, String...
+    
+
+        <a href="/2016/11/29/2016-11-30-Java7-file-op/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件夹操作/">文件夹操作</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
+            <article id="post-2016-11-05-go-sparse"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2016-11-05 00:00:00" datetime="2016-11-04T16:00:00.000Z"  itemprop="datePublished">2016-11-05</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Golang/">Golang</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2016/11/04/2016-11-05-go-sparse/">Golang 稀疏文件处理</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        
+使用 Docker 的我们都知道一个磁盘资源分配的问题，要么使用 devicemapper 设定一个固定大小，不过一旦确定就不可改，要么就没有限制，一个  container 就可能用尽整个磁盘空间。因为我们 WEDIDE 使用 Docker 运行大量服务，在调研了好几种磁盘分配方式后发现使用稀疏文件创建文件系统再挂载是一个很好的方案。
+
+什么是稀疏文件?我们都知道计算机文件是存储在磁盘上...
+    
+
+        <a href="/2016/11/04/2016-11-05-go-sparse/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/稀疏文件/">稀疏文件</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+    </ul>
+
+    
+<nav id="page-nav">
+    <div class="inner">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">下一页</a>
+    </div>
+</nav>
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/&title=tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/&title=tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=tiangao&url=http://j2go.cn/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAJYAAACWCAAAAAAZai4+AAABS0lEQVR42u3aQQ7DIAxEUe5/abptpZbM2LAo872K1CS8VArYOGPIMd/i16/uVRsCFqyLWHMZ63P0++tjwYKVzFJut36YNUIfCxYsWDprjYMFC9Zplj5ZuI8HCxYsJWlWjmvJNyxYsGolaO34yP4WLFh/zppmrDdqaxPHl1FgwQpj6S+wsrh2lmFYsJJZ7mvvtjD11PljLFiwwlinPzhQzmxl+rBgXcGqbfTok4Jbk8KClcna29pUFv7ijAULVgyrluB2QvojYMGKYbmpsF7QdspjWLAyWXo6q7RblKseFnVYsIJZelGqLNtugv5QW8OCdSmr+CmAWYLq94EFK5PVb67UPgMauwIWrItYte2eWkqtPwAsWJmsTqNl15wECxYsd8h++0Tq9sCCBavUJnFbpLBgwXKT5s42kH0tLFhhLDudlZsrbrsFFqxI1gslG1TsqIi1fwAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: false };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

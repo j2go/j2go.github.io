@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>file-leak-detector 检查Java文件句柄泄露 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="file leak">
+    <meta name="description" content="维护 WEB-IDE 免不了要管理很多的文件， 自从我们 线上的系统增加了资源回收功能，便一直受一个问题困扰，后台线程解绑目录时偶尔报错，看症状因为是某些文件被占用了，目录不能解绑。但是由于系统中很多地方都有打开文件，各种包也存在复杂的的引用关系，在搜查几遍代码后并没有发现什么明显的异常。  由于这个功能清理的是既没在线又没有在离线列表中的磁盘绑定目录，那么很可能是文件句柄泄露了，还有一种原因可">
+<meta name="keywords" content="file leak">
+<meta property="og:type" content="article">
+<meta property="og:title" content="file-leak-detector 检查Java文件句柄泄露">
+<meta property="og:url" content="http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="维护 WEB-IDE 免不了要管理很多的文件， 自从我们 线上的系统增加了资源回收功能，便一直受一个问题困扰，后台线程解绑目录时偶尔报错，看症状因为是某些文件被占用了，目录不能解绑。但是由于系统中很多地方都有打开文件，各种包也存在复杂的的引用关系，在搜查几遍代码后并没有发现什么明显的异常。  由于这个功能清理的是既没在线又没有在离线列表中的磁盘绑定目录，那么很可能是文件句柄泄露了，还有一种原因可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dn-coding-net-production-pp.qbox.me/fc6fdcc0-bf03-499a-bb46-2834e6aa9ba9.png">
+<meta property="og:image" content="https://dn-coding-net-production-pp.qbox.me/b34f6f31-d3fb-42eb-a3d5-535fdd45edfb.png">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="file-leak-detector 检查Java文件句柄泄露">
+<meta name="twitter:description" content="维护 WEB-IDE 免不了要管理很多的文件， 自从我们 线上的系统增加了资源回收功能，便一直受一个问题困扰，后台线程解绑目录时偶尔报错，看症状因为是某些文件被占用了，目录不能解绑。但是由于系统中很多地方都有打开文件，各种包也存在复杂的的引用关系，在搜查几遍代码后并没有发现什么明显的异常。  由于这个功能清理的是既没在线又没有在离线列表中的磁盘绑定目录，那么很可能是文件句柄泄露了，还有一种原因可">
+<meta name="twitter:image" content="https://dn-coding-net-production-pp.qbox.me/fc6fdcc0-bf03-499a-bb46-2834e6aa9ba9.png">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">file-leak-detector 检查Java文件句柄泄露</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">file-leak-detector 检查Java文件句柄泄露</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-01-01T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2017-01-02
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#使用方式"><span class="post-toc-number">1.</span> <span class="post-toc-text">使用方式</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#监听-HTTP-端口方式启动"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">监听 HTTP 端口方式启动</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#配置参数启动"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">配置参数启动</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Attach-方式启动"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">Attach 方式启动</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实际使用体验"><span class="post-toc-number">2.</span> <span class="post-toc-text">实际使用体验</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#工作原理"><span class="post-toc-number">3.</span> <span class="post-toc-text">工作原理</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#小结"><span class="post-toc-number">4.</span> <span class="post-toc-text">小结</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2017-01-02-file-leak-detector"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">file-leak-detector 检查Java文件句柄泄露</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-01-02 00:00:00" datetime="2017-01-01T16:00:00.000Z"  itemprop="datePublished">2017-01-02</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>维护 WEB-IDE 免不了要管理很多的文件， 自从我们 线上的系统增加了资源回收功能，便一直受一个问题困扰，后台线程解绑目录时偶尔报错，看症状因为是某些文件被占用了，目录不能解绑。但是由于系统中很多地方都有打开文件，各种包也存在复杂的的引用关系，在搜查几遍代码后并没有发现什么明显的异常。</p>
+</blockquote>
+<p>由于这个功能清理的是既没在线又没有在离线列表中的磁盘绑定目录，那么很可能是文件句柄泄露了，还有一种原因可能是 JVM 延迟释放文件句柄，不过实际是什么原因还需要用数据说话。</p>
+<p>经过一番搜索，发一个工具叫 file-leak-detector， 可以监控什么线程在什么时候打开了哪儿的文件，看起来好酷，官网在这里：<br><a href="http://file-leak-detector.kohsuke.org" target="_blank" rel="noopener">http://file-leak-detector.kohsuke.org</a></p>
+<h2 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h2><h3 id="监听-HTTP-端口方式启动"><a href="#监听-HTTP-端口方式启动" class="headerlink" title="监听 HTTP 端口方式启动"></a>监听 HTTP 端口方式启动</h3><p>以 javaagent 方式启动一个 jar 文件，输出在 http 19999 端口。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$java -javaagent:./file-leak-detector-1.8-jar-with-dependencies.jar=http=19999 -jar ide-backend.jar</span><br></pre></td></tr></table></figure></p>
+<p>然后直接在浏览器访问刚刚启动时配置的 http端口：<br> <figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://dn-coding-net-production-pp.qbox.me/fc6fdcc0-bf03-499a-bb46-2834e6aa9ba9.png" alt="图片" title>
+                </div>
+                <div class="image-caption">图片</div>
+            </figure><br>可以看到当前所有打开中的文件的堆栈信息。</p>
+<h3 id="配置参数启动"><a href="#配置参数启动" class="headerlink" title="配置参数启动"></a>配置参数启动</h3><p>配置线程数量限制,在文件句柄持有数超过设定数值时输出所有文件打开时的堆栈信息到 System 的 err 日志中。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ java -javaagent:path/to/file-leak-detector.jar=threshold=200 ...your usual Java args follows...</span><br></pre></td></tr></table></figure></p>
+<h3 id="Attach-方式启动"><a href="#Attach-方式启动" class="headerlink" title="Attach 方式启动"></a>Attach 方式启动</h3><p>启动后直接被加载到运行中的 JAVA 进程里。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ java -jar path/to/file-leak-detector.jar 1500 threshold=200,strong</span><br></pre></td></tr></table></figure></p>
+<p>strong 代表的含义是把记录信息的应用变成强引用，防止被 GC 回收掉，不设置在内存不足时文件记录会丢失。</p>
+<h2 id="实际使用体验"><a href="#实际使用体验" class="headerlink" title="实际使用体验"></a>实际使用体验</h2><p>首先我们在测试服务器上部署端口来监控，然后进行各种测试，最后确实找到几处未关闭的代码。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$java -javaagent:./file-leak-detector-1.8-jar-with-dependencies.jar=http=19999 -jar xxx.jar</span><br></pre></td></tr></table></figure></p>
+<p>不过有一点比较不爽，绑定的地址是固定的 localhost, 远程的就不能访问。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">╭─tiangao@tgmbp  ~/git/tiangao  ‹master*›</span><br><span class="line">╰─$ curl 192.168.31.227:19999</span><br><span class="line">curl: (7) Failed to connect to 192.168.31.227 port 19999: Connection refused</span><br></pre></td></tr></table></figure></p>
+<p>这个先放一边，官网说还可以 attach 到正在运行的进程中，这点才是我们到线上监控所需要的，有些问题只有在线上才会出现。</p>
+<p>不过官网里并没有发现怎么挂到正在运行中的 java 程序并开启 http 端口输出，而且监听的端口只有 localhost。这就让我们感觉有点怪异，<br>也许有安全性的考量吧，只好去看看源码，才知道怎么个用法，为了更方便还改了下监听的 host，以便远程可以访问。</p>
+<p><strong>AgentMain.java</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">private static void runHttpServer(int port) throws IOException &#123;</span><br><span class="line">    final ServerSocket ss = new ServerSocket();</span><br><span class="line">    ss.bind(new InetSocketAddress(&quot;0.0.0.0&quot;, port));</span><br><span class="line">    System.err.println(&quot;Serving file leak stats on http://0.0.0.0:&quot;+ss.getLocalPort()+&quot;/ for stats&quot;);</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>改之后使用如下所示:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">root@staging-1:~# java -jar file-leak-detector-1.8-jar-with-dependencies.jar 612 http=19999</span><br><span class="line">Connecting to 612</span><br><span class="line">Activating file leak detector at /root/file-leak-detector-1.8-jar-with-dependencies.jar</span><br></pre></td></tr></table></figure></p>
+<p><code>612</code> 是 java 服务的进程号，19999 是监听的 <code>http</code> 端口号。  </p>
+<p>执行后输出类似如下内容时即表示 <code>attach</code> 到进程成功。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">╭─tiangao@tgmbp  ~/git/WebIDE-Backend/target  ‹master*›</span><br><span class="line">╰─$ java -jar file-leak-detector-1.8-jar-with-dependencies.jar 93739</span><br><span class="line">Connecting to 93739</span><br><span class="line">Activating file leak detector at /Users/shitiangao/git/WebIDE-Backend/target/file-leak-detector-1.8-jar-with-dependencies.jar</span><br></pre></td></tr></table></figure></p>
+<p>然后通过地址加端口就可以访问,就可以显示进程在 <code>attach</code> 之后打开的文件以及相应堆栈信息。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">3 descriptors are open</span><br><span class="line">#1 /opt/coding-ide-home/ide-backend.jar by thread:qtp873134840-16 on Tue Nov 29 15:05:34 CST 2016</span><br><span class="line">	at java.io.RandomAccessFile.&lt;init&gt;(RandomAccessFile.java:244)</span><br><span class="line">	at org.springframework.boot.loader.data.RandomAccessDataFile$FilePool.acquire(RandomAccessDataFile.java:252)</span><br><span class="line">	at org.springframework.boot.loader.data.RandomAccessDataFile$DataInputStream.doRead(RandomAccessDataFile.java:174)</span><br><span class="line">	at org.springframework.boot.loader.data.RandomAccessDataFile$DataInputStream.read(RandomAccessDataFile.java:152)</span><br></pre></td></tr></table></figure></p>
+<p>如此改动测试后在本地好用，但是一到线上部署就报错了：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">pid: 13546</span><br><span class="line">Connecting to 13546</span><br><span class="line">Exception in thread &quot;main&quot; java.lang.reflect.InvocationTargetException</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)</span><br><span class="line">	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)</span><br><span class="line">	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)</span><br><span class="line">	at java.lang.reflect.Method.invoke(Method.java:497)</span><br><span class="line">	at org.kohsuke.file_leak_detector.Main.run(Main.java:54)</span><br><span class="line">	at org.kohsuke.file_leak_detector.Main.main(Main.java:39)</span><br><span class="line">Caused by: com.sun.tools.attach.AttachNotSupportedException: Unable to open socket file: target process not responding or HotSpot VM not loaded</span><br><span class="line">	at sun.tools.attach.LinuxVirtualMachine.&lt;init&gt;(LinuxVirtualMachine.java:106)</span><br><span class="line">	at sun.tools.attach.LinuxAttachProvider.attachVirtualMachine(LinuxAttachProvider.java:63)</span><br><span class="line">	at com.sun.tools.attach.VirtualMachine.attach(VirtualMachine.java:208)</span><br><span class="line">	... 6 more</span><br></pre></td></tr></table></figure></p>
+<p>目测原因是 JVM 运行时反射加载不到类。</p>
+<p>第一感觉需要设置一下 JAVA_HOME, 然而结果证明并不是这个原因。</p>
+<p>万能的 google &amp; stackoverflow 找到了解法：<br><a href="http://stackoverflow.com/questions/5769877/attachnotsupportedexception-due-to-missing-java-pid-file-in-attach-api" target="_blank" rel="noopener">java - AttachNotSupportedException due to missing java_pid file in Attach API</a></p>
+<p>执行 attach 的用户需要和 Java 服务运行用户是同一个，另外 JAVA_HOME 环境变量还是需要的。</p>
+<p>终于成功了，接下来就是等待错误的再次发生，然后分析堆栈信息了。</p>
+<p><strong><em>如此好用的工具是让我们对其原理很好奇</em></strong>。</p>
+<h2 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h2><p>项目源码并不是太多，先看 main ：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public static void main(String[] args) throws Exception &#123;</span><br><span class="line">        Main main = new Main();</span><br><span class="line">        CmdLineParser p = new CmdLineParser(main);</span><br><span class="line">        try &#123;</span><br><span class="line">            p.parseArgument(args);</span><br><span class="line">            main.run();</span><br><span class="line">        &#125; catch (CmdLineException e) &#123;</span><br><span class="line">            System.err.println(e.getMessage());</span><br><span class="line">            System.err.println(&quot;java -jar file-leak-detector.jar PID [OPTSTR]&quot;);</span><br><span class="line">            p.printUsage(System.err);</span><br><span class="line">            System.err.println(&quot;\nOptions:&quot;);</span><br><span class="line">            AgentMain.printOptions();</span><br><span class="line">            System.exit(1);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>来到 run() 方法，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">public void run() throws Exception &#123;</span><br><span class="line">    Class api = loadAttachApi();</span><br><span class="line"></span><br><span class="line">    System.out.println(&quot;Connecting to &quot;+pid);</span><br><span class="line">    Object vm = api.getMethod(&quot;attach&quot;,String.class).invoke(null,pid);</span><br><span class="line"></span><br><span class="line">    try &#123;</span><br><span class="line">        File agentJar = whichJar(getClass());</span><br><span class="line">        System.out.println(&quot;Activating file leak detector at &quot;+agentJar);</span><br><span class="line">        // load a specified agent onto the JVM</span><br><span class="line">        api.getMethod(&quot;loadAgent&quot;,String.class,String.class).invoke(vm, agentJar.getPath(), options);</span><br><span class="line">    &#125; finally &#123;</span><br><span class="line">        api.getMethod(&quot;detach&quot;).invoke(vm);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>通过 <code>loadAttachApi()</code> 得到 <code>VirtualMachine 类</code>，然后再用反射获取 <code>attach()</code> 方法，紧接着执行 <code>attach()</code> 到指定进程 id 上，得到 vm 的实例后执行 <code>loadAgent()</code> 方法，第一个参数为 <strong>agentJar</strong> 包的路径，第二个 <strong>options</strong> 是附加参数。</p>
+<p><code>loadAttachApi()</code> 方法如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">private Class loadAttachApi() throws MalformedURLException, ClassNotFoundException &#123;</span><br><span class="line">    File toolsJar = locateToolsJar();</span><br><span class="line"></span><br><span class="line">    ClassLoader cl = wrapIntoClassLoader(toolsJar);</span><br><span class="line">    try &#123;</span><br><span class="line">        return cl.loadClass(&quot;com.sun.tools.attach.VirtualMachine&quot;);</span><br><span class="line">    &#125; catch (ClassNotFoundException e) &#123;</span><br><span class="line">        throw new IllegalStateException(&quot;Unable to find tools.jar at &quot;+toolsJar+&quot; --- you need to run this tool with a JDK&quot;,e);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>问题来了，<code>VirtualMachine</code> 是个什么功能的类？ <code>attach()</code> <code>loadAgent()</code> 又是什么作用呢？</p>
+<p>这个就涉及到 JVM 层面提供的功能，在这之前也没有研究过，只好看看大拿的研究。  </p>
+<p><a href="http://www.infoq.com/cn/articles/javaagent-illustrated" target="_blank" rel="noopener">InfoQ JVM源码分析之javaagent原理完全解读</a>  </p>
+<p>关键类 Instrument:</p>
+<p><a href="http://docs.oracle.com/javase/7/docs/api/java/lang/instrument/package-summary.html" target="_blank" rel="noopener">Package java.lang.instrument</a></p>
+<p><strong>简单总结，JVM 暴露了一些动态操作已加载类型的接口，javaagnet 就是利用这些接口的一个实现，通过 agent 类的固定方法可以执行一些操作，比如对已经加载的类注入字节码，最常用的是用来监控运行时，进行一些疑难 bug 追踪。</strong></p>
+<p>此项目里 TransformerImpl 类就是字节码修改的实现类。   </p>
+<p>关键源码：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">instrumentation.addTransformer(new TransformerImpl(createSpec()),true);</span><br><span class="line">        </span><br><span class="line">instrumentation.retransformClasses(</span><br><span class="line">        FileInputStream.class,</span><br><span class="line">        FileOutputStream.class,</span><br><span class="line">        RandomAccessFile.class,</span><br><span class="line">        Class.forName(&quot;java.net.PlainSocketImpl&quot;),</span><br><span class="line">        ZipFile.class);</span><br></pre></td></tr></table></figure></p>
+<p>可以看到注册的类有 FileInputStream、FileOutputStream、RandomAccessFile、ZipFile 和 PlainSocketImpl。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">static List&lt;ClassTransformSpec&gt; createSpec() &#123;</span><br><span class="line">    return Arrays.asList(</span><br><span class="line">        newSpec(FileOutputStream.class, &quot;(Ljava/io/File;Z)V&quot;),</span><br><span class="line">        newSpec(FileInputStream.class, &quot;(Ljava/io/File;)V&quot;),</span><br><span class="line">        newSpec(RandomAccessFile.class, &quot;(Ljava/io/File;Ljava/lang/String;)V&quot;),</span><br><span class="line">        newSpec(ZipFile.class, &quot;(Ljava/io/File;I)V&quot;),</span><br><span class="line"></span><br><span class="line">        /*</span><br><span class="line">            java.net.Socket/ServerSocket uses SocketImpl, and this is where FileDescriptors</span><br><span class="line">            are actually managed.</span><br><span class="line"></span><br><span class="line">            SocketInputStream/SocketOutputStream does not maintain a separate FileDescritor.</span><br><span class="line">            They just all piggy back on the same SocketImpl instance.</span><br><span class="line">         */</span><br><span class="line">        new ClassTransformSpec(&quot;java/net/PlainSocketImpl&quot;,</span><br><span class="line">                // this is where a new file descriptor is allocated.</span><br><span class="line">                // it&apos;ll occupy a socket even before it gets connected</span><br><span class="line">                new OpenSocketInterceptor(&quot;create&quot;, &quot;(Z)V&quot;),</span><br><span class="line"></span><br><span class="line">                // When a socket is accepted, it goes to &quot;accept(SocketImpl s)&quot;</span><br><span class="line">                // where &apos;s&apos; is the new socket and &apos;this&apos; is the server socket</span><br><span class="line">                new AcceptInterceptor(&quot;accept&quot;,&quot;(Ljava/net/SocketImpl;)V&quot;),</span><br><span class="line"></span><br><span class="line">                // file descriptor actually get closed in socketClose()</span><br><span class="line">                // socketPreClose() appears to do something similar, but if you read the source code</span><br><span class="line">                // of the native socketClose0() method, then you see that it actually doesn&apos;t close</span><br><span class="line">                // a file descriptor.</span><br><span class="line">                new CloseInterceptor(&quot;socketClose&quot;)</span><br><span class="line">        ),</span><br><span class="line">        new ClassTransformSpec(&quot;sun/nio/ch/SocketChannelImpl&quot;,</span><br><span class="line">                new OpenSocketInterceptor(&quot;&lt;init&gt;&quot;, &quot;(Ljava/nio/channels/spi/SelectorProvider;)V&quot;),</span><br><span class="line">                new CloseInterceptor(&quot;kill&quot;)</span><br><span class="line">        )</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>ClassTransformSpec</code> 定义：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Creates &#123;@link ClassTransformSpec&#125; that intercepts</span><br><span class="line"> * a constructor and the close method.</span><br><span class="line"> */</span><br><span class="line">private static ClassTransformSpec newSpec(final Class c, String constructorDesc) &#123;</span><br><span class="line">    final String binName = c.getName().replace(&apos;.&apos;, &apos;/&apos;);</span><br><span class="line">    return new ClassTransformSpec(binName,</span><br><span class="line">        new ConstructorOpenInterceptor(constructorDesc, binName),</span><br><span class="line">        new CloseInterceptor()</span><br><span class="line">    );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>关键真相在这里，实现了一个方法拦截适配器，在注册类的某些方法执行后运行 <code>Listener</code> 类的 <code>open()</code> 方法来记录信息。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Intercepts the this.open(...) call in the constructor.</span><br><span class="line"> */</span><br><span class="line">private static class ConstructorOpenInterceptor extends MethodAppender &#123;</span><br><span class="line">    /**</span><br><span class="line">     * Binary name of the class being transformed.</span><br><span class="line">     */</span><br><span class="line">    private final String binName;</span><br><span class="line"></span><br><span class="line">    public ConstructorOpenInterceptor(String constructorDesc, String binName) &#123;</span><br><span class="line">        super(&quot;&lt;init&gt;&quot;, constructorDesc);</span><br><span class="line">        this.binName = binName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public MethodVisitor newAdapter(MethodVisitor base, int access, String name, String desc, String signature, String[] exceptions) &#123;</span><br><span class="line">        final MethodVisitor b = super.newAdapter(base, access, name, desc, signature, exceptions);</span><br><span class="line">        return new OpenInterceptionAdapter(b,access,desc) &#123;</span><br><span class="line">            @Override</span><br><span class="line">            protected boolean toIntercept(String owner, String name) &#123;</span><br><span class="line">                return owner.equals(binName) &amp;&amp; name.startsWith(&quot;open&quot;);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            @Override</span><br><span class="line">            protected Class&lt;? extends Exception&gt; getExpectedException() &#123;</span><br><span class="line">                return FileNotFoundException.class;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    protected void append(CodeGenerator g) &#123;</span><br><span class="line">        g.invokeAppStatic(Listener.class,&quot;open&quot;,</span><br><span class="line">                new Class[]&#123;Object.class, File.class&#125;,</span><br><span class="line">                new int[]&#123;0,1&#125;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>最后的 <code>append()</code> 方法可以说是整个流程中最核心的地方，<code>Listener#open()</code> 方法如下所示：<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> public static synchronized void open(Object _this, File f) &#123;</span><br><span class="line">    put(_this, new Listener.FileRecord(f));</span><br><span class="line">    Iterator i$ = ActivityListener.LIST.iterator();</span><br><span class="line"></span><br><span class="line">    while(i$.hasNext()) &#123;</span><br><span class="line">        ActivityListener al = (ActivityListener)i$.next();</span><br><span class="line">        al.open(_this, f);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p> 最后说 一下 <strong><code>Listener</code></strong> 这个类，这也是这个工具的一个关键的类实现，有许多静态方法，所有监控的打开的文件相关内容都在 <code>Listener</code> 中保存，内容输出的操作也在其中。</p>
+<p>这是类中的属性和方法:<br> <img src="https://dn-coding-net-production-pp.qbox.me/b34f6f31-d3fb-42eb-a3d5-535fdd45edfb.png" alt="图片"> </p>
+<p>TABLE 保存打开中的文件，默认是 weak 引用，内存不足时这个对象会被回收掉，以防止程序不会因为监控导致的内存不足而异常退出。<br>当参数 strong 存在时会 new 一个 LinkedHashMap, 让监控内容的容器不会被回收掉。<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"> /**</span><br><span class="line"> * Files that are currently open, keyed by the owner object (like &#123;@link FileInputStream&#125;.</span><br><span class="line"> */</span><br><span class="line">private static Map&lt;Object,Record&gt; TABLE = new WeakHashMap&lt;Object,Record&gt;();</span><br></pre></td></tr></table></figure></p>
+<p> Record 中有三个字段，一个是用来保存堆栈信息的异常类型，一个是线程名，最后一个是时间。<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Remembers who/where/when opened a file.</span><br><span class="line"> */</span><br><span class="line">public static class Record &#123;</span><br><span class="line">    public final Exception stackTrace = new Exception();</span><br><span class="line">    public final String threadName;</span><br><span class="line">    public final long time;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>到这里已经差不多了，其他细节实现也就不赘述了。</p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p><strong>file-leak-detector</strong> 查找文件句柄泄露问题，就是用 JVM 提供的接口，以 agent 方式 attach 进正在运行的 JAVA 进程，修改 <code>FileStream</code> 等类型的字节码，在 open &amp; close 文件时加入拦截操作，记录线程和堆栈，然后在 http 或者 系统日志中输出记录。<br>最后通过这些信息查找是哪里导致的问题，然后做针对性的修复。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2017/01/01/2017-01-02-file-leak-detector/" target="_blank" rel="external">http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/file-leak/">file leak</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/&title=《file-leak-detector 检查Java文件句柄泄露》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/&title=《file-leak-detector 检查Java文件句柄泄露》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《file-leak-detector 检查Java文件句柄泄露》 — tiangao&url=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/02/06/2017-02-07-download-refactoring/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">记一次代码重构</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2016/11/30/2016-12-01-cloud-config/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Spring Cloud Config</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/&title=《file-leak-detector 检查Java文件句柄泄露》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/&title=《file-leak-detector 检查Java文件句柄泄露》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《file-leak-detector 检查Java文件句柄泄露》 — tiangao&url=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/01/01/2017-01-02-file-leak-detector/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKElEQVR42u3aS47CQAwFQO5/6cwWiUl4tgEp3ZUVCvl0sTB2249HfBxPx/OZ18+v1+f3vl754QMDA+O2jOPyuGYkL86fnH/7zxsxMDA2YJy9/jqkJndVQ+r1e0/PY2BgYARLycNu8nwMDAyMOWMeXvMEFAMDAyMvYqsJXO8n+HotjoGBcUNGvuv++89f6W9gYGDcinEUj2oRm7cwJwcGBsbajDzAXadlkzQxL1yvC2AMDIy1Gb1LJ6Vmb6Qjb0JgYGCszciTuV6Tshpwq21UDAyMtRnV8DcpYquJY3I9BgbGqoxeJ+FToTNPPd/8NBgYGJsxJkupxvheEXv6X4GBgbENI0/yJgNenxq2ePO/gYGBsQQjaQNMxiyqiWA16cTAwNiBUU3squNcyXKTlDGaFsHAwFiaMUkHeyVuYagrH63AwMDYgJHf1oNVBzUKwxYYGBhLM+aPnqSJvcQRAwNjN0a1JZk0BqoL7eV7GBgY+zCqW2mTdmZeSOeNgeaOIAYGxkKMajrYa2dWj9NVYWBgbMBobnIVz/faD83tNgwMjOUYSSFaLiyLiWC1DM6+wMDAuDejl5ZVw2g+2NHc1MPAwFia0Qtz+abYPKxPNvIwMDBWYuRBthcc8ydPNvIwMDB2YPQCX3WoYvLMKM/FwMDAiMcjohcXYW+oGBgYGPHSe4lgdbAj6sRiYGAsx+htqFXPfGO8DAMDYwfGpHTsLbp6ZZ6GYmBgLMf4A28B8C7kSCNyAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

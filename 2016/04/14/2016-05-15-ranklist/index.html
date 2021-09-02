@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>数据排序——排行榜 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content>
+    <meta name="description" content="问题： 1w 10w 100w 数据找出前10 100 1000个，怎么弄效率较高?  全排序冒泡12345678910111213141516public void sort(int []a, boolean isUp)&amp;#123;        for (int i =0; i &amp;lt; a.length - 1; i++) &amp;#123;            for (int j=0; j">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据排序——排行榜">
+<meta property="og:url" content="http://j2go.cn/2016/04/14/2016-05-15-ranklist/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="问题： 1w 10w 100w 数据找出前10 100 1000个，怎么弄效率较高?  全排序冒泡12345678910111213141516public void sort(int []a, boolean isUp)&amp;#123;        for (int i =0; i &amp;lt; a.length - 1; i++) &amp;#123;            for (int j=0; j">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据排序——排行榜">
+<meta name="twitter:description" content="问题： 1w 10w 100w 数据找出前10 100 1000个，怎么弄效率较高?  全排序冒泡12345678910111213141516public void sort(int []a, boolean isUp)&amp;#123;        for (int i =0; i &amp;lt; a.length - 1; i++) &amp;#123;            for (int j=0; j">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">数据排序——排行榜</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">数据排序——排行榜</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-04-14T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2016-04-15
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#问题："><span class="post-toc-number">1.</span> <span class="post-toc-text">问题：</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#全排序"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">全排序</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#冒泡"><span class="post-toc-number">1.1.1.</span> <span class="post-toc-text">冒泡</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#快排"><span class="post-toc-number">1.1.2.</span> <span class="post-toc-text">快排</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#固定大小列表的插入排序"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">固定大小列表的插入排序</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#测试"><span class="post-toc-number">2.</span> <span class="post-toc-text">测试</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#测试程序代码"><span class="post-toc-number">3.</span> <span class="post-toc-text">测试程序代码</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2016-05-15-ranklist"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">数据排序——排行榜</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-04-15 00:00:00" datetime="2016-04-14T16:00:00.000Z"  itemprop="datePublished">2016-04-15</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/算法/">算法</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><blockquote>
+<p>1w 10w 100w 数据找出前10 100 1000个，怎么弄效率较高?</p>
+</blockquote>
+<h3 id="全排序"><a href="#全排序" class="headerlink" title="全排序"></a>全排序</h3><h4 id="冒泡"><a href="#冒泡" class="headerlink" title="冒泡"></a>冒泡</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span> []a, <span class="keyword">boolean</span> isUp)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i =<span class="number">0</span>; i &lt; a.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>; j &lt; a.length - i - <span class="number">1</span>; j++)&#123;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">if</span> ( isUp &amp;&amp; a[j] &lt; a[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = a[j];</span><br><span class="line">                    a[j] = a[j+<span class="number">1</span>];</span><br><span class="line">                    a[j+<span class="number">1</span>] = temp;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span>( !isUp &amp;&amp; a[j] &gt; a[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = a[j];</span><br><span class="line">                    a[j] = a[j+<span class="number">1</span>];</span><br><span class="line">                    a[j+<span class="number">1</span>] = temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h4 id="快排"><a href="#快排" class="headerlink" title="快排"></a>快排</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">qsort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ( lo &gt;= hi) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> left = lo, right = hi;</span><br><span class="line">        <span class="keyword">int</span> mid = a[(left+right)/<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right) &#123;</span><br><span class="line">            <span class="keyword">while</span>(mid &lt; a[left]) left++;</span><br><span class="line">            <span class="keyword">while</span>(mid &gt; a[right]) right--;</span><br><span class="line">            <span class="keyword">if</span> (left &lt; right) &#123;</span><br><span class="line">                <span class="keyword">int</span> temp = a[left];</span><br><span class="line">                a[left] = a[right];</span><br><span class="line">                a[right] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        qsort(a, lo, right - <span class="number">1</span>);</span><br><span class="line">        qsort(a, left + <span class="number">1</span>, hi);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h3 id="固定大小列表的插入排序"><a href="#固定大小列表的插入排序" class="headerlink" title="固定大小列表的插入排序"></a>固定大小列表的插入排序</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//链表长度</span></span><br><span class="line"><span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> DEFAULT_SHOW_SIZE = <span class="number">10</span>;</span><br><span class="line"><span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(LinkedList&lt;Integer&gt; list, <span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (list.size() &gt; <span class="number">10</span> &amp;&amp; x &lt; list.getLast()) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (list.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            list.add(x);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> size = DEFAULT_SHOW_SIZE &gt; list.size() ? list.size(): DEFAULT_SHOW_SIZE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (x &gt;= list.get(i)) &#123;</span><br><span class="line">                list.add(i, x);</span><br><span class="line">                <span class="keyword">if</span> (list.size() &gt; DEFAULT_SHOW_SIZE) &#123;</span><br><span class="line">                    list.removeLast();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>当然还有其他很多方式，不过个人拙见有限</p>
+<h2 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h2><p><strong>数组大小 1000 前10个</strong></p>
+<blockquote>
+<p>冒泡: 11ms<br>快排: 1ms<br>链表: 4ms   </p>
+</blockquote>
+<p><strong>数组大小 1W 前100个</strong></p>
+<blockquote>
+<p>冒泡: 198ms<br>快排: 4ms<br>链表: 9ms   </p>
+</blockquote>
+<blockquote>
+<p>冒泡: 310ms<br>快排: 11ms<br>链表: 6ms   </p>
+</blockquote>
+<blockquote>
+<p>冒泡: 290ms<br>快排: 4ms<br>链表: 5ms   </p>
+</blockquote>
+<p>多次测试后发现，快排真的不稳定</p>
+<p><strong>数组大小 1W 前500个</strong></p>
+<blockquote>
+<p>链表: 286ms<br>冒泡: 239ms<br>快排: 6ms   </p>
+</blockquote>
+<blockquote>
+<p>链表: 86ms<br>冒泡: 246ms<br>快排: 7ms   </p>
+</blockquote>
+<blockquote>
+<p>链表: 126ms<br>冒泡: 282ms<br>快排: 3ms   </p>
+</blockquote>
+<p>链表果不其然效率下来了，插入排序效率也还是有局限，可以用二分查找优化下，效率肯定提升极大</p>
+<p><strong>数组大小 10W 前100个</strong></p>
+<blockquote>
+<p>链表: 15ms<br>冒泡: 20643ms<br>快排: Failed   </p>
+</blockquote>
+<p>这里冒泡已经不能看了，然而快排直接就失败了。。。难道因为递归的原因，可是也没有 StackOverFlow 错误抛出。。。<br>数组大小换成3W   </p>
+<blockquote>
+<p>链表: 9ms<br>冒泡: 2215ms<br>快排:     </p>
+</blockquote>
+<p>依然跑不出结果。。。再来试 2W</p>
+<blockquote>
+<p>链表: 11ms<br>冒泡: 888ms<br>快排: 15ms   </p>
+</blockquote>
+<p>2.5W</p>
+<blockquote>
+<p>链表: 13ms<br>冒泡: 1618ms<br>快排: 7ms   </p>
+</blockquote>
+<p>2.8W   </p>
+<blockquote>
+<p>链表: 11ms<br>冒泡: 1833ms<br>快排: 11ms   </p>
+</blockquote>
+<p>2.9W又嗝屁了，看来是代码问题，卧槽.实际使用还是老实的用 jdk 的 Collections.sort吧</p>
+<h2 id="测试程序代码"><a href="#测试程序代码" class="headerlink" title="测试程序代码"></a>测试程序代码</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SimpleSortTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span>  Comparator&lt;Integer&gt; HIGH_COMPARATOR = <span class="keyword">new</span> Comparator&lt;Integer&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Integer o1, Integer o2)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> o1 - o2;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span> Comparator&lt;Integer&gt; LOW_COMPARATOR = <span class="keyword">new</span> Comparator&lt;Integer&gt;() &#123;</span><br><span class="line">        <span class="meta">@Override</span></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">compare</span><span class="params">(Integer o1, Integer o2)</span> </span>&#123;</span><br><span class="line">            <span class="keyword">return</span> o2 - o1;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">boolean</span> UP_ORDER = <span class="keyword">true</span>;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">boolean</span> LOW_ORDER = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span> []a, Comparator&lt;Integer&gt; comparator)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i =<span class="number">0</span>; i &lt; a.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>;j &lt; a.length - i - <span class="number">1</span>; j++)&#123;</span><br><span class="line">                <span class="keyword">if</span> (comparator.compare(a[j], a[j+<span class="number">1</span>]) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = a[j];</span><br><span class="line">                    a[j] = a[j+<span class="number">1</span>];</span><br><span class="line">                    a[j+<span class="number">1</span>] = temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sort</span><span class="params">(<span class="keyword">int</span> []a, <span class="keyword">boolean</span> isUp)</span></span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i =<span class="number">0</span>; i &lt; a.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> j=<span class="number">0</span>; j &lt; a.length - i - <span class="number">1</span>; j++)&#123;</span><br><span class="line">                <span class="comment">//如果 isUp ture 升序</span></span><br><span class="line">                <span class="keyword">if</span> ( isUp &amp;&amp; a[j] &lt; a[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = a[j];</span><br><span class="line">                    a[j] = a[j+<span class="number">1</span>];</span><br><span class="line">                    a[j+<span class="number">1</span>] = temp;</span><br><span class="line">                &#125; <span class="keyword">else</span> <span class="keyword">if</span>( !isUp &amp;&amp; a[j] &gt; a[j+<span class="number">1</span>]) &#123;</span><br><span class="line">                    <span class="keyword">int</span> temp = a[j];</span><br><span class="line">                    a[j] = a[j+<span class="number">1</span>];</span><br><span class="line">                    a[j+<span class="number">1</span>] = temp;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">qsort</span><span class="params">(<span class="keyword">int</span>[] a, <span class="keyword">int</span> lo, <span class="keyword">int</span> hi)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> ( lo &gt;= hi) <span class="keyword">return</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> left = lo, right = hi;</span><br><span class="line">        <span class="keyword">int</span> mid = a[(left+right)/<span class="number">2</span>];</span><br><span class="line">        <span class="keyword">while</span>(left &lt; right) &#123;</span><br><span class="line">            <span class="keyword">while</span>(mid &lt; a[left]) left++;</span><br><span class="line">            <span class="keyword">while</span>(mid &gt; a[right]) right--;</span><br><span class="line">            <span class="keyword">if</span> (left &lt; right) &#123;</span><br><span class="line">                <span class="keyword">int</span> temp = a[left];</span><br><span class="line">                a[left] = a[right];</span><br><span class="line">                a[right] = temp;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        qsort(a, lo, right - <span class="number">1</span>);</span><br><span class="line">        qsort(a, left + <span class="number">1</span>, hi);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> TEST_LIST_SIZE = <span class="number">10000</span>;</span><br><span class="line">    <span class="keyword">final</span> <span class="keyword">static</span> <span class="keyword">int</span> DEFAULT_SHOW_SIZE = <span class="number">500</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span>[] demo = generateRandomArray();</span><br><span class="line">        linkListTest(demo);</span><br><span class="line">        orderTest(demo);</span><br><span class="line">        qSortTest(demo);</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">qSortTest</span><span class="params">(<span class="keyword">int</span>[] array)</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"快排: "</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] demo = <span class="keyword">new</span> <span class="keyword">int</span>[TEST_LIST_SIZE];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">            demo[i] = array[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">new</span> SimpleSort().qsort(demo, <span class="number">0</span>, demo.length - <span class="number">1</span>);</span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println((end - start) +<span class="string">"ms"</span>);</span><br><span class="line"><span class="comment">//        System.out.println();</span></span><br><span class="line"><span class="comment">//        for (int i = 0; i &lt; DEFAULT_SHOW_SIZE; i++) &#123;</span></span><br><span class="line"><span class="comment">//            System.out.println(demo[i]);</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        System.out.println();</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">orderTest</span><span class="params">(<span class="keyword">int</span>[] array)</span> </span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"冒泡: "</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] demo = <span class="keyword">new</span> <span class="keyword">int</span>[TEST_LIST_SIZE];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">            demo[i] = array[i];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">new</span> SimpleSort().sort(demo, UP_ORDER);</span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println((end - start) + <span class="string">"ms"</span>);</span><br><span class="line"><span class="comment">//        System.out.println();</span></span><br><span class="line"><span class="comment">//        for (int i = 0; i &lt; DEFAULT_SHOW_SIZE; i++) &#123;</span></span><br><span class="line"><span class="comment">//            System.out.println(demo[i]);</span></span><br><span class="line"><span class="comment">//        &#125;</span></span><br><span class="line"><span class="comment">//        System.out.println();</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">linkListTest</span><span class="params">(<span class="keyword">int</span>[] array)</span></span>&#123;</span><br><span class="line">        System.out.print(<span class="string">"链表: "</span>);</span><br><span class="line">        <span class="keyword">long</span> start = System.currentTimeMillis();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span>[] demo2 = <span class="keyword">new</span> <span class="keyword">int</span>[TEST_LIST_SIZE];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; array.length; i++) &#123;</span><br><span class="line">            demo2[i] = array[i];</span><br><span class="line">        &#125;</span><br><span class="line">        LinkedList&lt;Integer&gt; linkList = <span class="keyword">new</span> LinkedList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i: demo2) &#123;</span><br><span class="line">            insert(linkList, i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">long</span> end = System.currentTimeMillis();</span><br><span class="line">        System.out.println((end - start) +<span class="string">"ms"</span>);</span><br><span class="line"><span class="comment">//        System.out.println();</span></span><br><span class="line"><span class="comment">//        linkList.forEach(System.out::println);</span></span><br><span class="line"><span class="comment">//        System.out.println();</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> Random random = <span class="keyword">new</span> Random();</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">int</span>[] generateRandomArray() &#123;</span><br><span class="line">        <span class="keyword">int</span>[] demo = <span class="keyword">new</span> <span class="keyword">int</span>[TEST_LIST_SIZE];</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; demo.length - <span class="number">1</span>; i++) &#123;</span><br><span class="line">            demo[i] = random.nextInt(<span class="number">1000000000</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> demo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">static</span> <span class="keyword">void</span> <span class="title">insert</span><span class="params">(LinkedList&lt;Integer&gt; list, <span class="keyword">int</span> x)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (list.size() &gt; <span class="number">10</span> &amp;&amp; x &lt; list.getLast()) &#123;</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (list.size() == <span class="number">0</span>) &#123;</span><br><span class="line">            list.add(x);</span><br><span class="line">            <span class="keyword">return</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> size = DEFAULT_SHOW_SIZE &gt; list.size() ? list.size(): DEFAULT_SHOW_SIZE;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (x &gt;= list.get(i)) &#123;</span><br><span class="line">                list.add(i, x);</span><br><span class="line">                <span class="keyword">if</span> (list.size() &gt; DEFAULT_SHOW_SIZE) &#123;</span><br><span class="line">                    list.removeLast();</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">return</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2016/04/14/2016-05-15-ranklist/" target="_blank" rel="external">http://j2go.cn/2016/04/14/2016-05-15-ranklist/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/04/14/2016-05-15-ranklist/&title=《数据排序——排行榜》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/04/14/2016-05-15-ranklist/&title=《数据排序——排行榜》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/04/14/2016-05-15-ranklist/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《数据排序——排行榜》 — tiangao&url=http://j2go.cn/2016/04/14/2016-05-15-ranklist/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/04/14/2016-05-15-ranklist/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2016/04/14/2016-04-15-netty4-1/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">初试 Netty4.1</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2016/04/09/2016-04-10-linkedlist-sort/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">双向链表排序</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/04/14/2016-05-15-ranklist/&title=《数据排序——排行榜》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/04/14/2016-05-15-ranklist/&title=《数据排序——排行榜》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/04/14/2016-05-15-ranklist/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《数据排序——排行榜》 — tiangao&url=http://j2go.cn/2016/04/14/2016-05-15-ranklist/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/04/14/2016-05-15-ranklist/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACL0lEQVR42u3aQY7CMAwFUO5/6Y40q5EG2m+nrWjyskJASV4WJrH9esVj+x1/X++P/afyd04eGBgYj2XkC9qf4NOz/0nJ1uRrw8DAWIeRB9n8qf2lJFuQz4KBgYGxP3ESUpPf7H0HAwMDI7/E5sfEK8I6BgbGCoxe4qz6fn58vPAujoGB8UBGrzBwz+vL6xsYGBhfz9iKoxouq2WD3sDAwJib0UvKJwe+kYtrHl2jfcLAwHg4o9qq1Ss05sWD6qa8+d/AwMCYlFFt28qLmgmpt2VvTrgYGBhTM3JAtZA5cmItBHoMDIzFGOPlyfxiPF7sfOWRGwMDYzrGeCJs/LJaaPXAwMBYgNFrOc0LA9WSZzl8Y2BgTM3Ij3cjrRXVhrPeJmJgYMzNGFnEfqBMvpO3ZZRbXTEwMKZjVK+y1WRZNQQnx0cMDIwVGPcscaTweUKzBQYGxhSM6lHs3DJntQyAgYGBMdKklSfR8mejTzEwMKZm9I59Sd6uVzzoXaQxMDDmZhTKgXFqvrcd1aMnBgbGyoxeWq2X9O+1Xxx0i2BgYEzHyKfJL5y9hVZbOg5mwcDAmIixFUeyK9VCQvLUQSDGwMCYmlENc3c2ZOQXXQwMjBUY+VV2JFxW8dUWDQwMjBUYI0FwpKmiV5b4GHAxMDCWZ/RS/zkvKXMe9IxgYGBgBGm48vStNrITAi4GBsYDGWddYnuhM0Hemm7DwMD4MsZ4YSBv0Uh4yVaWARgYGE9l/ACyvTMIgjtpKAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

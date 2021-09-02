@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Golang 稀疏文件处理 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="稀疏文件">
+    <meta name="description" content="使用 Docker 的我们都知道一个磁盘资源分配的问题，要么使用 devicemapper 设定一个固定大小，不过一旦确定就不可改，要么就没有限制，一个  container 就可能用尽整个磁盘空间。因为我们 WEDIDE 使用 Docker 运行大量服务，在调研了好几种磁盘分配方式后发现使用稀疏文件创建文件系统再挂载是一个很好的方案。  什么是稀疏文件?我们都知道计算机文件是存储在磁盘上的，都">
+<meta name="keywords" content="稀疏文件">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang 稀疏文件处理">
+<meta property="og:url" content="http://j2go.cn/2016/11/04/2016-11-05-go-sparse/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="使用 Docker 的我们都知道一个磁盘资源分配的问题，要么使用 devicemapper 设定一个固定大小，不过一旦确定就不可改，要么就没有限制，一个  container 就可能用尽整个磁盘空间。因为我们 WEDIDE 使用 Docker 运行大量服务，在调研了好几种磁盘分配方式后发现使用稀疏文件创建文件系统再挂载是一个很好的方案。  什么是稀疏文件?我们都知道计算机文件是存储在磁盘上的，都">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://dn-coding-net-production-pp.qbox.me/f655d88b-bbba-4885-8851-3e511b0768fd.png">
+<meta property="og:image" content="https://dn-coding-net-production-pp.qbox.me/5ceb8b5e-8d77-4eaa-b946-186ddca0629c.png">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Golang 稀疏文件处理">
+<meta name="twitter:description" content="使用 Docker 的我们都知道一个磁盘资源分配的问题，要么使用 devicemapper 设定一个固定大小，不过一旦确定就不可改，要么就没有限制，一个  container 就可能用尽整个磁盘空间。因为我们 WEDIDE 使用 Docker 运行大量服务，在调研了好几种磁盘分配方式后发现使用稀疏文件创建文件系统再挂载是一个很好的方案。  什么是稀疏文件?我们都知道计算机文件是存储在磁盘上的，都">
+<meta name="twitter:image" content="https://dn-coding-net-production-pp.qbox.me/f655d88b-bbba-4885-8851-3e511b0768fd.png">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Golang 稀疏文件处理</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Golang 稀疏文件处理</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2016-11-04T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2016-11-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Golang/">Golang</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是稀疏文件"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是稀疏文件?</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#稀疏文件的作用"><span class="post-toc-number">1.1.</span> <span class="post-toc-text">稀疏文件的作用</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Linux-下创建稀疏文件"><span class="post-toc-number">1.2.</span> <span class="post-toc-text">Linux 下创建稀疏文件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#一种方式是使用-truncate-命令。"><span class="post-toc-number">1.2.1.</span> <span class="post-toc-text">一种方式是使用 truncate 命令。</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#第二种方式是使用-dd-命令。"><span class="post-toc-number">1.2.2.</span> <span class="post-toc-text">第二种方式是使用 dd 命令。</span></a></li></ol></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#稀疏文件使用注意"><span class="post-toc-number">1.3.</span> <span class="post-toc-text">稀疏文件使用注意</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Golang-操作稀疏文件"><span class="post-toc-number">2.</span> <span class="post-toc-text">Golang 操作稀疏文件</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#判断文件是否是稀疏文件"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">判断文件是否是稀疏文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#创建稀疏文件"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">创建稀疏文件</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#稀疏文件的拷贝"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">稀疏文件的拷贝</span></a></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#golang系统调用扩容稀疏文件验证过程"><span class="post-toc-number">3.</span> <span class="post-toc-text">golang系统调用扩容稀疏文件验证过程</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2016-11-05-go-sparse"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Golang 稀疏文件处理</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2016-11-05 00:00:00" datetime="2016-11-04T16:00:00.000Z"  itemprop="datePublished">2016-11-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Golang/">Golang</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p>使用 Docker 的我们都知道一个磁盘资源分配的问题，要么使用 devicemapper 设定一个固定大小，不过一旦确定就不可改，要么就没有限制，一个  container 就可能用尽整个磁盘空间。<br>因为我们 WEDIDE 使用 Docker 运行大量服务，在调研了好几种磁盘分配方式后发现使用稀疏文件创建文件系统再挂载是一个很好的方案。</p>
+</blockquote>
+<h2 id="什么是稀疏文件"><a href="#什么是稀疏文件" class="headerlink" title="什么是稀疏文件?"></a>什么是稀疏文件?</h2><p>我们都知道计算机文件是存储在磁盘上的，都一个大小属性，让用户可以查询文件大小，但是并不是所有文件显示的大小就是真实的文件大小。<br>一般情况下文件大小是真实所占磁盘的大小，但是有一类文件里有很多“空洞”，呈现的结果就是文件的大小属性值很大但真实占的磁盘空间很小。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">root@dev-d:/data/image# du -h file_trun.img </span><br><span class="line">0	file_trun.img</span><br><span class="line">root@dev-d:/data/image# ls -lh file_trun.img </span><br><span class="line">-rw-r--r-- 1 root root 100M Sep 12 16:00 file_trun.img</span><br></pre></td></tr></table></figure></p>
+<p>du  命令计算的是文件真实所占磁盘空间大小，ls 命令读取的是文件记录信息中的文件大小，这里就可以看到文件大小信息并不一定是文件真实大小。<br>至于这种情况是怎么发生的，可以先看一下 UNIX 的文件系统组成：<br> <figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://dn-coding-net-production-pp.qbox.me/f655d88b-bbba-4885-8851-3e511b0768fd.png" alt="图片" title>
+                </div>
+                <div class="image-caption">图片</div>
+            </figure> </p>
+<p>更细节的看 i 节点和数据块时大概是下面这样<br> <figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://dn-coding-net-production-pp.qbox.me/5ceb8b5e-8d77-4eaa-b946-186ddca0629c.png" alt="图片" title>
+                </div>
+                <div class="image-caption">图片</div>
+            </figure> </p>
+<p>i 节点包含了文件有关的所有信息：文件类型、文件访问权限位、文件长度和指向文件数据块的的指针等。UNIX 系统调用的文件信息 stat 结构大多信息就取自 i 节点。<br>当一个文件 i 节点中 只存储磁盘空间的 block 号，数据为空，而且并不占用物理磁盘 block 号时就形成了这样的稀疏文件，在写数据的时候才分配真正的磁盘空间。当然，是否支持这样的行为需要文件系统支持。</p>
+<h3 id="稀疏文件的作用"><a href="#稀疏文件的作用" class="headerlink" title="稀疏文件的作用"></a>稀疏文件的作用</h3><ul>
+<li>快速创建大文件</li>
+<li>限制文件的最终大小</li>
+<li>提高文件系统空间利用率</li>
+<li>可创建虚拟文件系统</li>
+</ul>
+<p>稀疏文件在虚拟磁盘和创建虚拟机时用的最多，使用一个文件即可在其中创建一个文件系统，在真正需要的时候才为其分配空间，提高了文件系统的利用率，还能与现有的文件系统隔离。</p>
+<p>在使用 docker 的场景为了限制容器的磁盘使用，使用稀疏文件创建的文件系统是一个非常好的方案。 在 WEB-IDE Terminal  为每个项目提供独立的工作空间背后，正是使用了这种文件系统，既提高了文件系统利用率，又能为不同需要的用户提供不同空间大小。</p>
+<h3 id="Linux-下创建稀疏文件"><a href="#Linux-下创建稀疏文件" class="headerlink" title="Linux 下创建稀疏文件"></a>Linux 下创建稀疏文件</h3><p>(以下示例运行环境均在 ubuntu14.04 下)</p>
+<h4 id="一种方式是使用-truncate-命令。"><a href="#一种方式是使用-truncate-命令。" class="headerlink" title="一种方式是使用 truncate 命令。"></a>一种方式是使用 truncate 命令。</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">root@dev-d:/data/image# truncate -s 100M file_trun.img</span><br><span class="line">root@dev-d:/data/image# du -h file_trun.img </span><br><span class="line">0	file_trun.img</span><br><span class="line">root@dev-d:/data/image# ll -h file_trun.img </span><br><span class="line">-rw-r--r-- 1 root root 100M Sep 12 16:00 file_trun.img</span><br></pre></td></tr></table></figure>
+<p>truncate 命令是将文件缩减或扩展至指定大小，-s 参数是指定大小。</p>
+<h4 id="第二种方式是使用-dd-命令。"><a href="#第二种方式是使用-dd-命令。" class="headerlink" title="第二种方式是使用 dd 命令。"></a>第二种方式是使用 dd 命令。</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@dev-d:/data/image# dd of=file-dd bs=1M seek=200 count=0</span><br><span class="line">0+0 records in</span><br><span class="line">0+0 records out</span><br><span class="line">0 bytes (0 B) copied, 0.000419977 s, 0.0 kB/s</span><br><span class="line">drwxr-xr-x 2 root    root    4.0K Sep 12 16:02 ./</span><br><span class="line">drwxrwxr-x 5 vagrant vagrant 4.0K Sep 12 15:59 ../</span><br><span class="line">-rw-r--r-- 1 root    root    200M Sep 12 16:02 file-dd</span><br><span class="line">-rw-r--r-- 1 root    root    100M Sep 12 16:00 file_trun.img</span><br><span class="line">root@dev-d:/data/image# du -h file-dd</span><br><span class="line">0	file-dd</span><br></pre></td></tr></table></figure>
+<p>dd 命令一般用于指定大小的拷贝文件，在拷贝的同时进行指定转换。of 参数是输出文件位置，bs 是块大小，seek 指定从文件开头跳过的块数量，count 指定要拷贝的数量，所以在不拷贝真实文件全部跳过时就生成了我们需要的空稀疏文件。<br>另外还可以使用以下方式达到同样目的,<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">root@dev-d:/data/image# dd if=/dev/null of=file-dd bs=1M seek=200</span><br></pre></td></tr></table></figure></p>
+<p>if参数是输入文件位置，使用 null 来填充数据块指针，表现为不指向任何数据块。</p>
+<h3 id="稀疏文件使用注意"><a href="#稀疏文件使用注意" class="headerlink" title="稀疏文件使用注意"></a>稀疏文件使用注意</h3><p>一般情况下linux可直接用 cp 命令拷贝稀疏文件而不展开，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">root@dev-d:/data/image# cp file-dd file-dd2.img</span><br><span class="line">root@dev-d:/data/image# ll</span><br><span class="line">total 8</span><br><span class="line">drwxr-xr-x 2 root    root         4096 Sep 12 16:06 ./</span><br><span class="line">drwxrwxr-x 5 vagrant vagrant      4096 Sep 12 15:59 ../</span><br><span class="line">-rw-r--r-- 1 root    root    209715200 Sep 12 16:02 file-dd</span><br><span class="line">-rw-r--r-- 1 root    root    209715200 Sep 12 16:06 file-dd2.img</span><br><span class="line">-rw-r--r-- 1 root    root    104857600 Sep 12 16:00 file_trun.img</span><br><span class="line">root@dev-d:/data/image# du -h file-dd2.img </span><br><span class="line">0	file-dd2.img</span><br></pre></td></tr></table></figure></p>
+<p>但是有些系统 比如 FreeBSD 是不支持的，cp 操作会展开文件，“空洞”的地方全部用 0 填充，导致速度很慢，而且这也不是我们所预期的行为。<br>cp 命令有一个参数 –sparse 提供支持, 命令说明中如下解释:</p>
+<blockquote>
+<p>By default, sparse SOURCE files are detected by a crude heuristic and the corresponding DEST file is made sparse as well. That is the behavior selected by –sparse=auto. Specify –sparse=always to create a sparse DEST file whenever the SOURCE file contains a long enough sequence of zero bytes. Use –sparse=never to inhibit creation of sparse files.</p>
+<blockquote>
+<p>意思就是 默认–sparse=auto 会判断文件类型，拷贝结果与源文件一致; –sparse=always时总是会创建稀疏文件; –sparse=never 时总是会展开稀疏文件.</p>
+</blockquote>
+</blockquote>
+<h2 id="Golang-操作稀疏文件"><a href="#Golang-操作稀疏文件" class="headerlink" title="Golang 操作稀疏文件"></a>Golang 操作稀疏文件</h2><h3 id="判断文件是否是稀疏文件"><a href="#判断文件是否是稀疏文件" class="headerlink" title="判断文件是否是稀疏文件"></a>判断文件是否是稀疏文件</h3><p>由上面的原理可知道稀疏文件的大小和真实的大小是不一致的，所以只要能判断真实的大小 小于文件信息中的大小就知道这个文件是稀疏文件。<br>golang 实现代码如下：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">IsSparseFile</span><span class="params">(paht <span class="keyword">string</span>)</span> <span class="params">(<span class="keyword">bool</span>, error)</span></span>&#123;</span><br><span class="line">    allocated, taken, err := FileSize(path)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">false</span>, err</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> allocated &gt; taken, <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//返回值有三个，第一个是文件大小，第二个是真是文件大小，第三个值是错误</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">FileSize</span><span class="params">(path <span class="keyword">string</span>)</span> <span class="params">(allocated <span class="keyword">int64</span>, taken <span class="keyword">int64</span>, err error)</span></span> &#123;</span><br><span class="line">	s := syscall.Stat_t&#123;&#125;</span><br><span class="line">	err = syscall.Stat(path, &amp;s)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>, <span class="number">0</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	blockSize, err := FSBlockSize(path)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>, <span class="number">0</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> s.Size, s.Blocks * <span class="keyword">int64</span>(blockSize), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 返回真实的块大小</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">FSBlockSize</span><span class="params">(path <span class="keyword">string</span>)</span> <span class="params">(blockSize <span class="keyword">int</span>, err error)</span></span> &#123;</span><br><span class="line">	s := syscall.Statfs_t&#123;&#125;</span><br><span class="line">	err = syscall.Statfs(path, &amp;s)</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="number">0</span>, err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">int</span>(s.Bsize), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建稀疏文件"><a href="#创建稀疏文件" class="headerlink" title="创建稀疏文件"></a>创建稀疏文件</h3><p>使用原生 api 方式：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CreateSparseFile</span><span class="params">()</span></span> &#123;</span><br><span class="line">    <span class="keyword">if</span> f, err := os.Create(<span class="string">"go-trun.img"</span>); err != <span class="literal">nil</span> &#123;</span><br><span class="line">    	log.Fatal(<span class="string">"create error"</span>)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    	f.Close()</span><br><span class="line">    &#125;</span><br><span class="line">    err := os.Truncate(<span class="string">"go-trun.img"</span>, <span class="number">100</span>*<span class="number">1024</span>*<span class="number">1024</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    	log.Fatal(err)</span><br><span class="line">    &#125;</span><br><span class="line">    log.Println(<span class="string">"created."</span>)</span><br><span class="line">    f, err := os.Stat(<span class="string">"go-trun.img"</span>)</span><br><span class="line">    <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">    	log.Fatal(<span class="string">"stat error:"</span>, err)</span><br><span class="line">    &#125;</span><br><span class="line">    log.Println(<span class="string">"size:"</span>, f.Size, <span class="string">"ok"</span>)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>创建一个空文件，然后用系统调用将文件扩展至指定大小。这种方法还有另一个用途，扩展现有稀疏文件的大小，正确性验证过程附在文末。</p>
+<p>第二种种方式是调用系统 dd 命令来创建,<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">CreateSparseFile</span><span class="params">(path <span class="keyword">string</span>, size <span class="keyword">int</span>)</span> <span class="title">error</span></span> &#123;</span><br><span class="line">	seek := fmt.Sprintf(<span class="string">"seek=%d"</span>, size*<span class="number">1024</span>)</span><br><span class="line"></span><br><span class="line">	out, err := exec.Command(<span class="string">"dd"</span>, <span class="string">"if=/dev/null"</span>, <span class="string">"of="</span>+path, <span class="string">"bs=1M"</span>, seek).CombinedOutput()</span><br><span class="line">	<span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> err</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> exitErr, ok := err.(*exec.ExitError); ok &#123;</span><br><span class="line">		command := fmt.Sprintf(<span class="string">"dd if=/dev/null of=%s bs=1M %s"</span>, path, seek)</span><br><span class="line">		status := exitErr.Sys().(syscall.WaitStatus)</span><br><span class="line">		exitCode := status.ExitStatus()</span><br><span class="line">		<span class="keyword">return</span> fmt.Errorf(<span class="string">"command %q exits with %d: %s"</span>, command, exitCode, out)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此种方法属于调用 shell 执行操作，这种方式还可用于执行任何 shell 命令。</p>
+<h3 id="稀疏文件的拷贝"><a href="#稀疏文件的拷贝" class="headerlink" title="稀疏文件的拷贝"></a>稀疏文件的拷贝</h3><p>最简单的方法和 2.2 中第二种方法一样，调用 cp 命令来拷贝，这种方式简单有效。</p>
+<p>另外使用 go sdk 也能做到，不过比较麻烦一些。<br>下面的方式是直接使用 sdk 的 io.Copy() 拷贝：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~/test$ ll dd2.img</span><br><span class="line">-rw-rw-r-- 1 vagrant vagrant 524288000 Dec 27 17:07 dd2.img</span><br><span class="line">vagrant@ide-a:~/test$ du dd2.img</span><br><span class="line">4504	dd2.img</span><br><span class="line">vagrant@ide-a:~/test$ go run t.go</span><br><span class="line">2016/12/28 17:21:04 write bytes: 524,288,000</span><br><span class="line">2016/12/28 17:21:04 cost time: 1,715,998,834 ns</span><br></pre></td></tr></table></figure></p>
+<p>这效率实在没法看，这才 500M 的文件，线上的 img 文件动辄几个 G，如果需要迁移使用这种方式猴年马月也完成不了。所以还是要从源头入手，要跳过无效的文件内容，只拷贝有效内容。<br>有幸已经有人做过这个事情了，在 github 上的一个项目 <a href="https://github.com/mkorenkov/sparsed.git" target="_blank" rel="noopener">sparsed</a> 使用 sdk 的 bufio 完成了这个事情，测试代码：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> main</span><br><span class="line"><span class="keyword">import</span> (</span><br><span class="line">	<span class="string">"github.com/mkorenkov/sparsed"</span></span><br><span class="line">	<span class="string">"log"</span></span><br><span class="line">	<span class="string">"time"</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">main</span><span class="params">()</span></span> &#123;</span><br><span class="line">	start := time.Now()</span><br><span class="line">	sparsed.CopyFile(<span class="string">"dd2.img"</span>, <span class="string">"dd2.img.spec"</span>)</span><br><span class="line">	end := time.Now()</span><br><span class="line">	log.Printf(<span class="string">"cost time: %d ns"</span>, end.UnixNano()-start.UnixNano())</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试结果:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~$ ./test</span><br><span class="line">2016/12/28 17:42:12 cost time: 10,628 ns</span><br></pre></td></tr></table></figure></p>
+<p>在只拷贝有效内容的情况下只用了 0.01 微秒，效果立竿见影。<br>当然了，这是在真实磁盘空间占用比较小的情况下，实际环境下还是得看占用的空间大小和磁盘速度。</p>
+<hr>
+<p><a href="https://en.wikipedia.org/wiki/Sparse_file" target="_blank" rel="noopener">SparseFileWiki</a></p>
+<h2 id="golang系统调用扩容稀疏文件验证过程"><a href="#golang系统调用扩容稀疏文件验证过程" class="headerlink" title="golang系统调用扩容稀疏文件验证过程"></a>golang系统调用扩容稀疏文件验证过程</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">vagrant@ide-a:~/test$ mkfs.ext4 dd2.img</span><br><span class="line">mke2fs 1.42.9 (4-Feb-2014)</span><br><span class="line">dd2.img is not a block special device.</span><br><span class="line">Proceed anyway? (y,n) y</span><br><span class="line">Discarding device blocks: done</span><br><span class="line">Filesystem label=</span><br><span class="line">OS type: Linux</span><br><span class="line">Block size=1024 (log=0)</span><br><span class="line">Fragment size=1024 (log=0)</span><br><span class="line">Stride=0 blocks, Stripe width=0 blocks</span><br><span class="line">64000 inodes, 256000 blocks</span><br><span class="line">12800 blocks (5.00%) reserved for the super user</span><br><span class="line">First data block=1</span><br><span class="line">Maximum filesystem blocks=67371008</span><br><span class="line">32 block groups</span><br><span class="line">8192 blocks per group, 8192 fragments per group</span><br><span class="line">2000 inodes per group</span><br><span class="line">Superblock backups stored on blocks:</span><br><span class="line">	8193, 24577, 40961, 57345, 73729, 204801, 221185</span><br><span class="line"></span><br><span class="line">Allocating group tables: done</span><br><span class="line">Writing inode tables: done</span><br><span class="line">Creating journal (4096 blocks): done</span><br><span class="line">Writing superblocks and filesystem accounting information: done</span><br><span class="line"></span><br><span class="line">vagrant@ide-a:~/test$ du dd2.img</span><br><span class="line">4496	dd2.img</span><br><span class="line">vagrant@ide-a:~/test$ sudo mount dd2.img dd2test/</span><br><span class="line">vagrant@ide-a:~/test/dd2test$ sudo vim t.txt</span><br><span class="line">vagrant@ide-a:~/test/dd2test$ cat t.txt</span><br><span class="line">test</span><br><span class="line">vagrant@ide-a:~/test$ sudo umount dd2.img</span><br><span class="line">vagrant@ide-a:~/test$ ls -lh</span><br><span class="line">total 5.2M</span><br><span class="line">-rw-rw-r-- 1 vagrant vagrant 200M Dec 27 16:51 dd.img</span><br><span class="line">-rw-rw-r-- 1 vagrant vagrant 250M Dec 27 17:04 dd2.img</span><br><span class="line">drwxrwxr-x 2 vagrant vagrant 4.0K Dec 27 16:58 dd2test</span><br><span class="line">-rw-rw-r-- 1 vagrant vagrant 100M Dec 27 16:51 go-trun.img</span><br><span class="line">-rw-r--r-- 1 vagrant vagrant 1.2K Dec 27 17:05 test.go</span><br><span class="line">vagrant@ide-a:~/test$ go run test.go</span><br><span class="line">2016/12/23 00:36:23 adjust to 500 M succ</span><br><span class="line">vagrant@ide-a:~/test$ sudo mount dd2.img dd2test</span><br><span class="line">vagrant@ide-a:~/test$ cat dd2test/</span><br><span class="line">lost+found/ t.txt</span><br><span class="line">vagrant@ide-a:~/test$ cat dd2test/</span><br><span class="line">lost+found/ t.txt</span><br><span class="line">vagrant@ide-a:~/test$ cat dd2test/t.txt</span><br><span class="line">test</span><br></pre></td></tr></table></figure>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2016/11/04/2016-11-05-go-sparse/" target="_blank" rel="external">http://j2go.cn/2016/11/04/2016-11-05-go-sparse/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/稀疏文件/">稀疏文件</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Golang 稀疏文件处理》 — tiangao&url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2016/11/29/2016-11-30-Java7-file-op/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Java7 文件夹操作</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2016/10/14/2016-10-15-docker-swarm/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Docker Swarm 试用</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Golang 稀疏文件处理》 — tiangao&url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIUlEQVR42u3ay27jMAwF0Pz/T3uArrqxfEm6g1Y6WgWJHzpZEOLj84nX9bW+f86/ufs1efLLCwMD488yruXKX3Z3/d1b1lfme8PAwDiHkQfZ9YvnpPW9t99jYGBgxFuvHhmr4RgDAwOjGnALR7ciFQMDA6OXxOaJbvL8ya8YGBinMXqNgf/z+cf7GxgYGL+ecRVXXmJ7970Pu8LAwNiaUd3QmtRrfL7VKsDAwDiH0Usa82ZndSwsD/cYGBjnMPIjXd6k7A1tVIM+BgbGOYy89J/fNQ+m0R+BgYGxKaM36JBvPU99q8dKDAyMcxjrAFcdfeglw9Xj5m1oxsDAOIBRDa950a2aGDfLeRgYGJsyEuVk5KI3ulHdFQYGxjmMvFWwTnTnzYBqgQ8DA+NMRj6SlV+Tb7T6RgwMjL0Zbw06VLfVK6hFSTIGBsZ2jGpZv1fQ74Xy8kAYBgbGpox5EX+Smiat07wVgYGBcSZjEo7z9meesj4EaAwMjE0ZV7AmKW5+Vy+VxcDAOIeRfFM9tCWhOaoCJiEeAwNja0b1cUmxvlc+S65/eDIGBsamjKu4JuexT7zKSS8GBsbWjOqjkzBdDaPz0Q0MDIwTGL1y27wk12tIRC1MDAyMTRl5clt49EuJKwYGBkbOmA9nzNsAUdUQAwPjeEZ1c2+V7R4KeRgYGAcwkjA3D5TzZPhh2AIDA2NTxiSBnLQ8139E9biJgYGxKeMfNtB10+jyWhwAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>

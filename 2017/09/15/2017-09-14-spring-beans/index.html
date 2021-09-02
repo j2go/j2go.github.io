@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>深入 Spring Bean 生命周期 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="spring">
+    <meta name="description" content="实例化Spring 扫描包下所有类，对注解的 Bean 进行实例化 依赖注入Spring 将值和 Bean 的引用注入进 Bean 对应的属性中 setBeanName 回调如果 Bean 实现了 BeanNameAware 接口，Spring将Bean的ID传递给 setBeanName()方法（实现 BeanNameAware 主要是为了通过 Bean 的引用来获得 Bean 的 id，一般业">
+<meta name="keywords" content="spring">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深入 Spring Bean 生命周期">
+<meta property="og:url" content="http://j2go.cn/2017/09/15/2017-09-14-spring-beans/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="实例化Spring 扫描包下所有类，对注解的 Bean 进行实例化 依赖注入Spring 将值和 Bean 的引用注入进 Bean 对应的属性中 setBeanName 回调如果 Bean 实现了 BeanNameAware 接口，Spring将Bean的ID传递给 setBeanName()方法（实现 BeanNameAware 主要是为了通过 Bean 的引用来获得 Bean 的 id，一般业">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="深入 Spring Bean 生命周期">
+<meta name="twitter:description" content="实例化Spring 扫描包下所有类，对注解的 Bean 进行实例化 依赖注入Spring 将值和 Bean 的引用注入进 Bean 对应的属性中 setBeanName 回调如果 Bean 实现了 BeanNameAware 接口，Spring将Bean的ID传递给 setBeanName()方法（实现 BeanNameAware 主要是为了通过 Bean 的引用来获得 Bean 的 id，一般业">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">深入 Spring Bean 生命周期</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">深入 Spring Bean 生命周期</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2017-09-15T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2017-09-16
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#实例化"><span class="post-toc-number">1.</span> <span class="post-toc-text">实例化</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#依赖注入"><span class="post-toc-number">2.</span> <span class="post-toc-text">依赖注入</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#setBeanName-回调"><span class="post-toc-number">3.</span> <span class="post-toc-text">setBeanName 回调</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#setBeanDactory-回调"><span class="post-toc-number">4.</span> <span class="post-toc-text">setBeanDactory 回调</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#setApplicationContext-回调"><span class="post-toc-number">5.</span> <span class="post-toc-text">setApplicationContext 回调</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Bean-初始化前处理"><span class="post-toc-number">6.</span> <span class="post-toc-text">Bean 初始化前处理</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#容器启动完毕的回调"><span class="post-toc-number">7.</span> <span class="post-toc-text">容器启动完毕的回调</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Bean-初始化后回调"><span class="post-toc-number">8.</span> <span class="post-toc-text">Bean 初始化后回调</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#应用启动完毕"><span class="post-toc-number">9.</span> <span class="post-toc-text">应用启动完毕</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Bean-销毁调用"><span class="post-toc-number">10.</span> <span class="post-toc-text">Bean 销毁调用</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2017-09-14-spring-beans"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">深入 Spring Bean 生命周期</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2017-09-16 00:00:00" datetime="2017-09-15T16:00:00.000Z"  itemprop="datePublished">2017-09-16</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="实例化"><a href="#实例化" class="headerlink" title="实例化"></a>实例化</h1><p>Spring 扫描包下所有类，对注解的 Bean 进行实例化</p>
+<h1 id="依赖注入"><a href="#依赖注入" class="headerlink" title="依赖注入"></a>依赖注入</h1><p>Spring 将值和 Bean 的引用注入进 Bean 对应的属性中</p>
+<h1 id="setBeanName-回调"><a href="#setBeanName-回调" class="headerlink" title="setBeanName 回调"></a>setBeanName 回调</h1><p>如果 Bean 实现了 <code>BeanNameAware</code> 接口，Spring将Bean的ID传递给 <code>setBeanName()</code>方法（实现 BeanNameAware 主要是为了通过 Bean 的引用来获得 Bean 的 id，一般业务中是很少有用到 BeanId 的）</p>
+<h1 id="setBeanDactory-回调"><a href="#setBeanDactory-回调" class="headerlink" title="setBeanDactory 回调"></a>setBeanDactory 回调</h1><p>如果 Bean 实现了 <code>BeanFactoryAware</code> 接口，Spring 将调用 <code>setBeanDactory</code> ( BeanFactory bf )方法并把 BeanFactory 容器实例作为参数传入。（实现 BeanFactoryAware 主要目的是为了获取 Spring 容器，如 Bean 通过 Spring 容器发布事件等）</p>
+<h1 id="setApplicationContext-回调"><a href="#setApplicationContext-回调" class="headerlink" title="setApplicationContext 回调"></a>setApplicationContext 回调</h1><p>如果 Bean 实现了 <code>ApplicationContextAwaer</code> 接口，Spring 容器将调用 <code>setApplicationContext(ApplicationContext ctx)</code> 方法，把应用上下文作为参数传入。(作用与 BeanFactory 类似都是为了获取 Spring 容器，不同的是 Spring 容器在调用 <code>setApplicationContext()</code> 方法时会把它自己作为 setApplicationContext 的参数传入，而 Spring 容器在调用 <code>setBeanDactory()</code> 前需要程序员自己指定（注入）setBeanDactory 里的参数BeanFactory )</p>
+<h1 id="Bean-初始化前处理"><a href="#Bean-初始化前处理" class="headerlink" title="Bean 初始化前处理"></a>Bean 初始化前处理</h1><p>如果Bean实现了 <code>BeanPostProcess</code> 接口，Spring 将调用它们的 <code>postProcessBeforeInitialization</code>（预初始化）方法（作用是在 Bean 实例创建成功后对进行增强处理，如对 Bean 进行修改，增加某个功能）</p>
+<h1 id="容器启动完毕的回调"><a href="#容器启动完毕的回调" class="headerlink" title="容器启动完毕的回调"></a>容器启动完毕的回调</h1><p>如果 Bean 实现了 <code>InitializingBean</code> 接口，Spring 将调用它们的 <code>afterPropertiesSet()</code> 方法，作用与在配置文件中对 Bean 使用 init-method 声明初始化的作用一样，都是在 Bean 的全部属性设置成功后执行的初始化方法。</p>
+<h1 id="Bean-初始化后回调"><a href="#Bean-初始化后回调" class="headerlink" title="Bean 初始化后回调"></a>Bean 初始化后回调</h1><p>如果 Bean 实现了 BeanPostProcess 接口，Spring 将调用它们的 <code>postProcessAfterInitialization()</code> 方法</p>
+<h1 id="应用启动完毕"><a href="#应用启动完毕" class="headerlink" title="应用启动完毕"></a>应用启动完毕</h1><p>经过以上的工作后，Bean将一直驻留在应用上下文中给应用使用，直到应用上下文被销毁</p>
+<h1 id="Bean-销毁调用"><a href="#Bean-销毁调用" class="headerlink" title="Bean 销毁调用"></a>Bean 销毁调用</h1><p>如果Bean实现了DispostbleBean接口，Spring将调用它的destory方法，作用与在配置文件中对Bean使用destory-method属性的作用一样，都是在Bean实例销毁前执行的方法。</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2017/09/15/2017-09-14-spring-beans/" target="_blank" rel="external">http://j2go.cn/2017/09/15/2017-09-14-spring-beans/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.cn">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/spring/">spring</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/&title=《深入 Spring Bean 生命周期》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/&title=《深入 Spring Bean 生命周期》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入 Spring Bean 生命周期》 — tiangao&url=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between">
+  
+    <div class="waves-block waves-effect prev">
+      <a href="/2017/10/10/2017-10-11-java-csv/" id="post-prev" class="post-nav-link">
+        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
+        <h4 class="title">Java CSV 文件操作</h4>
+      </a>
+    </div>
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/03/04/2017-03-05-shell-go/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">直接上手写 Shell</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/&title=《深入 Spring Bean 生命周期》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/&title=《深入 Spring Bean 生命周期》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《深入 Spring Bean 生命周期》 — tiangao&url=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/&via=http://j2go.cn" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/09/15/2017-09-14-spring-beans/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACI0lEQVR42u3aSY6EQAwFUe5/aXpbGyC+DS2lM1ihEkM+Fi4PeRz4OG+P++t/fyHnV8984ZAhQ8ayDLLE/nc6wyP+fDJkyNiAcfXi+/PalbWnPaxZhgwZMkoLugqaabIoQ4YMGZ2ASxI7kiDWPo0MGTJ2Y/AFkXZb/3N8WIvLkCFjQQZvlv3/+SfzDRkyZCzF6DTrSbrWb/2jVcmQIWM0gwe4PpJvrUjXI0OGjNmM2kP5AIA8k7TbHtYgQ4aMDRj8ZTy96zT605afDBkyZjPSRls6JKiNEPhdMmTI2IFBghqpg3nA5eEyuFeGDBmjGWlhWWuNpQUquas4a5UhQ8aCjFrBSRaRlqCtMYMMGTK2YXQa97UEsZMOXo4wZciQMZTBR498qMmDdcp+qMVlyJAxmpEmbf3QfOAD1d8yZMgYzahNOHkCx9M+EoiLGa4MGTJGM/pDzTSwxm+UIUPGaEaaZdVa+WmRnAZoGTJk7MZIX1wbZH492pQhQ8Y8RqpMt4h1Rp7BiEKGDBkbMNKBIil006XwccJlwJUhQ8ZoBrn0rbbaWy059L8hQ4aMxRlneKRUHsRb9bcMGTJGM94aLqbJX6fobQV6GTJkLMtIg2wnvNZGnvdXypAhYx8GD3wkmeOkNO0r7hORIUOGjHCDV+2NRZ8MGTK2ZPA2Gd9YRn5BRawMGTJGMzpbLtJmXH8TmAwZMnZj9POuzmYysug0xZQhQ8Ygxh82ENE/gT50WgAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
