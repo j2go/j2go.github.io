@@ -19,16 +19,16 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="file download">
+    <meta name="keywords" content="重构">
     <meta name="description" content="问题有这么一个下载 zip 文件的功能函数     函数的目的是要下载一个文件到指定目录，第一要检查大小，第二要检查是不是 zip 文件，然后下载到指定目录。现在的问题是这个没有超时控制，网络慢或者出问题的时候就死死的卡在那儿了  原代码1234567891011121314151617181920212223242526272829303132333435private File downloa">
-<meta name="keywords" content="file download">
+<meta name="keywords" content="重构">
 <meta property="og:type" content="article">
 <meta property="og:title" content="记一次代码重构">
-<meta property="og:url" content="http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/index.html">
+<meta property="og:url" content="http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/index.html">
 <meta property="og:site_name" content="tiangao">
 <meta property="og:description" content="问题有这么一个下载 zip 文件的功能函数     函数的目的是要下载一个文件到指定目录，第一要检查大小，第二要检查是不是 zip 文件，然后下载到指定目录。现在的问题是这个没有超时控制，网络慢或者出问题的时候就死死的卡在那儿了  原代码1234567891011121314151617181920212223242526272829303132333435private File downloa">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta property="og:updated_time" content="2021-09-02T12:13:51.620Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="记一次代码重构">
 <meta name="twitter:description" content="问题有这么一个下载 zip 文件的功能函数     函数的目的是要下载一个文件到指定目录，第一要检查大小，第二要检查是不是 zip 文件，然后下载到指定目录。现在的问题是这个没有超时控制，网络慢或者出问题的时候就死死的卡在那儿了  原代码1234567891011121314151617181920212223242526272829303132333435private File downloa">
@@ -140,7 +140,7 @@
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/重构/">重构</a></li></ul>
 
             
         </h5>
@@ -170,7 +170,7 @@
             <time class="post-time" title="2017-02-07 00:00:00" datetime="2017-02-06T16:00:00.000Z"  itemprop="datePublished">2017-02-07</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/重构/">重构</a></li></ul>
 
 
 
@@ -215,16 +215,16 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+    Last updated: <time datetime="2021-09-02T12:13:51.620Z" itemprop="dateUpdated">2021-09-02 20:13:51</time>
 </span><br>
 
 
         
-        转载请注明出处 <a href="/2017/02/06/2017-02-07-download-refactoring/" target="_blank" rel="external">http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/</a>
+        转载请注明出处 <a href="/2017/02/06/2017-02-07-download-refactoring/" target="_blank" rel="external">http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/</a>
         
     </div>
     <footer>
-        <a href="http://j2go.cn">
+        <a href="http://j2go.github.io">
             <img src="/img/avatar.jpg" alt="stiangao">
             stiangao
         </a>
@@ -240,7 +240,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/file-download/">file download</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/重构/">重构</a></li></ul>
 
 
             
@@ -250,7 +250,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -260,22 +260,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记一次代码重构》 — tiangao&url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&via=http://j2go.cn" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记一次代码重构》 — tiangao&url=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/&via=http://j2go.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -409,7 +409,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -419,22 +419,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/&title=《记一次代码重构》 — tiangao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记一次代码重构》 — tiangao&url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/&via=http://j2go.cn" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《记一次代码重构》 — tiangao&url=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/&via=http://j2go.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2017/02/06/2017-02-07-download-refactoring/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2017/02/06/2017-02-07-download-refactoring/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -445,7 +445,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACJklEQVR42u3aS07EQAwFwLn/pYPECgRp/OyASKd6NQr5VRbGbfv1Kq/jfX38fXbk6/HKVWdHLl4YGBi3ZRzLVXnA+tqvpDVyffz0TTAwMB7A+I0guwavP0T93TAwMDAm59Tx6/MxMDAw0lf8IUUrpHTpRhcDAwMjfVglvKYlsz/di2NgYNyQ0WsM/M3vX+9vYGBg/HvGEa60iDY5J3grDAyMrRmTEv8kaE4GLIIMFwMDYztGpZSfblbTzXD6Ub4JuBgYGA9gTAr06SDFxU1QDAyMrRm9cFlpFdQbpb1WaFyMw8DAuC2jPgaRJnyThDL+WBgYGJsy6gW1C8phrfC6/oif+hsYGBibMiZZZBqg001vXLzDwMDYmhEU38MQ2SvS1ZNODAwMjB7pFa70ns2Ai4GBcVtGfbtY/+ukSLdOVU/TRAwMjEcyJoMRvU1vL+nEwMB4AqPebuwFynmCeBQWBgbG3oxS4lVuHvQSwcuGLTAwMDZlNIvvYerWC+VxsxMDA2NTRr312BsgS0NwvdCGgYHxTMYkZtebBPWBs/qdMTAw9mbUN5BpkjfZpl5wLQYGxkaMI1z1pLA3utH8N4CBgbE14+JoPd641hsDGBgYT2PU25PrJkFvnCvd7p4iMTAwHsCYDz0EjyyPhQXDZxgYGBitAv1kFKPybhgYGBi9JmWd0RtEw8DAeDLjqk1sGjp7xT4MDIynMSY36j2ml/yNABgYGHdlvAHgJ0a8VRDbcAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAN4AAADeCAAAAAB3DOFrAAACxElEQVR42u3aQU7DQAwF0N7/0iCxQipJv+0xVOhlVbUl8Ruksevx4xFfH1/X99fV6/luz/e8+vT5O4cvPDw8vFbo92El7yRBJMt0//08Zjw8PLxtXh7K1QOSO0zA1bvh4eHhvQMv37LvC+heiYyHh4f3P3j5Jn6fQpJA8fDw8N6Nl4ebl91JoJPlO9xrwcPDw4t5k3L2r16vn+/h4eHhtU7Vq5tyNYgkGYyGFfDw8PAWeMlNJ22C/NisOlJwnwUe+Zrh4eHhHeJNfupXx7Py+/fGs/Dw8PDO8vKRqRebb/z4Xiu2OaaAh4eH9yu8yTFYtYVxz652aH9YDjw8PLwFXj4UVT3snxyt5fFET8TDw8M7yus1WCev8yZFoVF7FT8eHh7eL/KS0jZJITmpV7K/WAI8PDy8BV71B39eWFeL9d4xWLKgeHh4eGd51UGBPBkkm3W1sVuOBw8PD2+NV23v5ltzL50kyxSV+3h4eHhrvGoQ+XhBvgSTka/LePDw8PAWePmgVa9NkI8OJKmlOdaAh4eHd5R3oNfbah/Mxwui5IGHh4e3wKuG2BvSylNL9UCu8BQ8PDy8Q7z7g6v8B/9kRCA/VKsmKjw8PLw9Xp4Mqt+pbu7JQkRHX71ch4eHhxfw8iZslZQcrVVTSAGDh4eHt8zbKG17Ld1qcR+NZOHh4eEd5U0enDQmrv5q0sAtlN14eHh4y7w8oMkAVnXhRqkLDw8Pb4FXbQHkrYpJwV0dNYgSDx4eHt4h3kfx6oVeXenJmNfl6AAeHh7eIV61HZA3CMp5qTVeMHkKHh4e3oSXJIM8YUwGBXqJ4cU/Aw8PD2+N1+th9JamOePQ67Xg4eHh/Skv37KryaA3dhC1IfDw8PDegJcgewdm1cI9Krjx8PDw1nh5WVzFbB+bvXgHDw8Pb4E3GZPKj/OrweVPnCwrHh4eXpH3CULx2k8PS08iAAAAAElFTkSuQmCC" alt="微信分享二维码">
 </div>
 
 

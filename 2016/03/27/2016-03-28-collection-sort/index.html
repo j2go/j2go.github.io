@@ -19,16 +19,16 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="Collection">
+    <meta name="keywords" content="Java">
     <meta name="description" content="从代码的角度一步步深入，首先 12List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;String&amp;gt;();Collections.sort(list); 里面是这样1234@SuppressWarnings(&quot;unchecked&quot;)public static &amp;lt;T extends Comparable&amp;lt;? super T&amp;gt;&amp;gt; voi">
-<meta name="keywords" content="Collection">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Collections.sort 原理探究">
-<meta property="og:url" content="http://j2go.cn/2016/03/27/2016-03-28-collection-sort/index.html">
+<meta property="og:url" content="http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/index.html">
 <meta property="og:site_name" content="tiangao">
 <meta property="og:description" content="从代码的角度一步步深入，首先 12List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;String&amp;gt;();Collections.sort(list); 里面是这样1234@SuppressWarnings(&quot;unchecked&quot;)public static &amp;lt;T extends Comparable&amp;lt;? super T&amp;gt;&amp;gt; voi">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta property="og:updated_time" content="2021-09-02T12:13:51.620Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Collections.sort 原理探究">
 <meta name="twitter:description" content="从代码的角度一步步深入，首先 12List&amp;lt;String&amp;gt; list = new ArrayList&amp;lt;String&amp;gt;();Collections.sort(list); 里面是这样1234@SuppressWarnings(&quot;unchecked&quot;)public static &amp;lt;T extends Comparable&amp;lt;? super T&amp;gt;&amp;gt; voi">
@@ -210,16 +210,16 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+    Last updated: <time datetime="2021-09-02T12:13:51.620Z" itemprop="dateUpdated">2021-09-02 20:13:51</time>
 </span><br>
 
 
         
-        转载请注明出处 <a href="/2016/03/27/2016-03-28-collection-sort/" target="_blank" rel="external">http://j2go.cn/2016/03/27/2016-03-28-collection-sort/</a>
+        转载请注明出处 <a href="/2016/03/27/2016-03-28-collection-sort/" target="_blank" rel="external">http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/</a>
         
     </div>
     <footer>
-        <a href="http://j2go.cn">
+        <a href="http://j2go.github.io">
             <img src="/img/avatar.jpg" alt="stiangao">
             stiangao
         </a>
@@ -235,7 +235,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Collection/">Collection</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Java/">Java</a></li></ul>
 
 
             
@@ -245,7 +245,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -255,22 +255,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Collections.sort 原理探究》 — tiangao&url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&via=http://j2go.cn" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Collections.sort 原理探究》 — tiangao&url=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/&via=http://j2go.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -404,7 +404,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -414,22 +414,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/&title=《Collections.sort 原理探究》 — tiangao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Collections.sort 原理探究》 — tiangao&url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/&via=http://j2go.cn" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Collections.sort 原理探究》 — tiangao&url=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/&via=http://j2go.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/03/27/2016-03-28-collection-sort/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2016/03/27/2016-03-28-collection-sort/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -440,7 +440,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIElEQVR42u3aQXKDMAwF0Nz/0u22G8iXRDJFPK8yBLAfC48s6fWKx8/pOLrz6Nm/18/vuXhgYGDclpEs8Xy5VV7+bP5+DAyMJzCOdrDz30ebbHkRwbxv1oyBgYExoFY/AQYGBsaEkVxJpkwCQQwMDIzeITafphdEJmm4C87iGBgYN2TkWffv//5IfQMDA+NWjEmyPgn18kBwMjAwMHYzeiXM8+As+TdvsMjfhoGBsZUxSeV/p/ksuRMDA+M5jEnZclJamJRIMTAwnsCoHjLzBVXbvy7YyjEwMJYy8qXnE/eKkb2EHQYGxjMZvUBw0hKRv/9wU8bAwFjNyMOyvIRZ7YhIwtDCmjEwMNYxqgfU6rab35+/500NFgMDYx2jutlV0/r5tntBMwcGBsYDGL2J8615zo5uxcDAWMpIDpmFNP2llUcMDAyMvCRZTfHnBdFJo0bU3YaBgbGCMQnaeltqfliNtnsMDIzVjEnBchLe9dq/8k+AgYGxj9FreqiGfclc+Tisx2JgYKxmJCHafOnVcmYhq4aBgbGakRcy88AxCQqrRYXoWQwMjHWMXkBWXfTkYBylAjEwMFYzJo0RvUJCtRTaKypgYGDsY1RT+fP2i155IKpmYGBgrGZUE215ebKc4u81eWBgYGC0igGTRH/eooGBgYFR3UZ7Qd7keIyBgfEcRu8QOwkE8w/x8XQbBgbGv2eMjo4fTredX8fAwHgA4xeLr2WritsrnAAAAABJRU5ErkJggg==" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACL0lEQVR42u3aQW7DMAxE0dz/0u62i9r9M3QLSPpaBYjj6GlBUCQ/H7yum/X927sn7972/NvPXywZMmQsy7geF9kc+WPyzu4ZGTJknMPowuLojzH1eW8yZMiQwZO/50D8nAKSzzJkyJAxZ/BNkGRRhgwZMrpLLHod3vTLiaYMGTK2ZvBN/P/nP+lvyJAhYynGFa4JlSSU3ZIhQ8bejLcakCQF5M90+5EhQ8aujPQH5KrJC2fkCFC4lyFDxmEMvlFeLOvalsHbZMiQsTVjvvV3A+ioASBDhoxNGby4xi+lvPHJMS+MWciQIWNZBr8DptdUHjTLGqEMGTIOY5CXdmG0Syt5+zMIvjJkyFiWQcLiZOSCHEFahrutGsqQIWNrBk/F0mSxO5T4WxkyZBzASNuQ6TU4TRPTIC5DhowTGGkJ7AIrbUx2B4pSQxkyZCzOIAGuu3amAxYosKZLhgwZWzDSFJA3A/jQWHfF/aExIEOGjE0ZvOjGW48pLOXd7lmGDBkHMHiKxmc3uqJbGbJlyJBxAKPbLgmy3fhFHMRlyJBxAIOXzHiql7LTUmB8n5YhQ8aCjCtcaWuBh0seZMueqgwZMpZlzLdFxjLSUTDSrugOV4YMGesy0pGs7prK26V8LCw+aRkyZCzOmAyH8TD61iX2l6qhDBkyjmd0Lc9JIoioMmTIkDEo8aeBtRsUkyFDxgkMXspPtzIpz/GLsQwZMvZmjCY1qjwtDdOT8C1DhozFGV+bs5NhN2y9YwAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 

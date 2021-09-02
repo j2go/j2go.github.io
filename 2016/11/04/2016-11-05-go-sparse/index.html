@@ -19,18 +19,18 @@
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="稀疏文件">
+    <meta name="keywords" content="文件">
     <meta name="description" content="使用 Docker 的我们都知道一个磁盘资源分配的问题，要么使用 devicemapper 设定一个固定大小，不过一旦确定就不可改，要么就没有限制，一个  container 就可能用尽整个磁盘空间。因为我们 WEDIDE 使用 Docker 运行大量服务，在调研了好几种磁盘分配方式后发现使用稀疏文件创建文件系统再挂载是一个很好的方案。  什么是稀疏文件?我们都知道计算机文件是存储在磁盘上的，都">
-<meta name="keywords" content="稀疏文件">
+<meta name="keywords" content="文件">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Golang 稀疏文件处理">
-<meta property="og:url" content="http://j2go.cn/2016/11/04/2016-11-05-go-sparse/index.html">
+<meta property="og:url" content="http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/index.html">
 <meta property="og:site_name" content="tiangao">
 <meta property="og:description" content="使用 Docker 的我们都知道一个磁盘资源分配的问题，要么使用 devicemapper 设定一个固定大小，不过一旦确定就不可改，要么就没有限制，一个  container 就可能用尽整个磁盘空间。因为我们 WEDIDE 使用 Docker 运行大量服务，在调研了好几种磁盘分配方式后发现使用稀疏文件创建文件系统再挂载是一个很好的方案。  什么是稀疏文件?我们都知道计算机文件是存储在磁盘上的，都">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://dn-coding-net-production-pp.qbox.me/f655d88b-bbba-4885-8851-3e511b0768fd.png">
 <meta property="og:image" content="https://dn-coding-net-production-pp.qbox.me/5ceb8b5e-8d77-4eaa-b946-186ddca0629c.png">
-<meta property="og:updated_time" content="2021-09-02T08:28:34.452Z">
+<meta property="og:updated_time" content="2021-09-02T12:13:51.620Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Golang 稀疏文件处理">
 <meta name="twitter:description" content="使用 Docker 的我们都知道一个磁盘资源分配的问题，要么使用 devicemapper 设定一个固定大小，不过一旦确定就不可改，要么就没有限制，一个  container 就可能用尽整个磁盘空间。因为我们 WEDIDE 使用 Docker 运行大量服务，在调研了好几种磁盘分配方式后发现使用稀疏文件创建文件系统再挂载是一个很好的方案。  什么是稀疏文件?我们都知道计算机文件是存储在磁盘上的，都">
@@ -246,16 +246,16 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2021-09-02T08:28:34.452Z" itemprop="dateUpdated">2021-09-02 16:28:34</time>
+    Last updated: <time datetime="2021-09-02T12:13:51.620Z" itemprop="dateUpdated">2021-09-02 20:13:51</time>
 </span><br>
 
 
         
-        转载请注明出处 <a href="/2016/11/04/2016-11-05-go-sparse/" target="_blank" rel="external">http://j2go.cn/2016/11/04/2016-11-05-go-sparse/</a>
+        转载请注明出处 <a href="/2016/11/04/2016-11-05-go-sparse/" target="_blank" rel="external">http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/</a>
         
     </div>
     <footer>
-        <a href="http://j2go.cn">
+        <a href="http://j2go.github.io">
             <img src="/img/avatar.jpg" alt="stiangao">
             stiangao
         </a>
@@ -271,7 +271,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/稀疏文件/">稀疏文件</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/文件/">文件</a></li></ul>
 
 
             
@@ -281,7 +281,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -291,22 +291,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Golang 稀疏文件处理》 — tiangao&url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&via=http://j2go.cn" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Golang 稀疏文件处理》 — tiangao&url=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/&via=http://j2go.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -440,7 +440,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&pic=http://j2go.cn/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -450,22 +450,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/&title=《Golang 稀疏文件处理》 — tiangao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Golang 稀疏文件处理》 — tiangao&url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/&via=http://j2go.cn" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Golang 稀疏文件处理》 — tiangao&url=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/&via=http://j2go.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.cn/2016/11/04/2016-11-05-go-sparse/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2016/11/04/2016-11-05-go-sparse/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -476,7 +476,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIUlEQVR42u3ay27jMAwF0Pz/T3uArrqxfEm6g1Y6WgWJHzpZEOLj84nX9bW+f86/ufs1efLLCwMD488yruXKX3Z3/d1b1lfme8PAwDiHkQfZ9YvnpPW9t99jYGBgxFuvHhmr4RgDAwOjGnALR7ciFQMDA6OXxOaJbvL8ya8YGBinMXqNgf/z+cf7GxgYGL+ecRVXXmJ7970Pu8LAwNiaUd3QmtRrfL7VKsDAwDiH0Usa82ZndSwsD/cYGBjnMPIjXd6k7A1tVIM+BgbGOYy89J/fNQ+m0R+BgYGxKaM36JBvPU99q8dKDAyMcxjrAFcdfeglw9Xj5m1oxsDAOIBRDa950a2aGDfLeRgYGJsyEuVk5KI3ulHdFQYGxjmMvFWwTnTnzYBqgQ8DA+NMRj6SlV+Tb7T6RgwMjL0Zbw06VLfVK6hFSTIGBsZ2jGpZv1fQ74Xy8kAYBgbGpox5EX+Smiat07wVgYGBcSZjEo7z9meesj4EaAwMjE0ZV7AmKW5+Vy+VxcDAOIeRfFM9tCWhOaoCJiEeAwNja0b1cUmxvlc+S65/eDIGBsamjKu4JuexT7zKSS8GBsbWjOqjkzBdDaPz0Q0MDIwTGL1y27wk12tIRC1MDAyMTRl5clt49EuJKwYGBkbOmA9nzNsAUdUQAwPjeEZ1c2+V7R4KeRgYGAcwkjA3D5TzZPhh2AIDA2NTxiSBnLQ8139E9biJgYGxKeMfNtB10+jyWhwAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACI0lEQVR42u3aQW6EMAwF0Ln/pem2VQX6tqEqyctqNGLAj4Undvz5xOs4Wb0rv3/z+/PZnW9YGBgYr2Uclyu55vrB1/dMromeiIGBsQHj7PFn11wHdB1cAs5jw8DAwEhI199Xw8XAwMC4K+FWE3GOwcDAwJgUsdXEeh100p57pBbHwMB4ISMP4u8/P3K+gYGB8SrGUVx50z8/EuhF8uOeGBgYSzPyBJcEWi1cJ207DAyMPRm9tJsPeF3/Nm/APbJBxMDA+PeMXiqsDlVUjy3zMTIMDIy1GZMR0knTP39NhX8MDAyMDRjVBllveKKHL0+LYGBgLMTIC9petZg34HrNPgwMjB0YvXZYdaM5SbLRsBoGBsYGjGq7v0fKi+dqSw4DA2NPxiS43oZyVPpiYGAszZjMLUwCrQbUbLphYGAswagOcj3Byw87y8MWGBgYCzF6LbBJiTtp2GFgYOzGqO4fJ22y/OChOjqGgYGxDyP5WXVrWL1zXu6ezrhhYGBsw8iLzGq4eYjl4Q8MDIxtGPOBraSFl7f58mMGDAyMHRiTRti8TL1h4AMDA2NRxlFc1VZadfCiScXAwFiaUT1crJap+YYyv1t1pAwDA2MNRjXJ9mB56mwmegwMjA0Yk4b+JOH2ilgMDAyMfItWTaDNjmBCxcDAwIgL0clYRg64LeFiYGC8ijEZm6g2+pMXVy2MMTAw1mb0RhzysrY3bNErrTEwMJZjfAFCFSLgGcdQmAAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 
