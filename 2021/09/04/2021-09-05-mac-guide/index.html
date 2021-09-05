@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>Mac 使用教程 - Java开发者视角 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="Mac">
+    <meta name="description" content="Windows 用户Mac 不分区，一般只有一个盘，Command 键大多数时候等于 Ctrl复制逻辑有点不一样，不能像 windows 下先复制再粘贴，而是要复制之后直接拖入下一个文件夹要不然就在终端用 cp  命令，Mac 下终端还是用得比较多的    Linux 用户homebrew ≈  yum  ≈ apt-get  ≈  pacman常用 shell 命令差不多，bash 脚本一般都可">
+<meta name="keywords" content="Mac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Mac 使用教程 - Java开发者视角">
+<meta property="og:url" content="http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="Windows 用户Mac 不分区，一般只有一个盘，Command 键大多数时候等于 Ctrl复制逻辑有点不一样，不能像 windows 下先复制再粘贴，而是要复制之后直接拖入下一个文件夹要不然就在终端用 cp  命令，Mac 下终端还是用得比较多的    Linux 用户homebrew ≈  yum  ≈ apt-get  ≈  pacman常用 shell 命令差不多，bash 脚本一般都可">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://files.catbox.moe/ibo1h6.png">
+<meta property="og:image" content="https://files.catbox.moe/ro8uyj.png">
+<meta property="og:image" content="https://files.catbox.moe/5bxn94.png">
+<meta property="og:image" content="https://files.catbox.moe/4dh9u1.png">
+<meta property="og:image" content="https://files.catbox.moe/c3uyuw.png">
+<meta property="og:image" content="https://files.catbox.moe/oq4kvl.png">
+<meta property="og:updated_time" content="2021-09-05T08:35:11.973Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mac 使用教程 - Java开发者视角">
+<meta name="twitter:description" content="Windows 用户Mac 不分区，一般只有一个盘，Command 键大多数时候等于 Ctrl复制逻辑有点不一样，不能像 windows 下先复制再粘贴，而是要复制之后直接拖入下一个文件夹要不然就在终端用 cp  命令，Mac 下终端还是用得比较多的    Linux 用户homebrew ≈  yum  ≈ apt-get  ≈  pacman常用 shell 命令差不多，bash 脚本一般都可">
+<meta name="twitter:image" content="https://files.catbox.moe/ibo1h6.png">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/stiangao" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Mac 使用教程 - Java开发者视角</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Mac 使用教程 - Java开发者视角</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-09-04T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2021-09-05
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/教程/">教程</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Windows-用户"><span class="post-toc-number">1.</span> <span class="post-toc-text">Windows 用户</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Linux-用户"><span class="post-toc-number">2.</span> <span class="post-toc-text">Linux 用户</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#文件夹操作"><span class="post-toc-number">3.</span> <span class="post-toc-text">文件夹操作</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#常用快捷键"><span class="post-toc-number">4.</span> <span class="post-toc-text">常用快捷键</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#终端快捷操作"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">终端快捷操作</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#常见误区"><span class="post-toc-number">5.</span> <span class="post-toc-text">常见误区</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#高效工作配置"><span class="post-toc-number">6.</span> <span class="post-toc-text">高效工作配置</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#oh-my-zsh"><span class="post-toc-number">6.1.</span> <span class="post-toc-text">oh-my-zsh</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Homebrew"><span class="post-toc-number">6.2.</span> <span class="post-toc-text">Homebrew</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Vscode"><span class="post-toc-number">6.3.</span> <span class="post-toc-text">Vscode</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Idea"><span class="post-toc-number">6.4.</span> <span class="post-toc-text">Idea</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Alfred-or-UTools"><span class="post-toc-number">7.</span> <span class="post-toc-text">Alfred or UTools</span></a></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2021-09-05-mac-guide"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Mac 使用教程 - Java开发者视角</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-09-05 00:00:00" datetime="2021-09-04T16:00:00.000Z"  itemprop="datePublished">2021-09-05</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/教程/">教程</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <h1 id="Windows-用户"><a href="#Windows-用户" class="headerlink" title="Windows 用户"></a>Windows 用户</h1><p>Mac 不分区，一般只有一个盘，Command 键大多数时候等于 Ctrl<br>复制逻辑有点不一样，不能像 windows 下先复制再粘贴，而是要复制之后直接拖入下一个文件夹<br>要不然就在终端用 cp  命令，Mac 下终端还是用得比较多的   </p>
+<h1 id="Linux-用户"><a href="#Linux-用户" class="headerlink" title="Linux 用户"></a>Linux 用户</h1><p>homebrew ≈  yum  ≈ apt-get  ≈  pacman<br>常用 shell 命令差不多，bash 脚本一般都可以直接跑，有些命令有细微差别<br>比如看当前文件夹下一层目录的使用容量统计   </p>
+<ul>
+<li>Mac 下  <code>du -d 1 -h .</code>    </li>
+<li>Centos <code>du --max-depth=1 -h .</code></li>
+</ul>
+<h1 id="文件夹操作"><a href="#文件夹操作" class="headerlink" title="文件夹操作"></a>文件夹操作</h1><p>在 Finder 中 Command + 上 可以进入当前目录的父目录<br>把 文件夹 直接拖到 终端 里就是该 文件夹路径<br>在终端里使用 open 命令可以用 Finder 打开文件夹   </p>
+<h1 id="常用快捷键"><a href="#常用快捷键" class="headerlink" title="常用快捷键"></a>常用快捷键</h1><ul>
+<li>Command + C：复制</li>
+<li>Command + V：粘贴</li>
+<li>Command + A ：全选</li>
+<li>Command + Shift + 3：全屏截图（+ 4 是选择截图），自动保存到桌面</li>
+<li>Command + Z：撤销Command + H：隐藏当前的窗口</li>
+<li>Command + Q：退出应用，等于window 下的 Alt+F4</li>
+<li>Command + W：退出当前 Tab，浏览器里用得多</li>
+<li>Command + T：创建新 Tab</li>
+<li>Command + N：创建新窗口</li>
+<li>Command + 1/2/3/4: 快速切换标签页，浏览器里试试就知道作用了</li>
+<li>Ctrl + 1/2/3/4/5: 多桌面的时候可以快速切换桌面</li>
+<li>Command + Tab：切换应用</li>
+<li>Command + Option + Esc：可以强制退出应用</li>
+<li>Control+Command+Q：快捷锁定电脑屏幕</li>
+<li>Command+Space（空格键）：搜索，输入简拼可以快速切换应用</li>
+</ul>
+<p>Ctrl 在控制台里使用比较频繁，可以使用系统设置交换 Ctrl 和 CapsLock 的位置<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://files.catbox.moe/ibo1h6.png" alt="修饰键" title>
+                </div>
+                <div class="image-caption">修饰键</div>
+            </figure></p>
+<h2 id="终端快捷操作"><a href="#终端快捷操作" class="headerlink" title="终端快捷操作"></a>终端快捷操作</h2><ul>
+<li>Ctrl + u : 删除当前光标之前的所有字符</li>
+<li>Ctrl + k : 删除当前光标之后的所有字符</li>
+<li>Ctrl + f : 向前移动光标</li>
+<li>Ctrl + b : 向后移动光标</li>
+<li>Ctrl + d : 删除光标后一个字符</li>
+<li>Ctrl + h : 删除光标前一个字符</li>
+<li>Ctrl + e : 移动光标到最后</li>
+<li>Ctrl + a : 移动光标到最前</li>
+<li>Ctrl + j : 回车（就是回车键的作用,可以减少右手移动次数）</li>
+<li>Ctrl + L : 清屏</li>
+<li>Ctrl + p : 调出命令历史中的前一条（Previous）命令，相当于通常的上箭头</li>
+<li>Ctrl + n : 调出命令历史中的下一条（Next）命令，相当于通常的上箭头</li>
+<li>Ctrl + r : 根据用户输入查找相关历史命令（reverse-i-search）</li>
+</ul>
+<h1 id="常见误区"><a href="#常见误区" class="headerlink" title="常见误区"></a>常见误区</h1><p>很多人以为 Macos 也像 IOS 一样应用都从 AppStore 下，并不是，直接下软件安装就行了，而且安装过程比 Windows 简单得多，直接把应用拖到 Application 文件夹下即可，卸载的时候直接移到废纸篓<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://files.catbox.moe/ro8uyj.png" alt="卸载软件" title>
+                </div>
+                <div class="image-caption">卸载软件</div>
+            </figure></p>
+<h1 id="高效工作配置"><a href="#高效工作配置" class="headerlink" title="高效工作配置"></a>高效工作配置</h1><h2 id="oh-my-zsh"><a href="#oh-my-zsh" class="headerlink" title="oh-my-zsh"></a>oh-my-zsh</h2><p><a href="https://juejin.cn/post/6844903939121348616" target="_blank" rel="noopener">oh-my-zsh让终端好用到飞起~</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sh -c &quot;$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&quot;</span><br></pre></td></tr></table></figure></p>
+<h2 id="Homebrew"><a href="#Homebrew" class="headerlink" title="Homebrew"></a>Homebrew</h2><p><a href="https://www.zhihu.com/column/c_1369940836248158208" target="_blank" rel="noopener">Homebrew 使用详解，macOS的第二个 AppStore!</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/bin/bash -c &quot;$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)&quot;</span><br></pre></td></tr></table></figure></p>
+<p>Git 常用操作简写配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">alias gc=&apos;git checkout&apos;</span><br><span class="line">alias gb=&apos;git branch&apos;</span><br><span class="line">alias gf=&apos;git fetch&apos;</span><br><span class="line">alias gs=&apos;git status&apos;</span><br><span class="line">alias gr=&apos;git remote&apos;</span><br><span class="line">alias gpl=&apos;git pull&apos;</span><br><span class="line">alias gps=&apos;git push&apos;</span><br><span class="line">alias gpo=&apos;git push origin&apos;</span><br><span class="line">alias gaa=&apos;git add --all&apos;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>以上保存到 <code>{user.home}/.zshrc</code> 文件下</p>
+</blockquote>
+<h2 id="Vscode"><a href="#Vscode" class="headerlink" title="Vscode"></a>Vscode</h2><p>命令行快速编辑项目或者文件<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://files.catbox.moe/5bxn94.png" alt="code" title>
+                </div>
+                <div class="image-caption">code</div>
+            </figure><br>搜 idea 可以找到下面这个，可以保持跟 Idea 一致的快捷键<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://files.catbox.moe/4dh9u1.png" alt="vscode-idea" title>
+                </div>
+                <div class="image-caption">vscode-idea</div>
+            </figure></p>
+<h2 id="Idea"><a href="#Idea" class="headerlink" title="Idea"></a>Idea</h2><p>命令行快速打开项目<br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://files.catbox.moe/c3uyuw.png" alt="idea" title>
+                </div>
+                <div class="image-caption">idea</div>
+            </figure></p>
+<blockquote>
+<p>终端中使用 <code>idea + {文件夹}</code> 可以快速打开项目</p>
+</blockquote>
+<p><strong>必备插件</strong><br><figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="https://files.catbox.moe/oq4kvl.png" alt="idea-plugin" title>
+                </div>
+                <div class="image-caption">idea-plugin</div>
+            </figure></p>
+<h1 id="Alfred-or-UTools"><a href="#Alfred-or-UTools" class="headerlink" title="Alfred or UTools"></a>Alfred or UTools</h1><blockquote>
+<p>默认唤起快捷键都是 Option + Space</p>
+</blockquote>
+<ul>
+<li>Alfred：系统搜索的增强版，老牌效率神器，macos 体验一半都归功于这个，不过插件好久没新增了</li>
+<li>Utools:  国内开发者开发，操作逻辑跟 Alfred 差不多，插件很丰富，功能强大，还能云端同步</li>
+</ul>
+<p><a href="https://www.hangge.com/blog/cache/detail_3061.html" target="_blank" rel="noopener">Alfred - 一款macOS系统下的效率神器介绍</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/262001765" target="_blank" rel="noopener">Mac 效率工具必备神器 —— Alfred</a></p>
+<p>utools 支持跨平台，windows  linux 都能用，mac 下使用快捷键唤起的时候有一丝的停顿，不如 alfred 流畅</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-09-05T08:35:11.973Z" itemprop="dateUpdated">2021-09-05 16:35:11</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2021/09/04/2021-09-05-mac-guide/" target="_blank" rel="external">http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.github.io">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Mac/">Mac</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/&title=《Mac 使用教程 - Java开发者视角》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/&title=《Mac 使用教程 - Java开发者视角》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Mac 使用教程 - Java开发者视角》 — tiangao&url=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/&via=http://j2go.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2017/12/23/2017-12-24-java-question1/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">记一道 Java 笔试题</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+                <p>Hosted by <a href="https://pages.coding.me" style="font-weight: bold">Coding Pages</a></p>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/&title=《Mac 使用教程 - Java开发者视角》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/&title=《Mac 使用教程 - Java开发者视角》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Mac 使用教程 - Java开发者视角》 — tiangao&url=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/&via=http://j2go.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2021/09/04/2021-09-05-mac-guide/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3a2W7DIBAFUP//T6evqSqTOwOpZDg8WV0Ix5XobNcVr9fbev/K3fPfdbfb3e9e31gYGBiPZbyGa/wByUeOSTnswz4YGBgHMO62zq/X5PKdudY/nBkDAwOjeNDxoauBJgYGBkaVkQeLPQwGBgbGTBI7PlAvlc2T52W5OAYGxgMZedX9/5+/0t/AwMB4FONVXHmQl7czeyf5tRsGBsbWjFVtyF7iWkhQkxeHgYFxAKM3TpEPZ8y0MKNgEQMDY2vGuPQ/vljzIl0SPuZt0cJwGAYGxhaMPFGsNg+qKfFUAwADA+MYRh6QVa/OpDw3FapiYGBsyshDvfnS2KpBjai/ioGBsSmjOgBRDRzHh54KRjEwMLZmVO+r5CjJc++gUbkNAwNjO0ZSju8lmdUxsjyF/vB3wMDA2JRRbQzkpbRk2KKXBmNgYJzD6IV61XS3+sqWRbgYGBhbMKoDFtXw7iquZoCIgYGxNSNPX6vjF9USW/UkUZyLgYGxHSNvQ/bCwfy71csdAwPjHEa1kZkXwlYNbRRqhxgYGMcw8oCvl+iu/RkMDIwTGNXLsRo+9hqcU0ksBgbGFoxeW3GmVVkdC4uoGBgYWzOqzcXe1nljMv8HkOyDgYGxE6M6nvVtfD4ihoGBcRqj16ScaT3OJLEYGBgYvRBtZuQiL/YV3iIGBsbBjGqprnCUmYYEBgbGAYxeKX9VWJkntwtycQwMjAcyeiMO+SBFrwC39gVhYGA8lvEDGtTbGa2KYXYAAAAASUVORK5CYII=" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
