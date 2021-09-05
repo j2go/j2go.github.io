@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "深入 Spring Bean 生命周期"
+title: "Spring Bean 生命周期"
 date: 2017-09-16
 tags: spring
 categories: Java

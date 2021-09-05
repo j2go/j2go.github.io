@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "查看 IPhone 电池信息"
-date: 2017-10-26
+date: 2017-01-01
 tags:  iphone
 categories: Other
 ---

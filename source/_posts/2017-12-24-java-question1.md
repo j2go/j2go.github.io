@@ -12,7 +12,7 @@ categories: 算法
 当时做的很烂，写了快 200 行，一开始的想法是 5 个线程 5 个 map 分开统计，然后归并，最后遍历插入一个 100 大小的有序数组。
 
 后来想想，其实好像有个简单的解法，毕竟这个单词总数又不是很多， 30 行代码就搞定了
-```
+```java
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -32,7 +32,8 @@ public class Main {
         String filesDir = args[0];
         ExecutorService pool = Executors.newFixedThreadPool(5);
         Map<String, AtomicInteger> countMap = new ConcurrentHashMap<>();
-        List<Path> paths = Files.list(Paths.get(filesDir)).filter(path -> path.toFile().isFile()).collect(Collectors.toList());
+        List<Path> paths = Files.list(Paths.get(filesDir)).filter(path -> 
+                path.toFile().isFile()).collect(Collectors.toList());
         System.out.println(paths.size());
         CountDownLatch countDownLatch = new CountDownLatch(paths.size());
         paths.forEach(path -> pool.execute(() -> {
@@ -57,7 +58,9 @@ public class Main {
         countDownLatch.await();
         pool.shutdown();
         List<Map.Entry<String, AtomicInteger>> top100Wrods = countMap.entrySet().stream()
-                .sorted((a, b) -> b.getValue().get() - a.getValue().get()).limit(100).collect(Collectors.toList());
+                .sorted((a, b) -> b.getValue().get() - a.getValue().get())
+                .limit(100)
+                .collect(Collectors.toList());
         System.out.println(top100Wrods);
     }
 }
