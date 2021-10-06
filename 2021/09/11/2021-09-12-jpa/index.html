@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html>
+<head><meta name="generator" content="Hexo 3.9.0">
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    <title>JPA规范 | tiangao | 天高云淡</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="JPA">
+    <meta name="description" content="JSR330  0. 简介截取一段规范的译文  Java Persistence API 是用于管理 Java EE 和 Java SE 环境中的持久性和对象/关系映射的 Java API。它为使用 Java 域模型管理关系数据库的 Java 应用程序开发人员提供对象/关系映射工具。Java Persistence 2.1 规范的目的是扩展 Java Persistence API 以包含社区要">
+<meta name="keywords" content="JPA">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JPA规范">
+<meta property="og:url" content="http://j2go.github.io/2021/09/11/2021-09-12-jpa/index.html">
+<meta property="og:site_name" content="tiangao">
+<meta property="og:description" content="JSR330  0. 简介截取一段规范的译文  Java Persistence API 是用于管理 Java EE 和 Java SE 环境中的持久性和对象/关系映射的 Java API。它为使用 Java 域模型管理关系数据库的 Java 应用程序开发人员提供对象/关系映射工具。Java Persistence 2.1 规范的目的是扩展 Java Persistence API 以包含社区要">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:updated_time" content="2021-10-06T10:51:31.092Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JPA规范">
+<meta name="twitter:description" content="JSR330  0. 简介截取一段规范的译文  Java Persistence API 是用于管理 Java EE 和 Java SE 环境中的持久性和对象/关系映射的 Java API。它为使用 Java 域模型管理关系数据库的 Java 应用程序开发人员提供对象/关系映射工具。Java Persistence 2.1 规范的目的是扩展 Java Persistence API 以包含社区要">
+    
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+</head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/img/brand.jpg)">
+      <div class="brand">
+        <a href="/" class="avatar waves-effect waves-circle waves-light">
+          <img src="/img/avatar.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">stiangao</h5>
+          <a href="mailto:tiangao1102@163.com" title="tiangao1102@163.com" class="mail">tiangao1102@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/"  >
+                <i class="icon icon-lg icon-home"></i>
+                主页
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                归档
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                标签
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/categories"  >
+                <i class="icon icon-lg icon-th-list"></i>
+                分类
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/j2go" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">JPA规范</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="搜索">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">JPA规范</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2021-09-11T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2021-09-12
+</time>
+
+
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#0-简介"><span class="post-toc-number">1.</span> <span class="post-toc-text">0. 简介</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#1-基本注解"><span class="post-toc-number">2.</span> <span class="post-toc-text">1. 基本注解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-1-Entity"><span class="post-toc-number">2.1.</span> <span class="post-toc-text">1.1 @Entity</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-2-Table"><span class="post-toc-number">2.2.</span> <span class="post-toc-text">1.2 @Table</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-3-Id"><span class="post-toc-number">2.3.</span> <span class="post-toc-text">1.3 @Id</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-4-IdClass"><span class="post-toc-number">2.4.</span> <span class="post-toc-text">1.4 @IdClass</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-5-GeneratedValue"><span class="post-toc-number">2.5.</span> <span class="post-toc-text">1.5 @GeneratedValue</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-6-Basic"><span class="post-toc-number">2.6.</span> <span class="post-toc-text">1.6 @Basic</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-7-Transient"><span class="post-toc-number">2.7.</span> <span class="post-toc-text">1.7 @Transient</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-8-Column"><span class="post-toc-number">2.8.</span> <span class="post-toc-text">1.8 @Column</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-9-Temporal"><span class="post-toc-number">2.9.</span> <span class="post-toc-text">1.9 @Temporal</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-10-Enumerated"><span class="post-toc-number">2.10.</span> <span class="post-toc-text">1.10 @Enumerated</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#1-11-Lob"><span class="post-toc-number">2.11.</span> <span class="post-toc-text">1.11 @Lob</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#2-关联关系注解"><span class="post-toc-number">3.</span> <span class="post-toc-text">2. 关联关系注解</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-1-JoinColumn"><span class="post-toc-number">3.1.</span> <span class="post-toc-text">2.1 @JoinColumn</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-2-关系映射注解"><span class="post-toc-number">3.2.</span> <span class="post-toc-text">2.2 关系映射注解</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#2-3-OrderBy"><span class="post-toc-number">3.3.</span> <span class="post-toc-text">2.3 @OrderBy</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#3-查询"><span class="post-toc-number">4.</span> <span class="post-toc-text">3. 查询</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#3-1-Repository"><span class="post-toc-number">4.1.</span> <span class="post-toc-text">3.1 Repository</span></a></li></ol></li></ol>
+        </nav>
+    </aside>
+    
+<article id="post-2021-09-12-jpa"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">JPA规范</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2021-09-12 00:00:00" datetime="2021-09-11T16:00:00.000Z"  itemprop="datePublished">2021-09-12</time>
+
+            
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <blockquote>
+<p><a href="https://jcp.org/en/jsr/proposalDetails?id=338" target="_blank" rel="noopener">JSR330</a></p>
+</blockquote>
+<h1 id="0-简介"><a href="#0-简介" class="headerlink" title="0. 简介"></a>0. 简介</h1><p>截取一段规范的译文</p>
+<blockquote>
+<p>Java Persistence API 是用于管理 Java EE 和 Java SE 环境中的持久性和对象/关系映射的 Java API。它为使用 Java 域模型管理关系数据库的 Java 应用程序开发人员提供对象/关系映射工具。<br>Java Persistence 2.1 规范的目的是扩展 Java Persistence API 以包含社区要求的附加功能。<br>专家组应考虑纳入这项工作的方面包括但不限于以下方面：</p>
+<ul>
+<li>支持在对象/关系映射中使用自定义类型和转换方法。</li>
+<li>支持使用“获取组”和/或“获取计划”以进一步控制获取、分离、复制和/或用于合并的数据。</li>
+<li>支持不可变属性和只读实体的规范。</li>
+<li>支持用户可配置的命名策略，用于 O/R 映射和元模型生成。</li>
+<li>更灵活地使用生成值；支持 UUID 生成器类型。</li>
+<li>额外的映射元数据为模式生成提供更好的标准化。</li>
+<li>支持多租户。</li>
+<li>额外的事件监听器和回调方法；实体管理器对回调的可用性。</li>
+<li>脏检测方法。</li>
+<li>改进了控制持久上下文同步的能力。</li>
+<li>支持使用供应商扩展的其他解包方法。</li>
+<li>支持持久化单元的动态定义，包括对象/关系映射信息。</li>
+<li>将元模型 API 扩展到对象/关系映射信息。</li>
+<li>对 Java Persistence 查询语言和标准 API 的改进，包括：<br>– 支持存储过程；<br>– 支持附加的内置函数，以及调用其他数据库和供应商函数；<br>– 支持向下转换；<br>– 支持带有 ON 条件的外部连接；<br>– 更新和删除条件查询；<br>– 支持 JPQL 查询和标准查询之间的映射。</li>
+<li>改进了对原生查询结果类型映射的支持。</li>
+<li>更灵活的 XML 描述符。<br>专家组的目标是评估这些问题，并确定和寻求方向，以增强 Java Persistence API 的整体编程模型和设施。</li>
+</ul>
+</blockquote>
+<h1 id="1-基本注解"><a href="#1-基本注解" class="headerlink" title="1. 基本注解"></a>1. 基本注解</h1><h2 id="1-1-Entity"><a href="#1-1-Entity" class="headerlink" title="1.1 @Entity"></a>1.1 @Entity</h2><p>由 <code>@Entity</code> 定义的对象会成为被 JPA 管理的实体，将映射到指定的数据库表中。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Entity &#123;</span><br><span class="line">    <span class="comment">//可选，默认是此实体类的名字，全局唯一</span></span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-2-Table"><a href="#1-2-Table" class="headerlink" title="1.2 @Table"></a>1.2 @Table</h2><p>用于指定数据库的表名。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Table &#123;</span><br><span class="line">    <span class="comment">//表的名字，如果不写，则默认与实体的名字一样</span></span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="comment">//此表的catalog</span></span><br><span class="line">    <span class="function">String <span class="title">catalog</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="comment">//此表的schema</span></span><br><span class="line">    <span class="function">String <span class="title">schema</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="comment">//唯一性约束，只有创建表的时候用，默认不需要</span></span><br><span class="line">    UniqueConstraint[] uniqueConstraints() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line">    <span class="comment">//索引，只有创建表的时候使用，默认不需要</span></span><br><span class="line">    Index[] indexes() <span class="keyword">default</span> &#123;&#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-3-Id"><a href="#1-3-Id" class="headerlink" title="1.3 @Id"></a>1.3 @Id</h2><p>定义数据库的主键，一个实体里至少有一个主键。</p>
+<h2 id="1-4-IdClass"><a href="#1-4-IdClass" class="headerlink" title="1.4 @IdClass"></a>1.4 @IdClass</h2><p>联合主键。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> IdClass &#123;</span><br><span class="line">    <span class="comment">//联合主键的类</span></span><br><span class="line">    <span class="function">Class <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>联合主键的用处就是一个表中能存在多个主键，这些主键在关联在外部的一个对象中，这个对象需要满足以下条件   </p>
+<ul>
+<li>必须实现 <code>Serializable</code> 接口</li>
+<li>必须有默认的 <code>public</code> 无参构造方法</li>
+<li>必须覆盖 <code>equals()</code> 和 <code>hashCode()</code> 方法</li>
+</ul>
+<h2 id="1-5-GeneratedValue"><a href="#1-5-GeneratedValue" class="headerlink" title="1.5 @GeneratedValue"></a>1.5 @GeneratedValue</h2><p>主键生成策略。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> GeneratedValue &#123;</span><br><span class="line">    <span class="comment">//Id生成策略，默认GenerationType.AUTO</span></span><br><span class="line">    <span class="function">GenerationType <span class="title">strategy</span><span class="params">()</span> <span class="keyword">default</span> GenerationType.AUTO</span>;</span><br><span class="line">    <span class="comment">//通过Sequences生成Id，常见的是Orcale数据库的Id生成规则，需要配合@SequenceGenerator使用</span></span><br><span class="line">    <span class="function">String <span class="title">generator</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> GenerationType &#123;</span><br><span class="line">    <span class="comment">//通过表产生主键，框架由表模拟序列产生主键，使用该策略可以使应用更易于数据库移植</span></span><br><span class="line">    TABLE,</span><br><span class="line">    <span class="comment">//通过序列产生主键，通过@SequenceGenerator注解指定序列名，Mysql不支持这种方式</span></span><br><span class="line">    SEQUENCE,</span><br><span class="line">    <span class="comment">//采用数据库Id自增，用于Mysql数据库</span></span><br><span class="line">    IDENTITY,</span><br><span class="line">    <span class="comment">//JPA默认选项，自动选择策略</span></span><br><span class="line">    AUTO;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">GenerationType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-6-Basic"><a href="#1-6-Basic" class="headerlink" title="1.6 @Basic"></a>1.6 @Basic</h2><p><code>@Basic</code> 表示属性是到数据库的字段的映射，如果实体的字段上没有任何注解，默认为 <code>@Basic</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Basic &#123;</span><br><span class="line">    <span class="comment">//EAGER是立即加载，这是默认方式，可以看到还有一种LAZY懒加载</span></span><br><span class="line">    <span class="function">FetchType <span class="title">fetch</span><span class="params">()</span> <span class="keyword">default</span> FetchType.EAGER</span>;</span><br><span class="line">    <span class="comment">//Optional 类是一个可以为null的容器对象，设置为true，则表示字段可以为null，默认可以</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">optional</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> FetchType &#123;</span><br><span class="line">    LAZY,</span><br><span class="line">    EAGER;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">FetchType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-7-Transient"><a href="#1-7-Transient" class="headerlink" title="1.7 @Transient"></a>1.7 @Transient</h2><p><code>@Transient</code> 表示该属性并非一个到数据库表的字段的映射，是非持久化属性，与 <code>@Basic</code> 作用相反。</p>
+<p>实体中有数据库中不存在的字段，可以加上 <code>@Transient</code> 注解，忽略这个字段的映射。</p>
+<h2 id="1-8-Column"><a href="#1-8-Column" class="headerlink" title="1.8 @Column"></a>1.8 @Column</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Column &#123;</span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="comment">//表示该字段是否为唯一标识，默认为false，如果表中有一个字段需要唯一标识，则既可以使用该标记，也可以使用@Table标记中的@UniqueConstraint</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">unique</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</span><br><span class="line">    <span class="comment">//数据字段是否允许为空，默认允许</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">nullable</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</span><br><span class="line">    <span class="comment">//执行insert操作时是否包含此字段，默认包含</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">insertable</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</span><br><span class="line">    <span class="comment">//执行update操作时是否包含此字段，默认包含</span></span><br><span class="line">    <span class="comment">//insertable和updatable属性一般多用于只读的属性，例如主键和外键等。这些字段的值通常是自动生成的</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">updatable</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</span><br><span class="line">    <span class="comment">//表示创建表时，该字段创建的SQL语句，一般用于通过Entity生成表定义时使用</span></span><br><span class="line">    <span class="function">String <span class="title">columnDefinition</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="comment">//表示当映射多个表时，指定表的表中的字段。默认值为主表的表名</span></span><br><span class="line">    <span class="function">String <span class="title">table</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="comment">//字段长度，默认255</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">length</span><span class="params">()</span> <span class="keyword">default</span> 255</span>;</span><br><span class="line">    <span class="comment">// precision属性和scale属性表示精度，当字段类型为double时，precision表示数值的总长度，scale表示小数点所占的位数</span></span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">precision</span><span class="params">()</span> <span class="keyword">default</span> 0</span>;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">scale</span><span class="params">()</span> <span class="keyword">default</span> 0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="1-9-Temporal"><a href="#1-9-Temporal" class="headerlink" title="1.9 @Temporal"></a>1.9 @Temporal</h2><p><code>@Temporal</code> 用来设置 Date 类型的属性映射到对应精度的字段，也就是对日期进行格式化。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> TemporalType &#123;</span><br><span class="line">    DATE,</span><br><span class="line">    TIME,</span><br><span class="line">    TIMESTAMP;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">TemporalType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Temporal &#123;</span><br><span class="line">    <span class="function">TemporalType <span class="title">value</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">enum</span> TemporalType &#123;</span><br><span class="line">    DATE,</span><br><span class="line">    TIME,</span><br><span class="line">    TIMESTAMP;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="title">TemporalType</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>可以看到有三种格式化方式，</p>
+<ol>
+<li><code>@Temporal(TemporalType.DATE)</code>: 实体类会封装成日期 <code>“yyyy-MM-dd”</code> 的 Date 类型。</li>
+<li><code>@Temporal(TemporalType.TIME)</code>: 实体类会封装成时间 <code>“hh-MM-ss”</code> 的 Date 类型。</li>
+<li><code>@Temporal(TemporalType.TIMESTAMP)</code>: 实体类会封装成完整的时间 <code>“yyyy-MM-dd hh:MM:ss”</code> 的 Date 类型。</li>
+</ol>
+<h2 id="1-10-Enumerated"><a href="#1-10-Enumerated" class="headerlink" title="1.10 @Enumerated"></a>1.10 @Enumerated</h2><p>用于直接映射枚举类型的字段。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Enumerated &#123;</span><br><span class="line">    <span class="function">EnumType <span class="title">value</span><span class="params">()</span> <span class="keyword">default</span> EnumType.ORDINAL</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h2 id="1-11-Lob"><a href="#1-11-Lob" class="headerlink" title="1.11 @Lob"></a>1.11 @Lob</h2><p><code>@Lob</code> 将属性映射为数据库支持的大对象类型，支持以下两种数据库类型的字段。</p>
+<ul>
+<li><code>Clob</code>：长字符串类型，<code>java.sql.Clob</code>、<code>Character[]</code>、<code>char[]</code>、<code>String</code> 都将被映射成 <code>Clob</code> 类型。</li>
+<li><code>Blob</code>：字节类型，<code>java.sql.Blob</code>、<code>Byte[]</code>、<code>byte[]</code>、实现了 <strong>Serializable</strong> 接口类型都将被映射成 <code>Blob</code> 类型。</li>
+</ul>
+<h1 id="2-关联关系注解"><a href="#2-关联关系注解" class="headerlink" title="2. 关联关系注解"></a>2. 关联关系注解</h1><p>JPA 中的实体关系</p>
+<p>简单地用原始字段持久化一个对象只是等式的一半。JPA 还具有管理彼此相关的实体的能力。表和对象中都可能存在四种实体关系：</p>
+<ul>
+<li>一对多</li>
+<li>多对一</li>
+<li>多对多</li>
+<li>一对一</li>
+</ul>
+<h2 id="2-1-JoinColumn"><a href="#2-1-JoinColumn" class="headerlink" title="2.1 @JoinColumn"></a>2.1 @JoinColumn</h2><p>定义外键关联的字段名称。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> JoinColumn &#123;</span><br><span class="line">    <span class="comment">//注解所在当前表的主键名，必须写</span></span><br><span class="line">    <span class="function">String <span class="title">name</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="comment">//关联外部表的列名，默认是外部主键名</span></span><br><span class="line">    <span class="function">String <span class="title">referencedColumnName</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line">    <span class="comment">//外键字段是否唯一</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">unique</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">false</span></span>;</span><br><span class="line">    <span class="comment">//外键字段是否允许为空</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">nullable</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</span><br><span class="line">    <span class="comment">//是否跟随一起新增</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">insertable</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</span><br><span class="line">    <span class="comment">//是否跟随一起更新</span></span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">updatable</span><span class="params">()</span> <span class="keyword">default</span> <span class="keyword">true</span></span>;</span><br><span class="line">    </span><br><span class="line">    <span class="function">String <span class="title">columnDefinition</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">String <span class="title">table</span><span class="params">()</span> <span class="keyword">default</span> ""</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function">ForeignKey <span class="title">foreignKey</span><span class="params">()</span> <span class="keyword">default</span> @<span class="title">ForeignKey</span><span class="params">(ConstraintMode.PROVIDER_DEFAULT)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>配合 <code>@OneToOne</code>、<code>@OneToMany</code>、<code>@ManyToOne</code> 一起使用。</p>
+<h2 id="2-2-关系映射注解"><a href="#2-2-关系映射注解" class="headerlink" title="2.2 关系映射注解"></a>2.2 关系映射注解</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">public @interface OneToOne &#123;</span><br><span class="line">    //关系目标实体，默认为该字段的类型</span><br><span class="line">    Class targetEntity() default void.class;</span><br><span class="line">    </span><br><span class="line">    //级联操作策略</span><br><span class="line">    CascadeType[] cascade() default &#123;&#125;;</span><br><span class="line"></span><br><span class="line">    //数据获取方式，立即加载和延迟加载</span><br><span class="line">    FetchType fetch() default FetchType.EAGER;</span><br><span class="line"></span><br><span class="line">    boolean optional() default true;</span><br><span class="line"></span><br><span class="line">    //关联关系被谁维护，一般不需要特别指定, 只有关系维护方才能操作两者的关系，被维护方即使设置了维护方属性进行存储也不会更新外键关联</span><br><span class="line">    //mappedBy不能与@JoinColumn或者@JoinTable同时使用</span><br><span class="line">    //mappedBy的值是指另一方的实体里属性的字段，而不是数据库字段，也不是实体的对象的名字，是另一方配置了@JoinColumn或者@JoinTable注解的属性的字段名称</span><br><span class="line">    String mappedBy() default &quot;&quot;;</span><br><span class="line"></span><br><span class="line">    //是否级联删除，和 CascadeType.REMOVE 的效果一样，只是配置了两种中的一种就会自动级联删除</span><br><span class="line">    boolean orphanRemoval() default false;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">public enum CascadeType &#123;</span><br><span class="line">    ALL,</span><br><span class="line">    PERSIST,</span><br><span class="line">    MERGE,</span><br><span class="line">    REMOVE,</span><br><span class="line">    REFRESH,</span><br><span class="line">    DETACH;</span><br><span class="line"></span><br><span class="line">    private CascadeType() &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>级联操作策略 <code>CascadeType[]</code></p>
+<ol>
+<li>CascadeType.PERSIST 级联新建</li>
+<li>CascadeType.MERGE   级联更新</li>
+<li>CascadeType.REMOVE  级联删除</li>
+<li>CascadeType.REFRESH 级联刷新，比如A先对商品修改，B后来修改商品时需要先刷新A修改的商品才可以修改</li>
+<li>CascadeType.DETACH  级联脱管/游离操作，如果你要删除一个实体，但是它有外键无法删除，你就需要这个级联权限了。它会撤销所有相关的外键关联</li>
+<li>CascadeType.ALL     拥有以上所有级联操作权限</li>
+<li>默认，关系表不会产生任何影响</li>
+</ol>
+<blockquote>
+<p><code>@OneToOne</code> 需要配合 @JoinColumn 一起使用</p>
+</blockquote>
+<p>在使用<code>@OneToOne</code>进行双向关联时，需要在类上加上注解 <code>@JsonIdentityInfo</code>，这个注解被用来在序列化/反序列化时为该对象或字段添加一个对象识别码，通常是用来解决循环嵌套的问题。通过配置属性 generator 来确定识别码生成的方式，配置属性 property 来确定识别码的名称，识别码名称没有限制。</p>
+<p>一般这个注解可以这么加</p>
+<blockquote>
+<p>@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,property = “id”)</p>
+</blockquote>
+<p><code>@OneToMany</code> 和 <code>@ManyToOne</code> 同上。</p>
+<h2 id="2-3-OrderBy"><a href="#2-3-OrderBy" class="headerlink" title="2.3 @OrderBy"></a>2.3 @OrderBy</h2><p>用于关联查询时排序。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@Entity</span> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Course</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="meta">@ManyToMany</span></span><br><span class="line">    <span class="meta">@OrderBy</span>(<span class="string">"lastname ASC"</span>)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> List  <span class="title">getStudents</span><span class="params">()</span> </span>&#123;...&#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Entity</span> </span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="meta">@ManyToMany</span>(mappedBy=<span class="string">"students"</span>)</span><br><span class="line">    <span class="meta">@OrderBy</span> <span class="comment">//默认使用主键排序</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> List  <span class="title">getCourses</span><span class="params">()</span> </span>&#123;...&#125;;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h1 id="3-查询"><a href="#3-查询" class="headerlink" title="3. 查询"></a>3. 查询</h1><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * Interface used to control query execution.</span><br><span class="line"> *</span><br><span class="line"> * @since Java Persistence 1.0</span><br><span class="line"> */</span><br><span class="line">public interface Query &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Execute a SELECT query and return the query results</span><br><span class="line">     * as a List.</span><br><span class="line">     * @return a list of the results</span><br><span class="line">     * @throws IllegalStateException if called for a Java </span><br><span class="line">     *    Persistence query language UPDATE or DELETE statement</span><br><span class="line">     */   </span><br><span class="line">    public List getResultList();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Execute a SELECT query that returns a single result.</span><br><span class="line">     * @return the result</span><br><span class="line">     * @throws NoResultException if there is no result</span><br><span class="line">     * @throws NonUniqueResultException if more than one result</span><br><span class="line">     * @throws IllegalStateException if called for a Java </span><br><span class="line">     *    Persistence query language UPDATE or DELETE statement</span><br><span class="line">     */</span><br><span class="line">    public Object getSingleResult();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Execute an update or delete statement.</span><br><span class="line">     * @return the number of entities updated or deleted</span><br><span class="line">     * @throws IllegalStateException if called for a Java </span><br><span class="line">     *    Persistence query language SELECT statement</span><br><span class="line">     * @throws TransactionRequiredException if there is</span><br><span class="line">     *    no transaction</span><br><span class="line">     */</span><br><span class="line">    public int executeUpdate();</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Set the maximum number of results to retrieve.</span><br><span class="line">     * @param maxResult</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if argument is negative</span><br><span class="line">     */</span><br><span class="line">    public Query setMaxResults(int maxResult);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Set the position of the first result to retrieve.</span><br><span class="line">     * @param startPosition the start position of the first result, numbered from 0</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if argument is negative</span><br><span class="line">     */</span><br><span class="line">    public Query setFirstResult(int startPosition);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Set an implementation-specific hint.</span><br><span class="line">     * If the hint name is not recognized, it is silently ignored.</span><br><span class="line">     * @param hintName</span><br><span class="line">     * @param value</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if the second argument is not</span><br><span class="line">     *    valid for the implementation</span><br><span class="line">     */</span><br><span class="line">    public Query setHint(String hintName, Object value);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Bind an argument to a named parameter.</span><br><span class="line">     * @param name the parameter name</span><br><span class="line">     * @param value</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if parameter name does not</span><br><span class="line">     *    correspond to parameter in query string</span><br><span class="line">     *    or argument is of incorrect type</span><br><span class="line">     */</span><br><span class="line">    public Query setParameter(String name, Object value);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Bind an instance of java.util.Date to a named parameter.</span><br><span class="line">     * @param name</span><br><span class="line">     * @param value</span><br><span class="line">     * @param temporalType</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if parameter name does not</span><br><span class="line">     *    correspond to parameter in query string</span><br><span class="line">     */</span><br><span class="line">    public Query setParameter(String name, Date value, TemporalType temporalType);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Bind an instance of java.util.Calendar to a named parameter.</span><br><span class="line">     * @param name</span><br><span class="line">     * @param value</span><br><span class="line">     * @param temporalType</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if parameter name does not</span><br><span class="line">     *    correspond to parameter in query string</span><br><span class="line">     */</span><br><span class="line">    public Query setParameter(String name, Calendar value, TemporalType temporalType);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Bind an argument to a positional parameter.</span><br><span class="line">     * @param position</span><br><span class="line">     * @param value</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if position does not</span><br><span class="line">     *    correspond to positional parameter of query</span><br><span class="line">     *    or argument is of incorrect type</span><br><span class="line">     */</span><br><span class="line">    public Query setParameter(int position, Object value);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Bind an instance of java.util.Date to a positional parameter.</span><br><span class="line">     * @param position</span><br><span class="line">     * @param value</span><br><span class="line">     * @param temporalType</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if position does not</span><br><span class="line">     *    correspond to positional parameter of query</span><br><span class="line">     */</span><br><span class="line">    public Query setParameter(int position, Date value, TemporalType temporalType);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Bind an instance of java.util.Calendar to a positional parameter.</span><br><span class="line">     * @param position</span><br><span class="line">     * @param value</span><br><span class="line">     * @param temporalType</span><br><span class="line">     * @return the same query instance</span><br><span class="line">     * @throws IllegalArgumentException if position does not</span><br><span class="line">     *    correspond to positional parameter of query</span><br><span class="line">     */</span><br><span class="line">    public Query setParameter(int position, Calendar value, TemporalType temporalType);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * Set the flush mode type to be used for the query execution.</span><br><span class="line">     * The flush mode type applies to the query regardless of the</span><br><span class="line">     * flush mode type in use for the entity manager.</span><br><span class="line">     * @param flushMode</span><br><span class="line">     */</span><br><span class="line">    public Query setFlushMode(FlushModeType flushMode);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="3-1-Repository"><a href="#3-1-Repository" class="headerlink" title="3.1 Repository"></a>3.1 <code>Repository</code></h2><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.springframework<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>spring-context<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;<span class="name">version</span>&gt;</span>5.2.16.RELEASE<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> 带注释的类是一个“存储库”，最初由领域驱动设计 (Evans, 2003) 作为 “一种封装存储的机制，检索和模拟对象集合的搜索行为”。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> 传统 Java EE 模式（例如“数据访问对象”）的团队也可以将此构造型应用于 DAO 类，但在这样做之前应注意</span></span><br><span class="line"><span class="comment"> 了解数据访问对象和 DDD 存储库之间的区别。此注释是一个通用的原型，各团队可缩小定义范围并按需使用。</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">从 Spring 2.5 开始，这个注解也作为 &#123;<span class="doctag">@link</span> Component <span class="doctag">@Component</span>&#125;，允许通过类路径扫描自动检测实现类</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="meta">@Target</span>(&#123;ElementType.TYPE&#125;)</span><br><span class="line"><span class="meta">@Retention</span>(RetentionPolicy.RUNTIME)</span><br><span class="line"><span class="meta">@Documented</span></span><br><span class="line"><span class="meta">@Component</span></span><br><span class="line"><span class="keyword">public</span> <span class="meta">@interface</span> Repository &#123;</span><br><span class="line"></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * The value may indicate a suggestion for a logical component name,</span></span><br><span class="line"><span class="comment">	 * to be turned into a Spring bean in case of an autodetected component.</span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@return</span> the suggested component name, if any (or empty String otherwise)</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="meta">@AliasFor</span>(annotation = Component<span class="class">.<span class="keyword">class</span>)</span></span><br><span class="line">	String value() default "";</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>@NoRepositoryBean<br>public interface MyRepository&lt;T,ID extends Serializable&gt; extends Repository&lt;T,ID&gt; {</p>
+<pre><code>T findOne(ID id);
+T save(T entity);
+</code></pre><p>}<br>通过自定义的公共基础接口，有选择的暴露了 CRUD 的方法。之后的数据接口只需要继承它即可。</p>
+<p>2.方法的查询策略的属性表达式</p>
+<p>假设一个User实体对象中有一个属性userCard，这个属性中包含有一个userId，在这种情况下，如果要通过userId查询User对象，那么查询方法写成：</p>
+<p>User findByUserCardCardId(String userId);</p>
+<p>为了解决属性匹配歧义问题，JPA 保留了下划线字符，只需要在特定地方加上下划线，即可分割属性，当然强烈建议遵循 Java 驼峰命名规范。</p>
+<p>User findByUserCard_CardId(String id);</p>
+<p>3.Projections 对查询结果的扩展<br>一般情况下，我们只需要返回一行数据的某些字段，但是 JPA 默认查找总会给我们全部返回，这样如果只需要其中几个字段，还需要手动去封装。Spring JPA 考虑到这一点，允许对专用返回类型进行建模，以便我们有更多选择，将部分字段显示成视图对象。</p>
+<p>现有两种方法可以进行建模。</p>
+<p>（1）声明一个接口，接口中包含需要返回的属性的方法。</p>
+<p>比如我有一个User实体，里面有 4 个字段，分别为id，name，email，gender，我现在只需要返回name和email，那么我可以这么定义接口。</p>
+<p>public interface NameAndEmail {<br>    String getName();<br>    String getEmail();<br>}<br>Repository中这么写：</p>
+<p>// 我这里是通过name查找的<br>NameAndEmail findByName(String name);<br>Controller 写法示例：</p>
+<p>@RequestMapping(“/findByName”)<br>@ResponseBody<br>public NameAndEmail findByName(){<br>    return userRepository.findByName(“fcy”);<br>}<br>（2）使用 Dto，定义自己的 Dto 实体类。</p>
+<p>@Data<br>public class NameAndEmailDto {</p>
+<pre><code>private String name;
+private String email;
+
+public NameAndEmailDto(String name, String email) {
+    this.name = name;
+    this.email = email;
+}
+</code></pre><p>}<br>Repository中这么写：</p>
+<p>Collection&lt;?&gt; findByName(String name, Class&lt;?&gt; type);<br>Controller写法示例：</p>
+<p>@RequestMapping(“/findByName”)<br>@ResponseBody<br>public Collection&lt;?&gt; findByName(){<br>    return userRepository.findByName(“fcy”,NameAndEmailDto.class);<br>}<br>//当然这里还可以传入 User.class,这样就返回所有字段了，算是通用接口，推荐这个写法</p>
+<p>四、注解式查询方法<br>1.@Query<br>源码如下：</p>
+<p>public @interface Query {<br>    //指定JPQL的查询语句，nativeQuery=true时，是原生SQL语句<br>    String value() default “”;<br>    //指定count的JPQL语句，如果不指定将根据query自动生成<br>    String countQuery() default “”;<br>    //根据哪个字段来count，默认即可<br>    String countProjection() default “”;<br>    //默认为false，表示不是原生SQL，如果要用原生SQL，改成true<br>    boolean nativeQuery() default false;<br>    //可以指定一个query的名字，必须是唯一的<br>    String name() default “”;<br>    //可以指定一个count的query的名字，必须是唯一的<br>    String countName() default “”;<br>}<br>注意：nativeQuery不支持直接Sort的参数查询。</p>
+<p>JPQL 语句不支持 insert</p>
+<p>nativeQuery排序的错误写法：</p>
+<p>@Query（value=”……”,nativeQuery=true）<br>User findByName（String name,Sort sort）<br>正确的排序写法是通过order by来查询。</p>
+<p>@Query排序<br>//使用JPQL语句<br>@Query(value = “select u from User u where u.name like ?1%”)<br>List<nameandemail> findByAndSort(String name, Sort sort);<br>new Sort里的属性必须是实体类中的字段，如下。</nameandemail></p>
+<p>userRepository.findByAndSort(“f”,new Sort(“name”));<br>@Query分页<br>@Query(“select u from User u where u.email=?1”)<br>Page<nameandemail> findByEmail(String email, Pageable pageable);<br>userRepository.findByEmail(“XXXXXXX”,new PageRequest(1,10));<br>2.@Param<br>默认参数是通过顺序绑定在查询语句上的，这使得查询方法对参数位置的重构容易出错。为了解决这个问题，可以使用@Param注解指定方法参数的具体名称，通过绑定的参数名称做查询条件。</nameandemail></p>
+<p>如下：</p>
+<p>@Query(“select u from User u where u.email = :email”)<br>Page<nameandemail> findByEmail(@Param(“email”) String email, Pageable pageable);<br>3.@Modifying<br>源码如下：</nameandemail></p>
+<p>public @interface Modifying {<br>    boolean flushAutomatically() default false;<br>    //我们知道jpa底层实现会有二级缓存，也就是在更新完数据库后，如果后面去用这个对象，你再去查这个对象，这个对象是在一级缓存中，并没有跟数据库同步，这个时候用clearAutomatically=true,就会刷新hibernate的一级缓存了，否则你在同一接口中，更新一个对象，接着查询这个对象，那么你查出来的这个对象还是没有更新之前的状态。<br>    boolean clearAutomatically() default false;<br>}<br>在@Query注解中编写 JPQL 实现 DELETE 和 UPDATE 操作的时候必须加上@Modifying注解，以通知 Spring Data 这是一个 DELETE 或 UPDATE 操作。</p>
+<p>五、JpaRepository 的扩展<br>1.QueryByExampleExecutor<br>源码如下：</p>
+<p>public interface QueryByExampleExecutor<t> {<br>    //根据“实例”查找一个对象<br>    <s extends t> Optional<s> findOne(Example<s> var1);</s></s></s></t></p>
+<pre><code>&lt;S extends T&gt; Iterable&lt;S&gt; findAll(Example&lt;S&gt; var1);
+
+&lt;S extends T&gt; Iterable&lt;S&gt; findAll(Example&lt;S&gt; var1, Sort var2);
+
+&lt;S extends T&gt; Page&lt;S&gt; findAll(Example&lt;S&gt; var1, Pageable var2);
+
+&lt;S extends T&gt; long count(Example&lt;S&gt; var1);
+
+&lt;S extends T&gt; boolean exists(Example&lt;S&gt; var1);
+</code></pre><p>}<br>public interface Example<t> {<br>    static <t> Example<t> of(T probe) {<br>        return new TypedExample(probe, ExampleMatcher.matching());<br>    }</t></t></t></p>
+<pre><code>static &lt;T&gt; Example&lt;T&gt; of(T probe, ExampleMatcher matcher) {
+    return new TypedExample(probe, matcher);
+}
+
+T getProbe();
+
+ExampleMatcher getMatcher();
+
+default Class&lt;T&gt; getProbeType() {
+    return ProxyUtils.getUserClass(this.getProbe().getClass());
+}
+</code></pre><p>}<br>Example主要包含：</p>
+<p>probe：这是具有填充字段的域对象的实际实体类，即查询条的封装类，必填。</p>
+<p>ExampleMatcher：ExampleMatcher源码中有关于如何匹配特定字段的匹配规则，它可以重复使用在多个示例，必填，有默认值。</p>
+<p>Example：用于创建查询。</p>
+<p>理解 ExampleMatcher<br>//现在ExampleMatcher好像变成interface了<br>public class ExampleMatcher {<br>NullHandler nullHandler; //Null值处理方式<br>StringMatcher defaultStringMatcher; //默认字符串匹配方式<br>boolean defaultIgnoreCase; //默认大小写忽略方式<br>PropertySpecifiers propertySpecifiers; //各属性特定查询方式<br>Set<string> ignoredPaths; //忽略属性列表<br>……<br>}<br>（1）nullHandler：Null 值处理方式，枚举类型，有 2 个可选值：</string></p>
+<p>INCLUDE（包括）</p>
+<p>IGNORE（忽略）</p>
+<p>标识作为条件的实体对象中，一个属性值（条件值）为 Null 是，是否参与过滤。当该选项值是 INCLUDE 时，表示仍参与过滤，会匹配数据库表中该字段值是 Null 的记录；若为 IGNORE 值，表示不参与过滤。</p>
+<p>（2）defaultStringMatcher：默认字符串匹配方式，枚举类型，有 6 个可选值：</p>
+<p>DEFAULT（默认，效果同 EXACT，即精确匹配））</p>
+<p>EXACT（相等）</p>
+<p>STARTING（开始匹配）</p>
+<p>ENDING（结束匹配）</p>
+<p>CONTAINING（包含，模糊匹配）</p>
+<p>REGEX（正则表达式）</p>
+<p>该配置对所有字符串属性过滤有效，除非该属性在propertySpecifiers 中单独定义自己的匹配方式。</p>
+<p>（3）defaultIgnoreCase：默认大小写忽略方式，布尔型，当值为false时，即不忽略，大小不相等。该配置对所有字符串属性过滤有效，除非该属性在 propertySpecifiers 中单独定义自己的忽略大小写方式。</p>
+<p>（4）propertySpecifiers：各属性特定查询方式，描述了各个属性单独定义的查询方式，每个查询方式中包含 4 个元素：属性名、字符串匹配方式、大小写忽略方式、属性转换器。如果属性未单独定义查询方式，或单独查询方式中，某个元素未定义（如：字符串匹配方式），则采用 ExampleMatcher中定义的默认值，即上面介绍的defaultStringMatcher和 defaultIgnoreCase 的值。</p>
+<p>（5）ignoredPaths：忽略属性列表，忽略的属性不参与查询过滤。</p>
+<p>常用情况说明：<br>1、关于基本数据类型。 实体对象中，避免使用基本数据类型，采用包装器类型。如果已经采用了基本类型， 而这个属性查询时不需要进行过滤，则把它添加到忽略列表（ignoredPaths）中。</p>
+<p>2、Null 值处理方式。 默认值是 IGNORE（忽略），即当条件值为 null 时，则忽略此过滤条件，一般业务也是采用这种方式就可满足。当需要查询数据库表中属性为 null 的记录时，可将值设为 INCLUDE，这时，对于不需要参与查询的属性，都必须添加到忽略列表（ignoredPaths）中，否则会出现查不到数据的情况。</p>
+<p>3、默认配置、特殊配置。 默认创建匹配器时，字符串采用的是精确匹配、不忽略大小写，可以通过操作方法改变这种默认匹配，以满足大多数查询条件的需要，如将 “字符串匹配方式” 改为 CONTAINING（包含，模糊匹配），这是比较常用的情况。对于个别属性需要特定的查询方式，可以通过配置 “属性特定查询方式” 来满足要求。</p>
+<p>4、非字符串属性 如约束中所谈，非字符串属性均采用精确匹配，即等于。</p>
+<p>5、忽略大小写的问题。 忽略大小的生效与否，是依赖于数据库的。例如 MySql 数据库中，默认创建表结构时，字段是已经忽略大小写的，所以这个配置与否，都是忽略的。如果业务需要严格区分大小写，可以改变数据库表结构属性来实现，具体可百度。</p>
+<p>常用查询示例：<br>1、无匹配器的情况</p>
+<p>要求：查询地址是 “河南省郑州市”，且重点关注的客户。 说明：对于默认匹配器满足条件时，则不需要创建匹配器。</p>
+<p> //创建查询条件数据对象<br>        Customer customer = new Customer();<br>        customer.setAddress(“河南省郑州市”);<br>        customer.setFocus(true);</p>
+<pre><code>//创建实例
+Example&lt;Customer&gt; ex = Example.of(customer); 
+
+//查询
+List&lt;Customer&gt; ls = dao.findAll(ex);
+
+//输出结果
+System.out.println(&quot;数量：&quot;+ls.size());
+for (Customer bo:ls)
+{
+    System.out.println(bo.getName());
+}
+</code></pre><p>2、通用情况 要求：根据姓名、地址、备注进行模糊查询，忽略大小写，地址要求开始匹配。 说明：这是通用情况，主要演示改变默认字符串匹配方式、改变默认大小写忽略方式、属性特定查询方式配置、忽略属性列表配置。</p>
+<p>//创建查询条件数据对象<br>        Customer customer = new Customer();<br>        customer.setName(“zhang”);<br>        customer.setAddress(“河南省”);<br>        customer.setRemark(“BB”);</p>
+<pre><code>//创建匹配器，即如何使用查询条件
+ExampleMatcher matcher = ExampleMatcher.matching() //构建对象
+        .withStringMatcher(StringMatcher.CONTAINING) //改变默认字符串匹配方式：模糊查询
+        .withIgnoreCase(true) //改变默认大小写忽略方式：忽略大小写
+        .withMatcher(&quot;address&quot;, GenericPropertyMatchers.startsWith()) //地址采用“开始匹配”的方式查询
+        .withIgnorePaths(&quot;focus&quot;);  //忽略属性：是否关注。因为是基本类型，需要忽略掉
+
+//创建实例
+Example&lt;Customer&gt; ex = Example.of(customer, matcher); 
+
+//查询
+List&lt;Customer&gt; ls = dao.findAll(ex);
+
+//输出结果
+System.out.println(&quot;数量：&quot;+ls.size());
+for (Customer bo:ls)
+{
+    System.out.println(bo.getName());
+}
+</code></pre><p>3、多级查询 要求：查询所有潜在客户 说明：主要演示多层级属性查询</p>
+<p>//创建查询条件数据对象<br>        Customer customer = new Customer();</p>
+<pre><code>//创建匹配器，即如何使用查询条件
+ExampleMatcher matcher = ExampleMatcher.matching() //构建对象
+        .withIncludeNullValues() //改变“Null值处理方式”：包括
+        .withIgnorePaths(&quot;id&quot;,&quot;name&quot;,&quot;sex&quot;,&quot;age&quot;,&quot;focus&quot;,&quot;addTime&quot;,&quot;remark&quot;,&quot;customerType&quot;); //忽略其他属性 
+
+//创建实例
+Example&lt;Customer&gt; ex = Example.of(customer, matcher); 
+
+//查询
+List&lt;Customer&gt; ls = dao.findAll(ex);
+
+//输出结果
+System.out.println(&quot;数量：&quot;+ls.size());
+for (Customer bo:ls)
+{
+    System.out.println(bo.getName());
+}
+</code></pre><p>2.JpaSpecificationExecutor<br>JpaSpecificationExecutor是 JPA2.0 提供的 Criteria API，可以动态生成 query。</p>
+<p>源码如下：</p>
+<p>public interface JpaSpecificationExecutor<t> {<br>    //根据Specification条件查询单个对象<br>    Optional<t> findOne(@Nullable Specification<t> var1);</t></t></t></p>
+<pre><code>List&lt;T&gt; findAll(@Nullable Specification&lt;T&gt; var1);
+
+Page&lt;T&gt; findAll(@Nullable Specification&lt;T&gt; var1, Pageable var2);
+
+List&lt;T&gt; findAll(@Nullable Specification&lt;T&gt; var1, Sort var2);
+
+long count(@Nullable Specification&lt;T&gt; var1);
+</code></pre><p>}<br>这个接口基本围绕Specification接口定义，Specification接口中的一个方法：</p>
+<p>Predicate toPredicate(Root<t> var1, CriteriaQuery&lt;?&gt; var2, CriteriaBuilder var3);<br>JpaSpecificationExecutor是针对Criteria API进行了predicate标准封装，帮我们封装了通过EntityManager`的查询和使用细节，操作 Criteria 更加便利。</t></p>
+<p>Criteria 的介绍：<br>Root<t> root :代表了可以查询和操作的实体对象的根。如果将实体对象比喻成表名，那 root 里面就是这张表里面的字段，只不过是 JPQL 的实体字段。通过里面的 Pathget(String attributeName) 来获取我们操作的字段。</t></p>
+<p>CriteriaQuery&lt;?&gt;query：代表一个 specific 的顶层查询对象，它包含查询的各个部分，比如：select、from、where、group by、order by 等。CriteriaQuery对象只对实体类型或嵌入式类型的 Criteria 查询起作用，它提供了查询 ROOT 的方法，常用方法有：</p>
+<pre><code>CriteriaQuery&lt;T&gt; select(Selection&lt;? extends T&gt; var1);
+CriteriaQuery&lt;T&gt; where(Predicate... var1);
+CriteriaQuery&lt;T&gt; having(Predicate... var1);
+</code></pre><p>JpaSpecificationExecutor 示例<br>public interface UserRepository extends JpaRepository&lt;User,Long&gt;, JpaSpecificationExecutor<user><br>实体类UserRepository必须继承JpaRepository或者Repository，同时继承JpaSpecificationExecutor才可以产生作用，因为JpaSpecificationExecutor并没有继承Repository。</user></p>
+<p>下面给出一个动态查询的例子（通过 email 模糊查询，name 精确查询，没有提供的话就忽略）</p>
+<p>// 这里给出两种方法<br>public List<user> findByCondition(User user){<br>    return userRepository.findAll(((root, criteriaQuery, criteriaBuilder) -&gt; {<br>        List<predicate> predicates = new ArrayList&lt;&gt;();<br>        if (!StringUtils.isEmpty(user.getEmail())){<br>            predicates.add(criteriaBuilder.like(root.get(“email”),”%”+user.getEmail()+”%”));<br>        }<br>        if (!StringUtils.isEmpty(user.getName())){<br>            predicates.add(criteriaBuilder.equal(root.get(“name”),user.getName()));<br>        }<br>        return criteriaQuery.where(predicates.toArray(new Predicate[0])).getGroupRestriction();<br>    }));<br>}</predicate></user></p>
+<p>public List<user> findByCondition2(User user){<br>    return userRepository.findAll((Specification<user>) (root, criteriaQuery, criteriaBuilder) -&gt; {<br>        Predicate predicate=criteriaBuilder.conjunction();<br>        if (!StringUtils.isEmpty(user.getEmail())){<br>       predicate.getExpressions().add(criteriaBuilder.like(root.get(“email”),”%”+user.getEmail()+”%”));<br>        }<br>        if (!StringUtils.isEmpty(user.getName())){<br>            predicate.getExpressions().add(criteriaBuilder.equal(root.get(“name”),user.getName()));<br>        }<br>        return predicate;<br>    });<br>}<br>如果要用到动态查询，推荐使用上述写法；如果平时只需要用到一些基本的条件查询，那么也可以使用下面这种工厂方式，提供一些常用的功能。</user></user></p>
+<p>public class SpecificationFactory {<br>    //模糊查询<br>    public static Specification containsLike(String attribute,String value){<br>        return (root, criteriaQuery, criteriaBuilder) -&gt;<br>            criteriaBuilder.like(root.get(attribute),”%”+value+”%”);<br>    }</p>
+<pre><code> //相等查询
+public static Specification equal(String attribute,Object value){
+    return (root, criteriaQuery, criteriaBuilder) -&gt; 
+            criteriaBuilder.equal(root.get(attribute),value);
+}
+</code></pre><p>}</p>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    <div class="content">
+        
+<span class="post-time">
+    Last updated: <time datetime="2021-10-06T10:51:31.092Z" itemprop="dateUpdated">2021-10-06 18:51:31</time>
+</span><br>
+
+
+        
+        转载请注明出处 <a href="/2021/09/11/2021-09-12-jpa/" target="_blank" rel="external">http://j2go.github.io/2021/09/11/2021-09-12-jpa/</a>
+        
+    </div>
+    <footer>
+        <a href="http://j2go.github.io">
+            <img src="/img/avatar.jpg" alt="stiangao">
+            stiangao
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/JPA/">JPA</a></li></ul>
+
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2021/09/11/2021-09-12-jpa/&title=《JPA规范》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2021/09/11/2021-09-12-jpa/&title=《JPA规范》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2021/09/11/2021-09-12-jpa/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JPA规范》 — tiangao&url=http://j2go.github.io/2021/09/11/2021-09-12-jpa/&via=http://j2go.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2021/09/11/2021-09-12-jpa/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/2021/09/04/2021-09-05-mac-guide/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">Mac 使用教程 - Java开发者视角</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+<section class="comments" id="comments">
+    <!-- UY BEGIN -->
+    <div id="uyan_frame"></div>
+    <script src="http://v2.uyan.cc/code/uyan.js?uid=2142800"></script>
+    <!-- UY END -->
+</section>
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢大爷~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/img/wechat.jpg" data-alipay="/img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+            <span>This blog is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>stiangao &copy; 2015 - 2021</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2021/09/11/2021-09-12-jpa/&title=《JPA规范》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2021/09/11/2021-09-12-jpa/&title=《JPA规范》 — tiangao&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2021/09/11/2021-09-12-jpa/" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《JPA规范》 — tiangao&url=http://j2go.github.io/2021/09/11/2021-09-12-jpa/&via=http://j2go.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2021/09/11/2021-09-12-jpa/" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACIklEQVR42u3ay47CMAwFUP7/p5kt0oj22m6RmpyuEKJNThfGj7xe8fUOrm+/TJ72//vXHRcGBsZjGdXNfX7TW6W37skLwsDA2IDxbeHkc/LLY171ZWFgYGBUGVVq7zkYGBgYOeP43uO7jtO7nwZcDAyMBzKSYnLSFEu2/qNaHAMD44GMfBO//3zLfAMDA+NRjHfxOg6+eTCt/vLkORgYGEszqu37ZnkZF7GT/WBgYKzNOF4gGTHmxefkQEYzTcTAwFiC0bv5qsNk1Vdz8r+BgYGxHGNSdubjzElJXAi1GBgYizKuGgDkATcJ6EljDgMDYzdGnrpdlURe1lzDwMDYgJFsujq2zENqHuhPdoWBgbE0I2mKTaj5ULOXnmJgYOzAqB4FyxO7PFmM3nRyWgQDA2NRRjXgJklblMa1itiTuzAwMBZlTBartt56B8jKqSEGBsaijN52e2246gA1KoAxMDA2YCShs1pS9o5cVEcOGBgYOzB6IW/SGjtOBHtBHwMDYwdGtUE2OfiVHzsrgzEwMLZhTBr3eYpZTUOj1h4GBsY2jORxvSMUtwd3DAyMRRm9tCzH9Np55XUxMDCWZlSHi5MQWW39Fw5bYGBgbMCoBtm7Q2czVcXAwNiA0Qt81SFo1Dib1OIYGBgYcZCdDzirzT4MDAyMasI3GYtWD2RgYGDsw8hb+fPQWY2ZF7fbMDAwHsjoNffnG+olgqOhJgYGxvMYf4yvQc9QgvnhAAAAAElFTkSuQmCC" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+<script>
+(function() {
+    var OriginTitile = document.title, titleTime;
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            document.title = 'stiangao's blog';
+            clearTimeout(titleTime);
+        } else {
+            document.title = '天高的博客';
+            titleTime = setTimeout(function() {
+                document.title = OriginTitile;
+            },2000);
+        }
+    });
+})();
+</script>
+
+
+
+</body>
+</html>
