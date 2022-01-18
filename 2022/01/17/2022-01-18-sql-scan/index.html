@@ -13,25 +13,25 @@
     
     
     
-    <title>Centos6.5 搭建 nexus + maven | tiangao | 天高云淡</title>
+    <title>一条 SQL 的经验 | tiangao | 天高云淡</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
     
     <meta name="theme-color" content="#3F51B5">
     
     
-    <meta name="keywords" content="nexus">
-    <meta name="description" content="安装MAVEN #wget http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz#tar -zxvf apache-maven-3.3.9-bin.tar.gz#mkdir /usr/local/maven#mv -rf apache-">
-<meta name="keywords" content="nexus">
+    <meta name="keywords" content="MySQL">
+    <meta name="description" content="需求：一张 7 亿的大表要清理几千条数据，这个表字段比较多，tool_queue 字段上是有索引的 直接使用条件 tool_queue=97 加上 id 排序轮询，发现直接超时无法执行，看下 explain1explain select * from userreview where tool_queue=97 and id&amp;gt;0 order by id limit 1000    SEQ i">
+<meta name="keywords" content="MySQL">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Centos6.5 搭建 nexus + maven">
-<meta property="og:url" content="http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/index.html">
+<meta property="og:title" content="一条 SQL 的经验">
+<meta property="og:url" content="http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/index.html">
 <meta property="og:site_name" content="tiangao">
-<meta property="og:description" content="安装MAVEN #wget http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz#tar -zxvf apache-maven-3.3.9-bin.tar.gz#mkdir /usr/local/maven#mv -rf apache-">
+<meta property="og:description" content="需求：一张 7 亿的大表要清理几千条数据，这个表字段比较多，tool_queue 字段上是有索引的 直接使用条件 tool_queue=97 加上 id 排序轮询，发现直接超时无法执行，看下 explain1explain select * from userreview where tool_queue=97 and id&amp;gt;0 order by id limit 1000    SEQ i">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:updated_time" content="2022-01-18T03:27:03.200Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Centos6.5 搭建 nexus + maven">
-<meta name="twitter:description" content="安装MAVEN #wget http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz#tar -zxvf apache-maven-3.3.9-bin.tar.gz#mkdir /usr/local/maven#mv -rf apache-">
+<meta name="twitter:title" content="一条 SQL 的经验">
+<meta name="twitter:description" content="需求：一张 7 亿的大表要清理几千条数据，这个表字段比较多，tool_queue 字段上是有索引的 直接使用条件 tool_queue=97 加上 id 排序轮询，发现直接超时无法执行，看下 explain1explain select * from userreview where tool_queue=97 and id&amp;gt;0 order by id limit 1000    SEQ i">
     
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
@@ -110,7 +110,7 @@
         <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
           <i class="icon icon-lg icon-navicon"></i>
         </a>
-        <div class="flex-col header-title ellipsis">Centos6.5 搭建 nexus + maven</div>
+        <div class="flex-col header-title ellipsis">一条 SQL 的经验</div>
         
         <div class="search-wrap" id="search-wrap">
             <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
@@ -132,15 +132,15 @@
 <header class="content-header post-header">
 
     <div class="container fade-scale">
-        <h1 class="title">Centos6.5 搭建 nexus + maven</h1>
+        <h1 class="title">一条 SQL 的经验</h1>
         <h5 class="subtitle">
             
-                <time datetime="2016-04-28T16:00:00.000Z" itemprop="datePublished" class="page-time">
-  2016-04-29
+                <time datetime="2022-01-17T16:00:00.000Z" itemprop="datePublished" class="page-time">
+  2022-01-18
 </time>
 
 
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
 
             
         </h5>
@@ -154,23 +154,16 @@
 
 <div class="container body-wrap">
     
-    <aside class="post-widget">
-        <nav class="post-toc-wrap" id="post-toc">
-            <h4>TOC</h4>
-            <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#安装MAVEN"><span class="post-toc-number">1.</span> <span class="post-toc-text">安装MAVEN</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#修改环境配置"><span class="post-toc-number">1.0.1.</span> <span class="post-toc-text">修改环境配置</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#检查结果"><span class="post-toc-number">1.0.2.</span> <span class="post-toc-text">检查结果</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#安装nexus"><span class="post-toc-number">2.</span> <span class="post-toc-text">安装nexus</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#接下来就可以运行了"><span class="post-toc-number">2.0.1.</span> <span class="post-toc-text">接下来就可以运行了</span></a></li></ol></li></ol></li></ol>
-        </nav>
-    </aside>
-    
-<article id="post-2016-04-29-nexus-maven"
+<article id="post-2022-01-18-sql-scan"
   class="post-article article-type-post fade" itemprop="blogPost">
 
     <div class="post-card">
-        <h1 class="post-card-title">Centos6.5 搭建 nexus + maven</h1>
+        <h1 class="post-card-title">一条 SQL 的经验</h1>
         <div class="post-meta">
-            <time class="post-time" title="2016-04-29 00:00:00" datetime="2016-04-28T16:00:00.000Z"  itemprop="datePublished">2016-04-29</time>
+            <time class="post-time" title="2022-01-18 00:00:00" datetime="2022-01-17T16:00:00.000Z"  itemprop="datePublished">2022-01-18</time>
 
             
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Linux/">Linux</a></li></ul>
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
 
 
 
@@ -182,42 +175,83 @@
 
         </div>
         <div class="post-content" id="post-content" itemprop="postContent">
-            <h1 id="安装MAVEN"><a href="#安装MAVEN" class="headerlink" title="安装MAVEN"></a>安装MAVEN</h1><blockquote>
-<p>#wget <a href="http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz" target="_blank" rel="noopener">http://mirror.cc.columbia.edu/pub/software/apache/maven/maven-3/3.3.9/binaries/apache-maven-3.3.9-bin.tar.gz</a><br>#tar -zxvf apache-maven-3.3.9-bin.tar.gz<br>#mkdir /usr/local/maven<br>#mv -rf apache-maven-3.3.9/* /usr/local/maven/</p>
-</blockquote>
-<h3 id="修改环境配置"><a href="#修改环境配置" class="headerlink" title="修改环境配置"></a>修改环境配置</h3><blockquote>
-<p># vi /etc/profile</p>
-</blockquote>
-<p><em>加入</em></p>
-<blockquote>
-<p>export M2_HOME=/usr/local/maven<br>export PATH=${M2_HOME}/bin:${PATH}<br># source /etc/profile</p>
-</blockquote>
-<h3 id="检查结果"><a href="#检查结果" class="headerlink" title="检查结果"></a>检查结果</h3><blockquote>
-<p># mvn -v<br>Apache Maven 3.3.9 (bb52d8502b132ec0a5a3f4c09453c07478323dc5; 2015-11-11T00:41:47+08:00)<br>Maven home: /usr/local/maven<br>Java version: 1.7.0_79, vendor: Oracle Corporation<br>Java home: /usr/java/jdk1.7.0_79/jre<br>Default locale: zh_CN, platform encoding: UTF-8<br>OS name: “linux”, version: “2.6.32-431.el6.x86_64”, arch: “amd64”, family: “unix”</p>
-</blockquote>
-<h1 id="安装nexus"><a href="#安装nexus" class="headerlink" title="安装nexus"></a>安装nexus</h1><p><em>需要翻墙才能下</em><br><a href="https://sonatype-download.global.ssl.fastly.net/nexus/oss/nexus-2.13.0-01-bundle.tar.gz" target="_blank" rel="noopener">nexus-2.13.0-01-bundle.tar.gz</a></p>
-<p><em>然后解压</em></p>
-<blockquote>
-<p>#tar -zxvf nexus-2.13.0-01-bundle.tar.gz</p>
-</blockquote>
-<p>产生如下两个目录</p>
-<blockquote>
-<p>drwxr-xr-x 8 1001 1001       4096 4月  28 16:06 nexus-2.13.0-01<br>drwxr-xr-x 3 1001 1001       4096 4月  12 22:21 sonatype-work</p>
-</blockquote>
-<p><em>直接去运行会报错</em></p>
-<blockquote>
-<p># nexus-2.13.0-01/bin/nexus start<br>Starting Nexus OSS…<br>Failed to start Nexus OSS.</p>
-</blockquote>
-<p>stackoverflow上找到了答案，不能用root用户运行，新建并切换用户之…</p>
-<p><em>还要切换目录owner</em></p>
-<blockquote>
-<p>#chown -R rd:rd nexus-2.13.0-01<br>#chown -R sonatype-work</p>
-</blockquote>
-<h3 id="接下来就可以运行了"><a href="#接下来就可以运行了" class="headerlink" title="接下来就可以运行了"></a>接下来就可以运行了</h3><blockquote>
-<p>#nexus start</p>
-</blockquote>
-<p>打开 <a href="http://localhost:8081/nexus" target="_blank" rel="noopener">http://localhost:8081/nexus</a> 即可看到nexus的管理页面</p>
-<p>_默认账户密码_admin admin123</p>
+            <p>需求：一张 7 亿的大表要清理几千条数据，这个表字段比较多，tool_queue 字段上是有索引的</p>
+<p>直接使用条件 <code>tool_queue=97</code> 加上 id 排序轮询，发现直接超时无法执行，看下 explain<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select * from userreview where tool_queue=97 and id&gt;0 order by id limit 1000</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>SEQ</th>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>partitions</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>filtered</th>
+<th>Extra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>SIMPLE</td>
+<td>userreview</td>
+<td>NULL</td>
+<td>range</td>
+<td>PRIMARY,idx_toolqueue</td>
+<td>PRIMARY</td>
+<td>8</td>
+<td>NULL</td>
+<td>350860402</td>
+<td>10</td>
+<td>Using where</td>
+</tr>
+</tbody>
+</table>
+<p>会发现 key 用的是 PRIMARY，然后做了一个小小的改动<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">explain select id from userreview where tool_queue=97 and id&gt;0 order by id limit 1000</span><br></pre></td></tr></table></figure></p>
+<table>
+<thead>
+<tr>
+<th>SEQ</th>
+<th>id</th>
+<th>select_type</th>
+<th>table</th>
+<th>partitions</th>
+<th>type</th>
+<th>possible_keys</th>
+<th>key</th>
+<th>key_len</th>
+<th>ref</th>
+<th>rows</th>
+<th>filtered</th>
+<th>Extra</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1</td>
+<td>SIMPLE</td>
+<td>userreview</td>
+<td>NULL</td>
+<td>range</td>
+<td>PRIMARY,idx_toolqueue</td>
+<td>idx_toolqueue</td>
+<td>12</td>
+<td>NULL</td>
+<td>17198828</td>
+<td>100</td>
+<td>Using where; Using index</td>
+</tr>
+</tbody>
+</table>
+<p>解决了。</p>
+<p>必须要使用覆盖索引才行，先拿出 id，再通过 id 去拿数据</p>
 
         </div>
 
@@ -230,7 +264,7 @@
 
 
         
-        转载请注明出处 <a href="/2016/04/28/2016-04-29-nexus-maven/" target="_blank" rel="external">http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/</a>
+        转载请注明出处 <a href="/2022/01/17/2022-01-18-sql-scan/" target="_blank" rel="external">http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/</a>
         
     </div>
     <footer>
@@ -250,7 +284,7 @@
 
         <div class="post-footer">
             
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/nexus/">nexus</a></li></ul>
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li></ul>
 
 
             
@@ -260,7 +294,7 @@
 <div class="page-share" id="pageShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/&title=《Centos6.5 搭建 nexus + maven》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/&title=《一条 SQL 的经验》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -270,22 +304,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/&title=《Centos6.5 搭建 nexus + maven》 — tiangao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/&title=《一条 SQL 的经验》 — tiangao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Centos6.5 搭建 nexus + maven》 — tiangao&url=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/&via=http://j2go.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《一条 SQL 的经验》 — tiangao&url=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/&via=http://j2go.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -305,21 +339,14 @@
     </div>
 
     
-<nav class="post-nav flex-row flex-justify-between">
-  
-    <div class="waves-block waves-effect prev">
-      <a href="/2016/10/14/2016-10-15-docker-swarm/" id="post-prev" class="post-nav-link">
-        <div class="tips"><i class="icon icon-angle-left icon-lg icon-pr"></i> Prev</div>
-        <h4 class="title">Docker Swarm 试用</h4>
-      </a>
-    </div>
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
   
 
   
     <div class="waves-block waves-effect next">
-      <a href="/2016/04/27/2016-04-28-nginx-cache/" id="post-next" class="post-nav-link">
+      <a href="/2021/09/11/2021-09-12-jpa/" id="post-next" class="post-nav-link">
         <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
-        <h4 class="title">nginx配置缓存</h4>
+        <h4 class="title">JPA规范</h4>
       </a>
     </div>
   
@@ -418,7 +445,7 @@
 <div class="global-share" id="globalShare">
     <ul class="reset share-icons">
       <li>
-        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/&title=《Centos6.5 搭建 nexus + maven》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/&title=《一条 SQL 的经验》 — tiangao&pic=http://j2go.github.io/img/avatar.jpg" data-title="微博">
           <i class="icon icon-weibo"></i>
         </a>
       </li>
@@ -428,22 +455,22 @@
         </a>
       </li>
       <li>
-        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/&title=《Centos6.5 搭建 nexus + maven》 — tiangao&source=" data-title=" QQ">
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/&title=《一条 SQL 的经验》 — tiangao&source=" data-title=" QQ">
           <i class="icon icon-qq"></i>
         </a>
       </li>
       <li>
-        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/" data-title=" Facebook">
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/" data-title=" Facebook">
           <i class="icon icon-facebook"></i>
         </a>
       </li>
       <li>
-        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Centos6.5 搭建 nexus + maven》 — tiangao&url=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/&via=http://j2go.github.io" data-title=" Twitter">
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《一条 SQL 的经验》 — tiangao&url=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/&via=http://j2go.github.io" data-title=" Twitter">
           <i class="icon icon-twitter"></i>
         </a>
       </li>
       <li>
-        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2016/04/28/2016-04-29-nexus-maven/" data-title=" Google+">
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=http://j2go.github.io/2022/01/17/2022-01-18-sql-scan/" data-title=" Google+">
           <i class="icon icon-google-plus"></i>
         </a>
       </li>
@@ -454,7 +481,7 @@
 <div class="page-modal wx-share" id="wxShare">
     <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACM0lEQVR42u3aQY7CMAwFUO5/aUaa1UgM5X+HIjW8rFApbV4Wxo5zu8Xj/jser/wdz67Pfns7Y2BgYFyWcT8cj4xnnxNGMtFkUf55AgYGxhcw2sflC5EszfF7kz8ADAwMjOGjg+Tybe/CwMDAKFO9NtHEwMDASBh58dnenxerH6rFMTAwLshoGwOf/HxifwMDA+MijPVtslnzMkn7illhYGBszUg2wpJDErPCNS9oo3CMgYGxNaMltdtwedk5K4YxMDD2ZiQJ3GwLLA/KyXxe3IOBgbE1Y7aLlZSjybfHE8rTRwwMjG9gzFqY64XrSqlctwcwMDAuy8gD3yxZTO5PrrxYGgwMjC9gtFOZbYrNEsRoITAwML6AMdsya5sECWbY7MTAwNia0SaCbVicbfdjYGBgHDcy21JzHZkH33rXEAMDYwtGPq32ztliJYv4IsPFwMDYjjFrGRbnNUaNhFlrEwMDY2/GeiGal6AnThoDA2NrRtseWE8oE0CdgGJgYGzKaNuNsxbm8WLlhWux3YaBgbEdoziAVV7JD20stQ0wMDC2ZrSb+3kalxeoszfW/x4YGBiXZdzLkQfT9SI2CdP/dGIxMDC2Y6y0CmYthJWJroRpDAyMqzPaINs2A9pVzAN91N/AwMDYiJFvuuWBMk8i26CPgYGBMWtVJux8OdpfYWBgYLSFZZtitq3Np+0BDAyMrRmzA1vnpXpJOB7W4hgYGBdkrByqaA+HrSSRb8BgYGBcj/EDWqk39aqzDEgAAAAASUVORK5CYII=" alt="微信分享二维码">
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMYAAADGCAAAAACs8KCBAAACKUlEQVR42u3aSZbjIBAFQN//0uptbZB/Jsj9QMHKrzyIYJGVA59PvK7Bqn7m7ydHr0ffWrAwMDC2ZVy3a/SA5C+jp/Se++WAMDAwXsDIw+J9xLs/oDxm5nvDwMDAuE/geiE4CawYGBgY8wG3Go7vGf/t/wYGBsZWjKSYrCKrYfpHtTgGBsaGjDxE/v71I/MNDAyMrRhXceUFZ3UweU0sDAyMsxnVpn+v6ZYXsTP7wcDAOJuRJII5o9o4yw9rQT6LgYGxIaP3sPnjmB9nDjNcDAyMoxl5opZcsMgHBkkpW263YWBgHMTIM6tVm+thohIXAwPjBYy8iO29m6SPy5prGBgYBzHWts9mNp0Uq8M9YGBgHM3IG2F54VpNCquXNr5MYjEwMI5jVK+CTRWZxQZf4V0MDIyjGTOjxzzU5ulmr8zGwMA4m9EsFx++ctG8bIGBgXEoo/dD+WOqIbs6VPjkkR4DA+MIRt7qShpneVKYl8fJrjAwME5l5CG1lyZWi9jeABUDA+MNjF6InClEe2H6S9MNAwPjBYxesVq9itH7PAYGBkbe/Mq3Xi1fZzppGBgYpzKu4qoOKathuknFwMA4mrGqZVYdSVYP5ZE5LQYGxlaMXpssv7Rxv9H8F5pdQwwMjIMYz8XvHx0TBgYGxnQ5OtURTKgYGBgYi9peyXebFzIwMDBewOgNKe9bcnmTLi9uF7TbMDAwNmSsStp6BW01EZwK/RgYGPsx/gEmdNsZXn8azQAAAABJRU5ErkJggg==" alt="微信分享二维码">
 </div>
 
 

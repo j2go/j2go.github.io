@@ -145,6 +145,58 @@
     <ul class="post-list">
     
         <li class="post-list-item fade">
+            <article id="post-2022-01-18-sql-scan"
+  class="article-card article-type-post" itemprop="blogPost">
+
+    <div class="post-meta">
+        <time class="post-time" title="2022-01-18 00:00:00" datetime="2022-01-17T16:00:00.000Z"  itemprop="datePublished">2022-01-18</time>
+
+        
+	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
+
+
+
+    </div>
+
+    
+
+
+  
+    <h3 class="post-title" itemprop="name">
+      <a class="post-title-link" href="/2022/01/17/2022-01-18-sql-scan/">一条 SQL 的经验</a>
+    </h3>
+  
+
+
+
+
+    <div class="post-content" id="post-content" itemprop="postContent">
+
+    
+        需求：一张 7 亿的大表要清理几千条数据，这个表字段比较多，tool_queue 字段上是有索引的
+直接使用条件 tool_queue=97 加上 id 排序轮询，发现直接超时无法执行，看下 explain1explain select * from userreview where tool_queue=97 and id&gt;0 order by id limit 1000
+
+
+
+SE...
+    
+
+        <a href="/2022/01/17/2022-01-18-sql-scan/" class="post-more waves-effect waves-button">
+            阅读全文
+        </a>
+    </div>
+    
+    <div class="post-footer">
+        
+	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/MySQL/">MySQL</a></li></ul>
+
+    </div>
+    
+</article>
+
+        </li>
+    
+        <li class="post-list-item fade">
             <article id="post-2021-09-12-jpa"
   class="article-card article-type-post" itemprop="blogPost">
 
@@ -604,53 +656,6 @@ setBeanName 回调如果 Bean 实现了 BeanNameAware 接口，Spring将Bean的I
 
         </li>
     
-        <li class="post-list-item fade">
-            <article id="post-2016-12-01-cloud-config"
-  class="article-card article-type-post" itemprop="blogPost">
-
-    <div class="post-meta">
-        <time class="post-time" title="2016-12-01 00:00:00" datetime="2016-11-30T16:00:00.000Z"  itemprop="datePublished">2016-12-01</time>
-
-        
-	<ul class="article-category-list"><li class="article-category-list-item"><a class="article-category-list-link" href="/categories/Java/">Java</a></li></ul>
-
-
-
-    </div>
-
-    
-
-
-  
-    <h3 class="post-title" itemprop="name">
-      <a class="post-title-link" href="/2016/11/30/2016-12-01-cloud-config/">Spring Cloud Config</a>
-    </h3>
-  
-
-
-
-
-    <div class="post-content" id="post-content" itemprop="postContent">
-
-    
-        背景现今这个时候，微服务大行其道，互联网应用遍地都是，随便开发个什么应用首要考虑的都是要可伸缩，扩展性要好。当我们的后台服务一点点增多，各个服务的配置也越来越多，随之而来的就是一个配置管理问题，各自管各自的开发时没什么问题，到了线上之后管理就会很头疼，到了要大规模更新的时候就更烦了。我们的后台服务就是如此，各种语言开发的都有，在慢慢的迭代过程的我们发现配置中心是一个比较好的解决方案，作为 S...
-    
-
-        <a href="/2016/11/30/2016-12-01-cloud-config/" class="post-more waves-effect waves-button">
-            阅读全文
-        </a>
-    </div>
-    
-    <div class="post-footer">
-        
-	<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/SpringCloud/">SpringCloud</a></li></ul>
-
-    </div>
-    
-</article>
-
-        </li>
-    
     </ul>
 
     
@@ -682,7 +687,7 @@ setBeanName 回调如果 Bean 实现了 BeanNameAware 接口，Spring将Bean的I
         </p>
     </div>
     <div class="bottom">
-        <p><span>stiangao &copy; 2015 - 2021</span>
+        <p><span>stiangao &copy; 2015 - 2022</span>
             <span>
                 
                 Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
