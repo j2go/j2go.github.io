@@ -28,7 +28,7 @@
 <meta property="og:site_name" content="tiangao">
 <meta property="og:description" content="需求：一张 7 亿的大表要清理几千条数据，这个表字段比较多，tool_queue 字段上是有索引的 直接使用条件 tool_queue=97 加上 id 排序轮询，发现直接超时无法执行，看下 explain1explain select * from userreview where tool_queue=97 and id&amp;gt;0 order by id limit 1000    SEQ i">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:updated_time" content="2022-01-18T03:27:03.200Z">
+<meta property="og:updated_time" content="2022-09-02T03:13:52.396Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一条 SQL 的经验">
 <meta name="twitter:description" content="需求：一张 7 亿的大表要清理几千条数据，这个表字段比较多，tool_queue 字段上是有索引的 直接使用条件 tool_queue=97 加上 id 排序轮询，发现直接超时无法执行，看下 explain1explain select * from userreview where tool_queue=97 and id&amp;gt;0 order by id limit 1000    SEQ i">
@@ -251,7 +251,7 @@
 </tbody>
 </table>
 <p>解决了。</p>
-<p>必须要使用覆盖索引才行，先拿出 id，再通过 id 去拿数据</p>
+<p>必须要使用覆盖索引才行，先拿出 id，再通过 id 去拿数据。</p>
 
         </div>
 
@@ -259,7 +259,7 @@
     <div class="content">
         
 <span class="post-time">
-    Last updated: <time datetime="2022-01-18T03:27:03.200Z" itemprop="dateUpdated">2022-01-18 11:27:03</time>
+    Last updated: <time datetime="2022-09-02T03:13:52.396Z" itemprop="dateUpdated">2022-09-02 11:13:52</time>
 </span><br>
 
 
